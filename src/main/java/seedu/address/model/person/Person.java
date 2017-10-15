@@ -119,6 +119,7 @@ public class Person implements ReadOnlyPerson {
     @Override
     public DateOfBirth getDateOfBirth() {
         return dob.get();
+    }
 
     public String getReason() {
         Address a = this.getAddress();
