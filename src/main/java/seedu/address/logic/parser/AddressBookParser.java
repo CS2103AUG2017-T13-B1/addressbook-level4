@@ -18,6 +18,7 @@ import seedu.address.logic.commands.HelpCommand;
 import seedu.address.logic.commands.HistoryCommand;
 import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.commands.PartialFindCommand;
+import seedu.address.logic.commands.PrintCommand;
 import seedu.address.logic.commands.RedoCommand;
 import seedu.address.logic.commands.SelectCommand;
 import seedu.address.logic.commands.UndoCommand;
@@ -33,7 +34,7 @@ public class AddressBookParser {
      * Enumerator list to define the types of commands.
      */
     private enum CommandType {
-        ADD, ADDLI, CLEAR, DEL, EDIT, EXIT, FIND, PFIND, HELP, HISTORY, LIST, REDO, UNDO, SELECT, WHY, NONE
+        ADD, ADDLI, CLEAR, DEL, EDIT, EXIT, FIND, PFIND, HELP, HISTORY, LIST, PRINT, REDO, UNDO, SELECT, WHY, NONE
     }
 
     /**
@@ -101,8 +102,13 @@ public class AddressBookParser {
         case REDO:
             return new RedoCommand();
 
+        //@@author arnollim
+        case PRINT:
+            return new PrintCommandParser().parse(arguments);
+
         case WHY:
             return new WhyCommandParser().parse(arguments);
+        //@@author arnollim
 
         default:
             throw new ParseException(MESSAGE_UNKNOWN_COMMAND);
@@ -186,11 +192,20 @@ public class AddressBookParser {
                 return CommandType.UNDO;
             }
         }
+
+        //@@author arnollim
         for (String word : WhyCommand.COMMAND_WORDS) {
             if (commandWord.contentEquals(word)) {
                 return CommandType.WHY;
             }
         }
+        for (String word : PrintCommand.COMMAND_WORDS) {
+            if (commandWord.contentEquals(word)) {
+                return CommandType.PRINT;
+            }
+        }
+        //@@author arnollim
+
         return CommandType.NONE;
     }
 
