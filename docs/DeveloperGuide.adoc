@@ -599,7 +599,8 @@ the added tags will be deleted afterwards.
 in any part of the command and the program will be able to execute the user's intention.
 ****
 // end::tagManagement[]
-// tag::searchbox
+
+// tag::searchbox[]
 === Searchbox
 
 The additional searchbox used for quick partial search/filter is a child of `UiParts` and is based on using `Listener` to detect any changes to `TextProperty`.
@@ -647,6 +648,7 @@ Case (1) is to restore the default list of all contacts after users have used th
 
 The rest of the execution then, follows closely to the case where the command is executed through `CommandBox`
 
+// end::searchbox[]
 // tag::li[]
 === Addition of Life Insurances
 

@@ -15,6 +15,7 @@ import javafx.scene.layout.Region;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.events.ui.InsuranceClickedEvent;
 import seedu.address.commons.events.ui.InsurancePanelSelectionChangedEvent;
+import seedu.address.commons.events.ui.JumpToInsuranceRequestEvent;
 import seedu.address.commons.events.ui.JumpToListRequestEvent;
 import seedu.address.commons.events.ui.SwitchToProfilePanelRequestEvent;
 import seedu.address.logic.commands.SelectCommand.PanelChoice;
@@ -62,8 +63,19 @@ public class InsuranceListPanel extends UiPart<Region> {
         setEventHandlerForSelectionChangeEvent();
 
     }
-
     //@@author RSJunior37
+
+    /**
+     * Scrolls down the listview to targetindex and select the entry
+     * @param index
+     */
+    private void scrollTo(int index) {
+        Platform.runLater(() -> {
+            insuranceListView.scrollTo(index);
+            insuranceListView.getSelectionModel().clearAndSelect(index);
+        });
+    }
+
     private void setEventHandlerForSelectionChangeEvent() {
         insuranceListView.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
@@ -112,6 +124,15 @@ public class InsuranceListPanel extends UiPart<Region> {
     }
     // weird phenomenon that a filteredList does not contain elements in the original list and cannot be used
     // in the select command
+    //@@author
+
+
+    //@@author RSJunior37
+    @Subscribe
+    private void handleJumpToInsuranceRequestEvent(JumpToInsuranceRequestEvent event) {
+        logger.info(LogsCenter.getEventHandlingLogMessage(event));
+        scrollTo(event.targetIndex);
+    }
     //@@author
 
     /**

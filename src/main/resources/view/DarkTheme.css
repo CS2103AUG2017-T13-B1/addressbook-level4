@@ -3,6 +3,8 @@
     background-color: #383838; /* Used in the default.html file */
 }
 
+
+
 .label {
     -fx-font-size: 11pt;
     -fx-font-family: "Segoe UI Semibold";
@@ -39,6 +41,7 @@
     -fx-opacity: 1;
 }
 
+/*@@author*/
 /*@@author Juxarius*/
 .profile-header {
     -fx-font-size: 35pt;
@@ -61,7 +64,7 @@
     -fx-opacity: 1;
 }
 
-#insuranceProfilePanel .dynamic-labels {
+#insuranceProfilePanel .dynamic-labels, .valid-file, .missing-file {
     -fx-font-size: 15pt;
     -fx-font-family: "Segoe UI SemiLight";
     -fx-text-fill: white;
@@ -82,7 +85,7 @@
     -fx-opacity: 1;
 }
 
-#insuranceProfilePanel #owner:hover, #insuranceProfilePanel #insured:hover, #insuranceProfilePanel #beneficiary:hover {
+#insuranceProfilePanel #owner:hover, #insuranceProfilePanel #insured:hover, #insuranceProfilePanel #beneficiary:hover, .valid-file:hover {
     -fx-text-fill: #ff4500;
 }
 
@@ -123,6 +126,11 @@
 }
 /*@@author*/
 
+/*@@author RSJunior37*/
+.missing-file:hover {
+    -fx-text-fill: #696969
+}
+/*@@author*/
 .text-field {
     -fx-font-size: 12pt;
     -fx-font-family: "Segoe UI Semibold";

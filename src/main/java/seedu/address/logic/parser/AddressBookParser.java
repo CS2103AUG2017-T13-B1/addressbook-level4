@@ -21,6 +21,7 @@ import seedu.address.logic.commands.PartialFindCommand;
 import seedu.address.logic.commands.PrintCommand;
 import seedu.address.logic.commands.RedoCommand;
 import seedu.address.logic.commands.SelectCommand;
+import seedu.address.logic.commands.SelectInsuranceCommand;
 import seedu.address.logic.commands.UndoCommand;
 import seedu.address.logic.commands.WhyCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
@@ -35,7 +36,8 @@ public class AddressBookParser {
      * Enumerator list to define the types of commands.
      */
     private enum CommandType {
-        ADD, ADDLI, CLEAR, DEL, EDIT, EXIT, FIND, PFIND, HELP, HISTORY, LIST, PRINT, REDO, UNDO, SELECT, WHY, NONE
+        ADD, ADDLI, CLEAR, DEL, EDIT, EXIT, FIND, PFIND, HELP, HISTORY, LIST,
+        PRINT, REDO, UNDO, SELECT, SELECTIN, WHY, NONE
     }
 
     /**
@@ -74,6 +76,9 @@ public class AddressBookParser {
 
         case SELECT:
             return new SelectCommandParser().parse(arguments);
+
+        case SELECTIN:
+            return new SelectInsuranceCommandParser().parse(arguments);
 
         case DEL:
             return new DeleteCommandParser().parse(arguments);
@@ -187,6 +192,11 @@ public class AddressBookParser {
         for (String word : SelectCommand.COMMAND_WORDS) {
             if (commandWord.contentEquals(word)) {
                 return CommandType.SELECT;
+            }
+        }
+        for (String word : SelectInsuranceCommand.COMMAND_WORDS) {
+            if (commandWord.contentEquals(word)) {
+                return CommandType.SELECTIN;
             }
         }
         for (String word : UndoCommand.COMMAND_WORDS) {
