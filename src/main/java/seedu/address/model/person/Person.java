@@ -40,8 +40,10 @@ public class Person implements ReadOnlyPerson {
     private ObjectProperty<Phone> phone;
     private ObjectProperty<Email> email;
     private ObjectProperty<Address> address;
+    //@@author Pujitha97
     private ObjectProperty<DateOfBirth> dob;
     private ObjectProperty<Gender> gender;
+    //@@author
 
     private String reason;
 
@@ -61,8 +63,10 @@ public class Person implements ReadOnlyPerson {
         this.phone = new SimpleObjectProperty<>(phone);
         this.email = new SimpleObjectProperty<>(email);
         this.address = new SimpleObjectProperty<>(address);
+        //@@author Pujitha97
         this.dob = new SimpleObjectProperty<>(dob);
         this.gender = new SimpleObjectProperty<>(gender);
+        //@@author
         // protect internal tags from changes in the arg list
         this.tags = new SimpleObjectProperty<>(new UniqueTagList(tags));
         //@@author OscarWang114
@@ -80,8 +84,10 @@ public class Person implements ReadOnlyPerson {
         this.phone = new SimpleObjectProperty<>(phone);
         this.email = new SimpleObjectProperty<>(email);
         this.address = new SimpleObjectProperty<>(address);
+        //@@author Pujitha97
         this.dob = new SimpleObjectProperty<>(dob);
         this.gender = new SimpleObjectProperty<>(gender);
+        //@@author
         // protect internal tags from changes in the arg list
         this.tags = new SimpleObjectProperty<>(new UniqueTagList(tags));
         this.lifeInsuranceIds = new SimpleObjectProperty<>(new ArrayList<UUID>());
@@ -300,10 +306,12 @@ public class Person implements ReadOnlyPerson {
             return getEmail().toString();
         } else if (prefix.equals(PREFIX_PHONE)) {
             return getPhone().toString();
-        } else if (prefix.equals(PREFIX_DOB)) {
+        } //@@author Pujitha97
+        else if (prefix.equals(PREFIX_DOB)) {
             return getDateOfBirth().toString();
         } else if (prefix.equals(PREFIX_GENDER)) {
             return getGender().toString();
+            //@@author
         } else if (prefix.equals(PREFIX_TAG) || prefix.equals(PREFIX_DELTAG)) {
             Set<Tag> tags = getTags();
             String detail = "";
