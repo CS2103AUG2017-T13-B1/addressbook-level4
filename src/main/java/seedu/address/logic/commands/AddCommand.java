@@ -132,10 +132,9 @@ public class AddCommand extends UndoableCommand {
             this.phone = new Phone();
             this.email = new Email();
             this.address = new Address();
-            //@@author Pujitha97
             this.dateofbirth = new DateOfBirth();
+            this.dateOfBirth = new DateOfBirth();
             this.gender = new Gender();
-            //@@author
         }
 
         public void setPhone(Phone phone) {
@@ -163,11 +162,11 @@ public class AddCommand extends UndoableCommand {
         }
         //@@author Pujitha97
         public void setDateOfBirth(DateOfBirth dateofbirth) {
-            this.dateofbirth = dateofbirth;
+            this.dateOfBirth = dateofbirth;
         }
 
         public DateOfBirth getDateOfBirth() {
-            return dateofbirth;
+            return dateOfBirth;
         }
 
         public void setGender(Gender gender) {
