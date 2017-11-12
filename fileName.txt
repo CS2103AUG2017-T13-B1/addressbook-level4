@@ -1,0 +1,104 @@
+LISA was last updated on: 12/11/2017 14:02:28
+
+
+There are 7 contacts in LISA
+
+
+1. Alice Pauline
+
+Phone: 85355255
+Email: alice@example.com
+Address: 123, Jurong West Ave 6, #08-111
+DateOfBirth: 27 Jan 1997
+Gender: FEMALE
+Tags: [friends]
+
+Alice Pauline is a personnel involved in the following insurance policies:
+
+--------End of Alice Pauline's profile
+
+
+2. Benson Meier
+
+Phone: 98765432
+Email: johnd@example.com
+Address: 311, Clementi Ave 2, #02-25
+DateOfBirth: 28 Feb 1997
+Gender: MALE
+Tags: [owesMoney][friends]
+
+Benson Meier is a personnel involved in the following insurance policies:
+
+--------End of Benson Meier's profile
+
+
+3. Carl Kurz
+
+Phone: 95352563
+Email: heinz@example.com
+Address: wall street
+DateOfBirth: 27 Feb 1998
+Gender: MALE
+Tags: [friends]
+
+Carl Kurz is a personnel involved in the following insurance policies:
+
+--------End of Carl Kurz's profile
+
+
+4. Daniel Meier
+
+Phone: 87652533
+Email: cornelia@example.com
+Address: 10th street
+DateOfBirth: 21 Feb 1998
+Gender: MALE
+Tags: [friends]
+
+Daniel Meier is a personnel involved in the following insurance policies:
+
+--------End of Daniel Meier's profile
+
+
+5. Elle Meyer
+
+Phone: 9482224
+Email: werner@example.com
+Address: michegan ave
+DateOfBirth: 28 Feb 1998
+Gender: FEMALE
+Tags: [friends]
+
+Elle Meyer is a personnel involved in the following insurance policies:
+
+--------End of Elle Meyer's profile
+
+
+6. Fiona Kunz
+
+Phone: 9482427
+Email: lydia@example.com
+Address: little tokyo
+DateOfBirth: 28 Feb 1998
+Gender: FEMALE
+Tags: [friends]
+
+Fiona Kunz is a personnel involved in the following insurance policies:
+
+--------End of Fiona Kunz's profile
+
+
+7. George Best
+
+Phone: 9482442
+Email: anna@example.com
+Address: 4th street
+DateOfBirth: 01 Feb 1998
+Gender: MALE
+Tags: [friends]
+
+George Best is a personnel involved in the following insurance policies:
+
+--------End of George Best's profile
+
+

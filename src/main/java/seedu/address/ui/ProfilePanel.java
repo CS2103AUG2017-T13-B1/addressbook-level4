@@ -57,6 +57,7 @@ public class ProfilePanel extends UiPart<Region> {
     @FXML
     private Label gender;
     //@@author
+    //@@author RSJunior37
     @FXML
     private Label email;
     @FXML
@@ -112,8 +113,10 @@ public class ProfilePanel extends UiPart<Region> {
         name.setText(DEFAULT_MESSAGE);
         phone.setText(null);
         address.setText(null);
+        //@@author Pujitha97
         dob.setText(null);
         gender.setText(null);
+        //@@author
         email.setText(null);
         insuranceHeader.setText(null);
     }
@@ -126,8 +129,10 @@ public class ProfilePanel extends UiPart<Region> {
         name.textProperty().bind(Bindings.convert(person.nameProperty()));
         phone.textProperty().bind(Bindings.convert(person.phoneProperty()));
         address.textProperty().bind(Bindings.convert(person.addressProperty()));
+        //@@author Pujitha97
         dob.textProperty().bind(Bindings.convert(person.dobProperty()));
         gender.textProperty().bind(Bindings.convert(person.genderProperty()));
+        //@@author
         email.textProperty().bind(Bindings.convert(person.emailProperty()));
     }
 

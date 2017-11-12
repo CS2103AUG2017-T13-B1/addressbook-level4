@@ -31,12 +31,15 @@ public class ParserUtilTest {
     private static final String INVALID_PHONE = "+651234";
     private static final String INVALID_ADDRESS = " ";
     private static final String INVALID_EMAIL = "example.com";
+    //@@author Pujitha97
     private static final String INVALID_DOB = "example.com";
     private static final String INVALID_GENDER = "example.com";
+    //@@author
     private static final String INVALID_TAG = "#friend";
-
+    //@@author Pujitha97
     private static final String VALID_DateOfBirth = "27 01 1997";
     private static final String VALID_GENDER = "FEMALE";
+    //@@author
     private static final String VALID_NAME = "Rachel Walker";
     private static final String VALID_PHONE = "123456";
     private static final String VALID_ADDRESS = "123 Main Street #0505";
