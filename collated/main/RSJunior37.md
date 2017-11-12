@@ -8,7 +8,7 @@ public class InsurancePanelSelectionChangedEvent extends BaseEvent {
 
     private final ReadOnlyInsurance insurance;
 
-    public InsurancePanelSelectionChangedEvent(InsuranceCard newSelection) {
+    public InsurancePanelSelectionChangedEvent(InsuranceProfile newSelection) {
         insurance = newSelection.getInsurance();
     }
 
@@ -115,6 +115,18 @@ public class PartialFindCommand extends Command {
     }
 }
 ```
+###### \java\seedu\address\logic\Logic.java
+``` java
+    /** Returns an unmodifiable view of the list of insurances */
+    ObservableList<ReadOnlyInsurance> getInsuranceList();
+```
+###### \java\seedu\address\logic\LogicManager.java
+``` java
+    @Override
+    public ObservableList<ReadOnlyInsurance> getInsuranceList() {
+        return model.getInsuranceList();
+    }
+```
 ###### \java\seedu\address\logic\parser\PartialFindCommandParser.java
 ``` java
 /**
@@ -155,7 +167,21 @@ public class PartialFindCommandParser implements Parser<PartialFindCommand> {
      */
     public ObservableList<ReadOnlyInsurance> asObservableList() {
         assert CollectionUtil.elementsAreUnique(internalMap.values());
-        return FXCollections.unmodifiableObservableList(internalList);
+        return FXCollections.unmodifiableObservableList(FXCollections.observableArrayList(internalMap.values()));
+    }
+```
+###### \java\seedu\address\model\Model.java
+``` java
+    /**
+     * Returns an unmodifiable view of the insurances list
+     */
+    ObservableList<ReadOnlyInsurance> getInsuranceList();
+```
+###### \java\seedu\address\model\ModelManager.java
+``` java
+    @Override
+    public ObservableList<ReadOnlyInsurance> getInsuranceList() {
+        return addressBook.getInsuranceList();
     }
 ```
 ###### \java\seedu\address\model\person\NameStartsWithKeywordsPredicate.java
@@ -185,10 +211,46 @@ public class NameStartsWithKeywordsPredicate implements Predicate<ReadOnlyPerson
 
 }
 ```
-###### \java\seedu\address\ui\InsuranceCard.java
+###### \java\seedu\address\ui\InsuranceIdLabel.java
+``` java
+/**
+ * To be used in ProfilePanel ListView, displaying list of associated insurance
+ */
+public class InsuranceIdLabel extends UiPart<Region> {
+
+    private static final String FXML = "InsuranceIdLabel.fxml";
+
+    private final Logger logger = LogsCenter.getLogger(this.getClass());
+
+
+    @FXML
+    private Label insuranceId;
+
+
+    public InsuranceIdLabel(ReadOnlyInsurance insurance) {
+        super(FXML);
+        insuranceId.textProperty().bind(insurance.insuranceNameProperty());
+        setPremiumLevel(insurance.getPremium());
+        insuranceId.setOnMouseClicked(e -> raise(new InsuranceClickedEvent(insurance)));
+    }
+
+```
+###### \java\seedu\address\ui\InsuranceListPanel.java
+``` java
+    private void setEventHandlerForSelectionChangeEvent() {
+        insuranceListView.getSelectionModel().selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    if (newValue != null) {
+                        logger.fine("Selection in insurance list panel changed to : '" + newValue + "'");
+                        raise(new InsurancePanelSelectionChangedEvent(newValue));
+                    }
+                });
+    }
+```
+###### \java\seedu\address\ui\InsuranceProfile.java
 ``` java
 
-    public InsuranceCard(ReadOnlyInsurance insurance, int displayIndex) {
+    public InsuranceProfile(ReadOnlyInsurance insurance, int displayIndex) {
         super(FXML);
         this.insurance = insurance;
         index.setText(displayIndex + ".");
@@ -227,7 +289,7 @@ public class NameStartsWithKeywordsPredicate implements Predicate<ReadOnlyPerson
     }
 
 ```
-###### \java\seedu\address\ui\InsuranceCard.java
+###### \java\seedu\address\ui\InsuranceProfile.java
 ``` java
     @Subscribe
     private void handleInsurancePanelSelectionChangedEvent(InsurancePanelSelectionChangedEvent event) {
@@ -235,42 +297,8 @@ public class NameStartsWithKeywordsPredicate implements Predicate<ReadOnlyPerson
         insurance = event.getInsurance();
         enableNameToProfileLink(insurance);
         bindListeners(insurance);
+        index.setText(null);
         raise(new SwitchToInsurancePanelRequestEvent());
-    }
-```
-###### \java\seedu\address\ui\InsuranceIdLabel.java
-``` java
-/**
- * To be used in ProfilePanel ListView, displaying list of associated insurance
- */
-public class InsuranceIdLabel extends UiPart<Region> {
-
-    private static final String FXML = "InsuranceIdLabel.fxml";
-
-    private final Logger logger = LogsCenter.getLogger(this.getClass());
-
-
-    @FXML
-    private Label insuranceId;
-
-    public InsuranceIdLabel(ReadOnlyInsurance insurance) {
-        super(FXML);
-        insuranceId.textProperty().bind(insurance.insuranceNameProperty());
-        setPremiumLevel(insurance.getPremium());
-        insuranceId.setOnMouseClicked(e -> raise(new InsuranceClickedEvent(insurance)));
-    }
-
-```
-###### \java\seedu\address\ui\InsuranceListPanel.java
-``` java
-    private void setEventHandlerForSelectionChangeEvent() {
-        insuranceListView.getSelectionModel().selectedItemProperty()
-                .addListener((observable, oldValue, newValue) -> {
-                    if (newValue != null) {
-                        logger.fine("Selection in insurance list panel changed to : '" + newValue + "'");
-                        raise(new InsurancePanelSelectionChangedEvent(newValue));
-                    }
-                });
     }
 ```
 ###### \java\seedu\address\ui\InsuranceProfilePanel.java
@@ -280,7 +308,7 @@ public class InsuranceIdLabel extends UiPart<Region> {
         super(FXML);
         this.insurance = insurance;
 
-        initializeContractFile(insurance);
+        // initializeContractFile(insurance);
 
         enableNameToProfileLink(insurance);
 
@@ -292,6 +320,7 @@ public class InsuranceIdLabel extends UiPart<Region> {
         return insurance;
     }
 
+
     /**
      * Listen for click event on person names to be displayed as profile
      * @param insurance
@@ -302,15 +331,6 @@ public class InsuranceIdLabel extends UiPart<Region> {
         beneficiary.setOnMouseClicked(e -> raise(new PersonNameClickedEvent(insurance.getBeneficiary())));
     }
 
-    private void setAllToNull() {
-        owner.setText(null);
-        insured.setText(null);
-        beneficiary.setText(null);
-        contractName.setText(null);
-        premium.setText(null);
-        signingDate.setText(null);
-        expiryDate.setText(null);
-    }
 
     /**
      * Checks if pdf file exist in project, if not add click event on contract field to add file with filechooser
@@ -345,8 +365,9 @@ public class InsuranceIdLabel extends UiPart<Region> {
                     }
                 }
             });
+
         }
-    }
+    }*/
 
     /**
      *  Enable the link to open contract pdf file and adjusting the text hover highlight
@@ -361,7 +382,7 @@ public class InsuranceIdLabel extends UiPart<Region> {
                 logger.info("File do not exist: " + PDFFOLDERPATH + insurance.getContractName());
             }
         });
-    }
+    }*/
 ```
 ###### \java\seedu\address\ui\MainWindow.java
 ``` java
@@ -376,7 +397,6 @@ public class InsuranceIdLabel extends UiPart<Region> {
     @Subscribe
     private void handleSwitchToInsurancePanelRequestEvent(SwitchToInsurancePanelRequestEvent event) {
         logger.info(LogsCenter.getEventHandlingLogMessage(event));
-
         middlePanelPlaceholder.getChildren().clear();
         middlePanelPlaceholder.getChildren().add(insuranceProfilePanel.getRoot());
     }
@@ -452,9 +472,10 @@ public class ProfilePanel extends UiPart<Region> {
     private Label phone;
     @FXML
     private Label address;
-```
-###### \java\seedu\address\ui\ProfilePanel.java
-``` java
+    @FXML
+    private Label dob;
+    @FXML
+    private Label gender;
     @FXML
     private Label email;
     @FXML
@@ -587,6 +608,7 @@ public class SearchBox extends UiPart<Region> {
 .missing-file:hover {
     -fx-text-fill: #696969
 }
+
 ```
 ###### \resources\view\DarkTheme.css
 ``` css

@@ -121,9 +121,9 @@ public class InsuranceClickedEvent extends BaseEvent {
         Phone updatedPhone = editPersonDescriptor.getPhone().orElse(personToEdit.getPhone());
         Email updatedEmail = editPersonDescriptor.getEmail().orElse(personToEdit.getEmail());
         Address updatedAddress = editPersonDescriptor.getAddress().orElse(personToEdit.getAddress());
-```
-###### \java\seedu\address\logic\commands\EditCommand.java
-``` java
+        DateOfBirth updatedDateOfBirth = editPersonDescriptor.getDateOfBirth().orElse(personToEdit.getDateOfBirth());
+        Gender updatedGender = editPersonDescriptor.getGender().orElse(personToEdit.getGender());
+
         Set<Tag> updatedTags = personToEdit.getTags();
 
         if (editPersonDescriptor.getTagsToDel().isPresent()) {
@@ -843,14 +843,30 @@ public class MissingPrefixException extends ParseException {
         this.dateOfBirth = LocalDate.now();
         this.dateSet = false;
     }
-```
-###### \java\seedu\address\model\person\DateOfBirth.java
-``` java
+
+    /**
+     * Validates given Date of Birth.
+     *
+     * @throws IllegalValueException if given date of birth string is invalid.
+     */
+    public DateOfBirth(String dob) throws IllegalValueException {
+        requireNonNull(dob);
+        if (dob.isEmpty()) {
+            throw new EmptyFieldException(PREFIX_DOB);
+        }
+        if (!isValidDateOfBirth(dob)) {
+            throw new IllegalValueException(MESSAGE_DOB_CONSTRAINTS);
+        }
         this.dateOfBirth = new DateParser().parse(dob);
         this.dateSet = true;
-```
-###### \java\seedu\address\model\person\DateOfBirth.java
-``` java
+    }
+
+    /**
+     * Returns true if a given string is a valid person date of birth.
+     */
+    public static boolean isValidDateOfBirth(String test) {
+        return test.matches(DOB_VALIDATION_REGEX);
+    }
     @Override
     public String toString() {
         return dateSet ? dateOfBirth.format(DateParser.DATE_FORMAT) : "";
@@ -1003,7 +1019,7 @@ public class InsuranceProfilePanel extends UiPart<Region> {
         insuranceScrollPane.setFitToWidth(true);
         insuranceProfilePanel.prefWidthProperty().bind(insuranceScrollPane.widthProperty());
         insuranceProfilePanel.prefHeightProperty().bind(insuranceScrollPane.heightProperty());
-        setAllToNull();
+        enableNameToProfileLink(insurance);
         registerAsAnEventHandler(this);
     }
 

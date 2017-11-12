@@ -1,5 +1,5 @@
 # arnollim
-###### \java\seedu\address\logic\commands\AddCommand.java
+###### /java/seedu/address/logic/commands/AddCommand.java
 ``` java
     /**
      * Returns the Command String of that added this person into the addressbook
@@ -14,30 +14,31 @@
                 .append(toAdd.getEmail())
                 .append("Address: ")
                 .append(toAdd.getAddress())
-```
-###### \java\seedu\address\logic\commands\AddCommand.java
-``` java
+                .append("DateOfBirth: ")
+                .append(toAdd.getDateOfBirth())
+                .append("Gender: ")
+                .append(toAdd.getGender())
                 .append(" Tags: ");
         toAdd.getTags().forEach(builder::append);
         String person = builder.toString();
         return COMMAND_WORD + " " + person;
     }
 ```
-###### \java\seedu\address\logic\commands\AddLifeInsuranceCommand.java
+###### /java/seedu/address/logic/commands/AddLifeInsuranceCommand.java
 ``` java
     @Override
     public String toString() {
         return COMMAND_WORD;
     }
 ```
-###### \java\seedu\address\logic\commands\ClearCommand.java
+###### /java/seedu/address/logic/commands/ClearCommand.java
 ``` java
     @Override
     public String toString() {
         return COMMAND_WORD;
     }
 ```
-###### \java\seedu\address\logic\commands\DeleteCommand.java
+###### /java/seedu/address/logic/commands/DeleteCommand.java
 ``` java
     @Override
     public String toString() {
@@ -48,7 +49,7 @@
         return command;
     }
 ```
-###### \java\seedu\address\logic\commands\EditCommand.java
+###### /java/seedu/address/logic/commands/EditCommand.java
 ``` java
     @Override
     public String toString() {
@@ -56,7 +57,7 @@
         return feedbackToUser;
     }
 ```
-###### \java\seedu\address\logic\commands\PrintCommand.java
+###### /java/seedu/address/logic/commands/PrintCommand.java
 ``` java
 package seedu.address.logic.commands;
 
@@ -154,7 +155,7 @@ public class PrintCommand extends Command {
                 //of insuranceHeader to make the txt file more organised.
                 String insuranceEnd = "";
                 int headerLength = insuranceHeader.length();
-                for (int i = 1; i <= headerLength; i++) {
+                for( int i = 1; i<= headerLength; i++) {
                     insuranceEnd = insuranceEnd + "=";
                 }
                 lines.add(insuranceEnd);
@@ -179,7 +180,7 @@ public class PrintCommand extends Command {
 
 }
 ```
-###### \java\seedu\address\logic\commands\UndoCommand.java
+###### /java/seedu/address/logic/commands/UndoCommand.java
 ``` java
         String commandString = undoRedoStack.peekUndo().toString();
         String feedbackToUser = parseUndoCommand(commandString);
@@ -187,7 +188,7 @@ public class PrintCommand extends Command {
 
         return new CommandResult(feedbackToUser);
 ```
-###### \java\seedu\address\logic\commands\UndoCommand.java
+###### /java/seedu/address/logic/commands/UndoCommand.java
 ``` java
     /**
      * Parses the output command to display the previously undone command
@@ -197,7 +198,7 @@ public class PrintCommand extends Command {
         return output;
     }
 ```
-###### \java\seedu\address\logic\commands\WhyCommand.java
+###### /java/seedu/address/logic/commands/WhyCommand.java
 ``` java
 package seedu.address.logic.commands;
 
@@ -208,6 +209,8 @@ import java.util.List;
 import seedu.address.commons.core.Messages;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.exceptions.CommandException;
+import seedu.address.model.person.Address;
+import seedu.address.model.person.Name;
 import seedu.address.model.person.ReadOnlyPerson;
 
 
@@ -252,7 +255,7 @@ public class WhyCommand extends Command {
     }
 }
 ```
-###### \java\seedu\address\logic\parser\PrintCommandParser.java
+###### /java/seedu/address/logic/parser/PrintCommandParser.java
 ``` java
 package seedu.address.logic.parser;
 
@@ -292,7 +295,7 @@ public class PrintCommandParser implements Parser<PrintCommand> {
 
 }
 ```
-###### \java\seedu\address\logic\parser\WhyCommandParser.java
+###### /java/seedu/address/logic/parser/WhyCommandParser.java
 ``` java
 package seedu.address.logic.parser;
 
@@ -324,7 +327,7 @@ public class WhyCommandParser implements Parser<WhyCommand> {
 
 }
 ```
-###### \java\seedu\address\logic\UndoRedoStack.java
+###### /java/seedu/address/logic/UndoRedoStack.java
 ``` java
     /**
      * Peeks and returns the Command at the top of the Undo Stack.
@@ -342,7 +345,7 @@ public class WhyCommandParser implements Parser<WhyCommand> {
         return toRedo;
     }
 ```
-###### \java\seedu\address\model\person\Person.java
+###### /java/seedu/address/model/person/Person.java
 ``` java
     @Override
     public String getReason() {
@@ -382,7 +385,7 @@ public class WhyCommandParser implements Parser<WhyCommand> {
         return reason;
     }
 ```
-###### \java\seedu\address\model\person\ReadOnlyPerson.java
+###### /java/seedu/address/model/person/ReadOnlyPerson.java
 ``` java
     default String getAsParagraph() {
         final StringBuilder builder = new StringBuilder();
@@ -402,15 +405,15 @@ public class WhyCommandParser implements Parser<WhyCommand> {
         return builder.toString();
     }
 ```
-###### \java\seedu\address\model\person\UniquePersonList.java
+###### /java/seedu/address/model/person/UniquePersonList.java
 ``` java
         sortPersons();
 ```
-###### \java\seedu\address\model\person\UniquePersonList.java
+###### /java/seedu/address/model/person/UniquePersonList.java
 ``` java
         replacement.sortPersons();
 ```
-###### \java\seedu\address\model\person\UniquePersonList.java
+###### /java/seedu/address/model/person/UniquePersonList.java
 ``` java
     /**
      * Sorts the internal list of people in alphabetical order
