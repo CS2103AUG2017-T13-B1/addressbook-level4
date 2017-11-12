@@ -39,6 +39,7 @@ public class AddCommand extends UndoableCommand {
             + "[" + PREFIX_DOB + "DATE OF BIRTH] "
             + "[" + PREFIX_GENDER + "GENDER] "
             //@@author
+            //@@author OscarWang114
             + "[" + PREFIX_TAG + "TAG]...\n"
             + "Example: " + COMMAND_WORD + " "
             + PREFIX_NAME + "John Doe "
@@ -49,6 +50,7 @@ public class AddCommand extends UndoableCommand {
             + PREFIX_DOB + "20 01 1997 "
             + PREFIX_GENDER + "Male "
             //@@author
+            //@@author OscarWang114
             + PREFIX_TAG + "friends "
             + PREFIX_TAG + "owesMoney";
     //@@author
@@ -104,6 +106,7 @@ public class AddCommand extends UndoableCommand {
                 .append("Gender: ")
                 .append(toAdd.getGender())
                 //@@author
+                //@@author arnollim
                 .append(" Tags: ");
         toAdd.getTags().forEach(builder::append);
         String person = builder.toString();
@@ -124,7 +127,7 @@ public class AddCommand extends UndoableCommand {
         private DateOfBirth dateofbirth;
         private Gender gender;
         //@@author
-
+        //@@author OscarWang114
         public AddPersonOptionalFieldDescriptor() {
             this.phone = new Phone();
             this.email = new Email();

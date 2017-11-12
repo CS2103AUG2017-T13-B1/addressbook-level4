@@ -56,6 +56,7 @@ public class ProfilePanel extends UiPart<Region> {
     @FXML
     private Label gender;
     //@@author
+    //@@author RSJunior37
     @FXML
     private Label email;
     @FXML
