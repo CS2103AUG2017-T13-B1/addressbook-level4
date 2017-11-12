@@ -43,6 +43,20 @@ public interface ThrowingConsumer<T> extends Consumer<T> {
 ```
 ###### \java\seedu\address\logic\commands\AddCommand.java
 ``` java
+            + "[" + PREFIX_TAG + "TAG]...\n"
+            + "Example: " + COMMAND_WORD + " "
+            + PREFIX_NAME + "John Doe "
+            + PREFIX_PHONE + "98765432 "
+            + PREFIX_EMAIL + "johnd@example.com "
+            + PREFIX_ADDRESS + "311, Clementi Ave 2, #02-25 "
+```
+###### \java\seedu\address\logic\commands\AddCommand.java
+``` java
+            + PREFIX_TAG + "friends "
+            + PREFIX_TAG + "owesMoney";
+```
+###### \java\seedu\address\logic\commands\AddCommand.java
+``` java
     /**
      * Stores the optional details to add the person with. By default each field is an object
      * with value of empty String.
@@ -51,6 +65,13 @@ public interface ThrowingConsumer<T> extends Consumer<T> {
         private Phone phone;
         private Email email;
         private Address address;
+```
+###### \java\seedu\address\logic\commands\AddCommand.java
+``` java
+        public AddPersonOptionalFieldDescriptor() {
+            this.phone = new Phone();
+            this.email = new Email();
+            this.address = new Address();
 ```
 ###### \java\seedu\address\logic\commands\AddLifeInsuranceCommand.java
 ``` java

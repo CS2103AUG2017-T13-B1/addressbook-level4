@@ -124,6 +124,26 @@ public class InsuranceClickedEvent extends BaseEvent {
 ```
 ###### \java\seedu\address\logic\commands\EditCommand.java
 ``` java
+        Set<Tag> updatedTags = personToEdit.getTags();
+
+        if (editPersonDescriptor.getTagsToDel().isPresent()) {
+            for (Tag tag : editPersonDescriptor.getTagsToDel().get()) {
+                if (tag.getTagName().equals("all")) {
+                    updatedTags.clear();
+                }
+            }
+            updatedTags.removeAll(editPersonDescriptor.getTagsToDel().get());
+        }
+
+        if (editPersonDescriptor.getTags().isPresent()) {
+            updatedTags.addAll(editPersonDescriptor.getTags().get());
+        }
+        return new Person(updatedName, updatedPhone, updatedEmail, updatedAddress,
+                updatedDateOfBirth, updatedGender, updatedTags, personToEdit.getLifeInsuranceIds());
+    }
+```
+###### \java\seedu\address\logic\commands\EditCommand.java
+``` java
         public void setTagsToDel(Set<Tag> tagsToDel) {
             this.tagsToDel = tagsToDel;
         }

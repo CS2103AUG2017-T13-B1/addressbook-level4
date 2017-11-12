@@ -15,6 +15,14 @@
                 .append("Address: ")
                 .append(toAdd.getAddress())
 ```
+###### \java\seedu\address\logic\commands\AddCommand.java
+``` java
+                .append(" Tags: ");
+        toAdd.getTags().forEach(builder::append);
+        String person = builder.toString();
+        return COMMAND_WORD + " " + person;
+    }
+```
 ###### \java\seedu\address\logic\commands\AddLifeInsuranceCommand.java
 ``` java
     @Override

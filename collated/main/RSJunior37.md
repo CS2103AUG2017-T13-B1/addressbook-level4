@@ -453,6 +453,46 @@ public class ProfilePanel extends UiPart<Region> {
     @FXML
     private Label address;
 ```
+###### \java\seedu\address\ui\ProfilePanel.java
+``` java
+    @FXML
+    private Label email;
+    @FXML
+    private Label insuranceHeader;
+    @FXML
+    private ListView<InsuranceIdLabel> insuranceListView;
+
+    public ProfilePanel() {
+        super(FXML);
+        scrollPane.setFitToWidth(true);
+        profilePanel.prefWidthProperty().bind(scrollPane.widthProperty());
+        // To prevent triggering events for typing inside the loaded Web page.
+        getRoot().setOnKeyPressed(Event::consume);
+
+        loadDefaultPage();
+        registerAsAnEventHandler(this);
+    }
+
+    /**
+     * Updates selected person
+     * @param person
+     */
+    private void loadPersonPage(ReadOnlyPerson person) {
+        bindListeners(person);
+        if (person.getLifeInsuranceIds().isEmpty()) {
+            insuranceHeader.setText(NO_INSURANCE_MESSAGE);
+        } else {
+            insuranceHeader.setText(INSURANCE_LIST_HEADER);
+        }
+        ObservableList<ReadOnlyInsurance> insuranceList = person.getLifeInsurances().asObservableList();
+        for (ReadOnlyInsurance i : insuranceList) {
+            insurance.add(new InsuranceIdLabel(i));
+        }
+        insuranceListView.setItems(insurance);
+        insuranceListView.setCellFactory(insuranceListView -> new ProfilePanel.InsuranceIdListViewCell());
+    }
+
+```
 ###### \java\seedu\address\ui\SearchBox.java
 ``` java
 /**
