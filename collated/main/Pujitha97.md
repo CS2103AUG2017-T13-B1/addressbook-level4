@@ -151,9 +151,9 @@
         if (!isValidDateOfBirth(dob)) {
             throw new IllegalValueException(MESSAGE_DOB_CONSTRAINTS);
         }
-        this.dateOfBirth = new DateParser().parse(dob);
-        this.dateSet = true;
-    }
+```
+###### \java\seedu\address\model\person\DateOfBirth.java
+``` java
     /**
      * Returns true if a given string is a valid person date of birth.
      */

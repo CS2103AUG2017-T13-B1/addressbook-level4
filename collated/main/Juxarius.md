@@ -846,6 +846,11 @@ public class MissingPrefixException extends ParseException {
 ```
 ###### \java\seedu\address\model\person\DateOfBirth.java
 ``` java
+        this.dateOfBirth = new DateParser().parse(dob);
+        this.dateSet = true;
+```
+###### \java\seedu\address\model\person\DateOfBirth.java
+``` java
     @Override
     public String toString() {
         return dateSet ? dateOfBirth.format(DateParser.DATE_FORMAT) : "";
