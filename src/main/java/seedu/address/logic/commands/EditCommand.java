@@ -112,9 +112,10 @@ public class EditCommand extends UndoableCommand {
         Phone updatedPhone = editPersonDescriptor.getPhone().orElse(personToEdit.getPhone());
         Email updatedEmail = editPersonDescriptor.getEmail().orElse(personToEdit.getEmail());
         Address updatedAddress = editPersonDescriptor.getAddress().orElse(personToEdit.getAddress());
+        //@@author Pujitha97
         DateOfBirth updatedDateOfBirth = editPersonDescriptor.getDateOfBirth().orElse(personToEdit.getDateOfBirth());
         Gender updatedGender = editPersonDescriptor.getGender().orElse(personToEdit.getGender());
-
+        //@@author
         Set<Tag> updatedTags = personToEdit.getTags();
 
         if (editPersonDescriptor.getTagsToDel().isPresent()) {
@@ -169,8 +170,10 @@ public class EditCommand extends UndoableCommand {
         private Phone phone;
         private Email email;
         private Address address;
+        //@@author Pujitha97
         private DateOfBirth dob;
         private Gender gender;
+        //@@author
         private Set<Tag> tags;
         private Set<Tag> tagsToDel;
 
@@ -181,8 +184,10 @@ public class EditCommand extends UndoableCommand {
             this.phone = toCopy.phone;
             this.email = toCopy.email;
             this.address = toCopy.address;
+            //@@author Pujitha97
             this.dob = toCopy.dob;
             this.gender = toCopy.gender;
+            //@@author
             this.tags = toCopy.tags;
             this.tagsToDel = toCopy.tagsToDel;
         }
@@ -280,8 +285,10 @@ public class EditCommand extends UndoableCommand {
                     && getPhone().equals(e.getPhone())
                     && getEmail().equals(e.getEmail())
                     && getAddress().equals(e.getAddress())
+                    //@@author Pujitha97
                     && getDateOfBirth().equals(e.getDateOfBirth())
                     && getGender().equals(e.getGender())
+                    //@@author
                     && getTags().equals(e.getTags());
         }
     }

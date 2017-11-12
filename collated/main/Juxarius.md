@@ -121,26 +121,6 @@ public class InsuranceClickedEvent extends BaseEvent {
         Phone updatedPhone = editPersonDescriptor.getPhone().orElse(personToEdit.getPhone());
         Email updatedEmail = editPersonDescriptor.getEmail().orElse(personToEdit.getEmail());
         Address updatedAddress = editPersonDescriptor.getAddress().orElse(personToEdit.getAddress());
-        DateOfBirth updatedDateOfBirth = editPersonDescriptor.getDateOfBirth().orElse(personToEdit.getDateOfBirth());
-        Gender updatedGender = editPersonDescriptor.getGender().orElse(personToEdit.getGender());
-
-        Set<Tag> updatedTags = personToEdit.getTags();
-
-        if (editPersonDescriptor.getTagsToDel().isPresent()) {
-            for (Tag tag : editPersonDescriptor.getTagsToDel().get()) {
-                if (tag.getTagName().equals("all")) {
-                    updatedTags.clear();
-                }
-            }
-            updatedTags.removeAll(editPersonDescriptor.getTagsToDel().get());
-        }
-
-        if (editPersonDescriptor.getTags().isPresent()) {
-            updatedTags.addAll(editPersonDescriptor.getTags().get());
-        }
-        return new Person(updatedName, updatedPhone, updatedEmail, updatedAddress,
-                updatedDateOfBirth, updatedGender, updatedTags, personToEdit.getLifeInsuranceIds());
-    }
 ```
 ###### \java\seedu\address\logic\commands\EditCommand.java
 ``` java
@@ -843,30 +823,9 @@ public class MissingPrefixException extends ParseException {
         this.dateOfBirth = LocalDate.now();
         this.dateSet = false;
     }
-
-    /**
-     * Validates given Date of Birth.
-     *
-     * @throws IllegalValueException if given date of birth string is invalid.
-     */
-    public DateOfBirth(String dob) throws IllegalValueException {
-        requireNonNull(dob);
-        if (dob.isEmpty()) {
-            throw new EmptyFieldException(PREFIX_DOB);
-        }
-        if (!isValidDateOfBirth(dob)) {
-            throw new IllegalValueException(MESSAGE_DOB_CONSTRAINTS);
-        }
-        this.dateOfBirth = new DateParser().parse(dob);
-        this.dateSet = true;
-    }
-
-    /**
-     * Returns true if a given string is a valid person date of birth.
-     */
-    public static boolean isValidDateOfBirth(String test) {
-        return test.matches(DOB_VALIDATION_REGEX);
-    }
+```
+###### \java\seedu\address\model\person\DateOfBirth.java
+``` java
     @Override
     public String toString() {
         return dateSet ? dateOfBirth.format(DateParser.DATE_FORMAT) : "";
@@ -1019,7 +978,7 @@ public class InsuranceProfilePanel extends UiPart<Region> {
         insuranceScrollPane.setFitToWidth(true);
         insuranceProfilePanel.prefWidthProperty().bind(insuranceScrollPane.widthProperty());
         insuranceProfilePanel.prefHeightProperty().bind(insuranceScrollPane.heightProperty());
-        enableNameToProfileLink(insurance);
+        setAllToNull();
         registerAsAnEventHandler(this);
     }
 

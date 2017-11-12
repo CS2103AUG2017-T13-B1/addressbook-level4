@@ -35,16 +35,20 @@ public class AddCommand extends UndoableCommand {
             + "[" + PREFIX_PHONE + "PHONE] "
             + "[" + PREFIX_EMAIL + "EMAIL] "
             + "[" + PREFIX_ADDRESS + "ADDRESS] "
+            //@@author Pujitha97
             + "[" + PREFIX_DOB + "DATE OF BIRTH] "
             + "[" + PREFIX_GENDER + "GENDER] "
+            //@@author
             + "[" + PREFIX_TAG + "TAG]...\n"
             + "Example: " + COMMAND_WORD + " "
             + PREFIX_NAME + "John Doe "
             + PREFIX_PHONE + "98765432 "
             + PREFIX_EMAIL + "johnd@example.com "
             + PREFIX_ADDRESS + "311, Clementi Ave 2, #02-25 "
+            //@@author Pujitha97
             + PREFIX_DOB + "20 01 1997 "
             + PREFIX_GENDER + "Male "
+            //@@author
             + PREFIX_TAG + "friends "
             + PREFIX_TAG + "owesMoney";
     //@@author
@@ -94,10 +98,12 @@ public class AddCommand extends UndoableCommand {
                 .append(toAdd.getEmail())
                 .append("Address: ")
                 .append(toAdd.getAddress())
+                //@@author Pujitha97
                 .append("DateOfBirth: ")
                 .append(toAdd.getDateOfBirth())
                 .append("Gender: ")
                 .append(toAdd.getGender())
+                //@@author
                 .append(" Tags: ");
         toAdd.getTags().forEach(builder::append);
         String person = builder.toString();
@@ -114,15 +120,19 @@ public class AddCommand extends UndoableCommand {
         private Phone phone;
         private Email email;
         private Address address;
+        //@@author Pujitha97
         private DateOfBirth dateofbirth;
         private Gender gender;
+        //@@author
 
         public AddPersonOptionalFieldDescriptor() {
             this.phone = new Phone();
             this.email = new Email();
             this.address = new Address();
+            //@@author Pujitha97
             this.dateofbirth = new DateOfBirth();
             this.gender = new Gender();
+            //@@author
         }
 
         public void setPhone(Phone phone) {
@@ -183,8 +193,10 @@ public class AddCommand extends UndoableCommand {
             return getPhone().equals(a.getPhone())
                     && getEmail().equals(a.getEmail())
                     && getAddress().equals(a.getAddress())
+                    //@@author Pujitha97
                     && getDateOfBirth().equals(a.getDateOfBirth())
                     && getGender().equals(a.getGender());
+            //@@author
         }
     }
 }

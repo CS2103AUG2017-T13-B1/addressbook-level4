@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.logic.parser.DateParser;
 import seedu.address.logic.parser.exceptions.EmptyFieldException;
-
 /**
  * Represents a Person's date of birth in the address book.
  */
@@ -34,7 +33,7 @@ public class DateOfBirth {
         this.dateOfBirth = LocalDate.now();
         this.dateSet = false;
     }
-
+    //@@author Pujitha97
     /**
      * Validates given Date of Birth.
      *
@@ -51,13 +50,13 @@ public class DateOfBirth {
         this.dateOfBirth = new DateParser().parse(dob);
         this.dateSet = true;
     }
-
     /**
      * Returns true if a given string is a valid person date of birth.
      */
     public static boolean isValidDateOfBirth(String test) {
         return test.matches(DOB_VALIDATION_REGEX);
     }
+    //@@author Juxarius
     @Override
     public String toString() {
         return dateSet ? dateOfBirth.format(DateParser.DATE_FORMAT) : "";

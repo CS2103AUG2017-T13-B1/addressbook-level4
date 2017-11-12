@@ -23,8 +23,10 @@ public class PersonBuilder {
     public static final String DEFAULT_PHONE = "85355255";
     public static final String DEFAULT_EMAIL = "alice@gmail.com";
     public static final String DEFAULT_ADDRESS = "123, Jurong West Ave 6, #08-111";
+    //@@author Pujitha97
     public static final String DEFAULT_DOB = "27 01 1997";
     public static final String DEFAULT_GENDER = "FEMALE";
+    //@@author
     public static final String DEFAULT_TAGS = "friends";
 
     private Person person;
@@ -35,8 +37,10 @@ public class PersonBuilder {
             Phone defaultPhone = new Phone(DEFAULT_PHONE);
             Email defaultEmail = new Email(DEFAULT_EMAIL);
             Address defaultAddress = new Address(DEFAULT_ADDRESS);
+            //@@author Pujitha97
             DateOfBirth defaultDateOfBirth = new DateOfBirth(DEFAULT_DOB);
             Gender defaultGender = new Gender(DEFAULT_GENDER);
+            //@@author
             Set<Tag> defaultTags = SampleDataUtil.getTagSet(DEFAULT_TAGS);
             this.person = new Person(defaultName, defaultPhone, defaultEmail, defaultAddress,
                     defaultDateOfBirth, defaultGender, defaultTags);
