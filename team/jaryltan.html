@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 1.5.3">
+<title>Jaryl Tan - Project Portfolio</title>
+<link rel="stylesheet" href="../stylesheets/gh-pages.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="../stylesheets/coderay-asciidoctor.css">
+</head>
+<body class="article">
+<div id="header">
+<h1>Jaryl Tan - Project Portfolio</h1>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="lisa-levels-integrated-secretarial-agent"><a class="link" href="#lisa-levels-integrated-secretarial-agent">LISA: Levels Integrated Secretarial Agent</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>LISA: Levels Integrated Secretarial Agent is a desktop address book application used for teaching Software Engineering principles. The user interacts with it using a CLI, and it has a GUI created with JavaFX. It is written in Java, and has about 6 kLoC.</p>
+</div>
+<div class="paragraph">
+<p><strong>Code contributed</strong>: [<a href="https://github.com/CS2103AUG2017-T13-B1/main/tree/master/collated/main/Juxarius.md">Functional code</a>]
+ [<a href="https://github.com/CS2103AUG2017-T13-B1/main/tree/master/collated/test/Juxarius.md">Test code</a>]</p>
+</div>
+<div class="sect2">
+<h3 id="enhancement-added-multiple-command-words"><a class="link" href="#enhancement-added-multiple-command-words">Enhancement Added: Multiple Command Words</a></h3>
+<div class="sect3">
+<h4 id="external-behavior"><a class="link" href="#external-behavior">External behavior</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: User Guide]</mark></p>
+</div>
+<div class="paragraph">
+<p>Every command has multiple command words that are recognised.</p>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+</div>
+<div class="sect3">
+<h4 id="justification"><a class="link" href="#justification">Justification</a></h4>
+<div class="paragraph">
+<p>Many commands require the user to type out the entire word which can be a hassle. We want to provide
+familiar users with shortcuts to the commands. Also, was suggested by textbook.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="implementation"><a class="link" href="#implementation">Implementation</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: Developer Guide]</mark></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="multiple-command-words"><a class="link" href="#multiple-command-words">Multiple Command Words</a></h3>
+<div class="paragraph">
+<p>Many commands require the user to type out the entire word which can be a hassle. We want to provide
+familiar users with shortcuts to the commands. Also, was suggested by textbook.</p>
+</div>
+<div class="paragraph">
+<p>This feature is implemented by adding a public constant <code>String[] COMMAND_WORDS</code> in every command class.
+The <code>AddressBookParser</code> will also have to change its implementation. We classified every command
+into an enumerator <code>CommandType</code> which all the command words can funnel into.</p>
+</div>
+<div class="paragraph">
+<p><code>v1.5 Implementation</code><br>
+A <code>HashMap</code> is used to contain all links from key command words to their <code>CommandType</code> enumerator.
+The <code>commandWord</code> is passed into the processing function. The function checks if the map is empty,
+in which case, it calls the map setup function, then refers to the map to get its respective
+<code>CommandType</code> and the default is <code>CommandType.NONE</code> which returns an invalid command error message.
+The map setup function converts every <code>COMMAND_WORDS</code> to a stream before mapping it with the <code>forEach</code>
+function.</p>
+</div>
+<div class="paragraph">
+<p><code>v1.2 Implementation</code><br>
+A brute force approach is applied where the <code>commandWord</code> is compared against every command&#8217;s
+<code>COMMAND_WORDS</code> using for-in-if loops. Any successful comparison is to return the respective
+<code>CommandType</code> enumerator.</p>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="enhancement-added-add-life-insurance-prefix-autofill"><a class="link" href="#enhancement-added-add-life-insurance-prefix-autofill">Enhancement Added: Add Life Insurance Prefix Autofill</a></h3>
+
+</div>
+<div class="sect2">
+<h3 id="external-behavior-2"><a class="link" href="#external-behavior-2">External behavior</a></h3>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: User Guide]</mark></p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>Prefix filling</strong><br>
+All fields are required here as a life insurance needs to be complete before it is valid.
+However, due to the multitude of information required, you can press enter with an unfilled
+command to trigger the autofill to prompt you with the prefixes required. Also,
+pressing enter allows you to move to the next field.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+<div class="sect3">
+<h4 id="justification-2"><a class="link" href="#justification-2">Justification</a></h4>
+<div class="paragraph">
+<p>All fields are required here as a contract needs to be complete before it is valid.
+However, due to the multitude of information required, users are given a method to prompt them
+on all the missing information as well as aid them in re-positioning the caret to the correct position</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="implementation-2"><a class="link" href="#implementation-2">Implementation</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: Developer Guide]</mark></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="prefix-autofill"><a class="link" href="#prefix-autofill">Prefix Autofill</a></h3>
+<div class="paragraph">
+<p>When adding a new insurance, all fields are required as a contract needs to be complete before it is valid.
+However, due to the multitude of information required, users should have the convenience of
+pressing enter with an unfilled command to trigger the autofill to prompt you with the prefixes
+required and move the the caret to the next field.</p>
+</div>
+<div class="paragraph">
+<p>This enhancement follows a similar method to the autofill feature, however, since it does not
+require the pulling of data from the LISA, it is simpler.</p>
+</div>
+<div class="paragraph">
+<p>A <code>MissingPrefixException</code> is thrown from the <code>AddLifeInsuranceCommandParser</code> in the case of
+a missing prefix OR an empty field. This exception is caught by the <code>LogicManager</code> which analyses
+and fills the missing prefix.</p>
+</div>
+<div class="paragraph">
+<p><strong>How the analysis is done</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>catch (MissingPrefixException mpe) {
+        // this assertion is because this exception should only
+        // be thrown by the addli command,
+        // to change if this exception is used elsewhere
+        final String inputToTest = commandText;
+        assert Arrays.stream(AddLifeInsuranceCommand.COMMAND_WORDS).anyMatch(commandWord -&gt;
+            inputToTest.contains(commandWord));
+        commandText = getCommandWithFilledPrefixes(commandText);
+        throw mpe;
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Since we are assuming that this exception is only thrown by the <code>AddLifeInsuranceCommandParser</code> ,
+we use the assert here together with a lambda function to ensure that the <code>commandText</code> starts with
+any of the valid <code>COMMAND_WORDS</code>. In the case that another new function throws the same exception,
+this assert needs to be removed and the catch should handle the exception appropriately.</p>
+</div>
+<div class="paragraph">
+<p>The <code>commandText</code> is then sent to the autofill function which gets the constant <code>Set&lt;Prefix&gt;</code> from <code>CliSyntax</code>
+called <code>PREFIXES_INSURANCE</code> and filters the list according to which is not already inside the
+<code>commandText</code>, appends the prefixes and returns the filled text.</p>
+</div>
+<div class="paragraph">
+<p>The filled text is then passed on to the <code>history</code>. <code>commandBox</code> then takes over to show the last
+command as from the <code>historySnapshot</code> and places the caret at the 1st empty field found.</p>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="enhancement-added-date-parser"><a class="link" href="#enhancement-added-date-parser">Enhancement Added: Date Parser</a></h3>
+<div class="sect3">
+<h4 id="external-behavior-3"><a class="link" href="#external-behavior-3">External behavior</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: User Guide]</mark></p>
+</div>
+<div class="paragraph">
+<p>Generalised to all forms of dates used in LISA to use this parser.</p>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+</div>
+<div class="sect3">
+<h4 id="justification-3"><a class="link" href="#justification-3">Justification</a></h4>
+<div class="paragraph">
+<p>The <code>LocalDate</code> class was used to store date data but it contained a strict parser on the format
+of the input. It does not allow users to follow different input styles. The date parser was then
+created for this purpose to allow more intuitive adding of dates and correction. Other date parser
+APIs were considered but may require dependencies that the User may not have.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="implementation-3"><a class="link" href="#implementation-3">Implementation</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: Developer Guide]</mark></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="date-parser"><a class="link" href="#date-parser">Date Parser</a></h3>
+<div class="paragraph">
+<p>The date parser was created as an easy alternative to parsing user input to create a <code>LocalDate</code>
+class. A string is obtained from the user containing details of the date and is to follow a
+Day-Month-Year format, separated by any of the common dividers (i.e. <code>\\s,/-.</code>). The rearrangement
+of the 3 details is not allowed due to the multitude of confusions it may come with.</p>
+</div>
+<div class="paragraph">
+<p>Pros of using this parser:</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>Date and month can be typed as a single digit</p>
+</li>
+<li>
+<p>Month can be expressed as a number or string, in both long and 3 letter forms (e.g Oct and October)</p>
+</li>
+<li>
+<p>Case-insensitive</p>
+</li>
+<li>
+<p><code>dateString(LocalDate date)</code> gives a very nice all-friendly string for display purposes</p>
+</li>
+<li>
+<p>Year can be expressed as 4-digits or 2-digits</p>
+</li>
+<li>
+<p>2 digit years are smartly corrected to a year before the current year, a commented line shows you where to change if you wish to change the correction bracket</p>
+</li>
+<li>
+<p>Ignores extra stuff after accepting a 4-digit year</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Cons of using this parser:</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>Only accepts Day-Month-Year format</p>
+</li>
+<li>
+<p>Have to conform to using a <code>LocalDate</code> class to store your dates</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>How the string is parsed</strong></p>
+</div>
+<div class="paragraph">
+<p>Below is the main parse function of the parser</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>public LocalDate parse(String dob) throws IllegalValueException {
+     List&lt;String&gt; arguments = Arrays.asList(dob.split("[\\s-/.,]"));
+     if (arguments.size() &lt; 2) {
+         throw new IllegalValueException(MESSAGE_DATE_CONSTRAINTS);
+     }
+     String day = arguments.get(0);
+     String month = arguments.get(1);
+     String year = arguments.size() &gt; 2 ? arguments.get(2)
+            : String.valueOf(LocalDate.now().getYear());
+     return LocalDate.parse(getValidDay(day) + " " + getValidMonth(month)
+            + " " + getValidYear(year), DATE_FORMAT);
+ }</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The string is first split using the delimiters as stated above using the <code>String::split</code> function.<br>
+If the number of arguments is less than 2, there is insufficient information to
+create a date and an exception os thrown. If more than 3 arguments are input,
+only th first 3 are taken, in the Day-Month_Year format. The year is optional
+which defaults to the current year if not input. The 3 details are then each
+passed into their own correcting function in order to fit the correct format
+for the actual <code>LocalDate::parse</code> method to create a <code>LocalDate</code> object according
+to a standard format.</p>
+</div>
+<div class="paragraph">
+<p>The <code>getValidDay</code> function simply checks if the date given is less than 32 as
+it only corrects dates up to the 31st (e.g. if you tried to input 31 Feb,
+<code>LocalDate::parse</code> will be able to help you correct to 28 or 29 Feb but it throws
+an exception if you tried to input 32 or higher). This function also checks if
+the date is a single digit, in which it will then add a zero in front to fit the
+standard format.</p>
+</div>
+<div class="paragraph">
+<p>The <code>getValidMonth</code> function does the same checks as the <code>getValidDay</code> function
+(i.e. input is 12 and below and add a zero if it is a single digit). In addition,
+it checks if the month was given as a name, if so, it then searches the constant
+string arrays in the parser to check the month. It allows a case-insensitive search
+(use of <code>String::toLowerCase</code> method) and 3 letter representations of months
+(<code>MONTH_NAME_LONG</code> and <code>MONTH_NAME_SHORT</code> const string arrays).</p>
+</div>
+<div class="paragraph">
+<p>The <code>getValidYear</code> function only takes in the first 4 characters if more than 4
+are provided and can only do this since it is the last argument in the string.
+It then checks if a 2-digit year was given, if so, it auto corrects to a bracket,
+currently defined as the last century. Else 4 digit form will be taken as
+the whole year. This implementation assumes the user does not intend a 2 or 3
+digit year. Otherwise, users will have to append zeros at the start of the year
+input to indicate.</p>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="enhancement-added-autofill-feature"><a class="link" href="#enhancement-added-autofill-feature">Enhancement Added: Autofill Feature</a></h3>
+<div class="sect3">
+<h4 id="external-behavior-4"><a class="link" href="#external-behavior-4">External behavior</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: User Guide]</mark></p>
+</div>
+<div class="paragraph">
+<p>As above in the edit feature.</p>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+</div>
+<div class="sect3">
+<h4 id="justification-4"><a class="link" href="#justification-4">Justification</a></h4>
+<div class="paragraph">
+<p>This idea stems from the consideration of convenience in editing typos in a contact.
+This is especially so when the user wishes to update a small typo in very long field but
+does not wish to re-type out everything in the current field.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="implementation-4"><a class="link" href="#implementation-4">Implementation</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: Developer Guide]</mark></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="autofill-feature"><a class="link" href="#autofill-feature">Autofill Feature</a></h3>
+<div class="paragraph">
+<p>The <code>edit</code> command now allows empty fields to be entered to trigger an autofill response.
+The autofill replaces all empty fields entered in the command box at once.
+This idea stems from the consideration of convenience in editing typos in a contact. This is especially so
+when the user wishes to update a small typo in very long field but does not wish to re-type out everything in the current field.</p>
+</div>
+<div class="paragraph">
+<p>The <code>Undo</code> command can help reverse an added contact and pressing the up button will recall the used <code>add</code> command but
+this causes more hassle than needed. Also, the up button will not be able to recall a command that was used in a previous
+session which increases the need for an autofill feature.</p>
+</div>
+<div class="paragraph">
+<p><strong>How it is triggered</strong><br>
+Below is the activity diagram on how the <code>editCommandParser</code> works while editing the <code>editPersonDescriptor</code>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/autofillactivitydiagram.png" alt="autofillactivitydiagram">
+</div>
+</div>
+<div class="paragraph">
+<p>The part in orange is the added branch to the the flow of activities. The set of argument validation events happen within each <code>Person</code>
+attribute&#8217;s constructor. (i.e. constructors of <code>Name</code> <code>Email</code> <code>Address</code> <code>Phone</code> <code>DateOfBirth</code>)</p>
+</div>
+<div class="paragraph">
+<p>The exception thrown, <code>EmptyFieldException</code>, is a subclass of <code>ParserException</code> and helps indicate the presence of an empty field
+which is to be distinguished from an argument regex mismatch and to be thrown out to the <code>LogicManager</code> which has access to
+the contacts and is able to carry out the autofill feature. The <code>EmptyFieldException</code> is conceptually
+correct to be a subclass of <code>ParserException</code> as it is indeed a type of exception when processing invalid arguments.
+Furthermore, there is no need to declare a new type of exception thrown as it is a type of <code>ParseException</code>.</p>
+</div>
+<div class="paragraph">
+<p><strong>How the autofilling is done</strong><br>
+<code>v1.2</code><br>
+The <code>EmptyFieldException</code> contains the empty field prefix and the index of the contact in concern which allows the
+<code>LogicManager</code> to retrieve the relevant detail and replace the prefix with the filled prefix. However, this method
+restricts the feature to only fill one prefix at a time, per enter key pressed. Also, in conjunction with the feature
+as in <strong>3.2</strong>, this causes a problem as contacts with empty fields will not be able to have other specified fields filled.</p>
+</div>
+<div class="paragraph">
+<p><code>v1.3</code><br>
+The autofill function now scans and replaces every prefix that is present in the command line. Effectively
+solving the problem of inconvenience where multiple enter key presses is required to fill multiple fields and
+contacts with empty fields no longer prevent the autofilling of other empty prefixes. This also means that
+the <code>EmptyFieldException</code> is no longer unique to the empty prefix and thus, there is no need for the prefix parameter,
+which is removed from the constructor of the exception.</p>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="enhancement-added-improved-tag-management-allowing-tags-to-be-added-on-and-deleted-without-being-overwritten"><a class="link" href="#enhancement-added-improved-tag-management-allowing-tags-to-be-added-on-and-deleted-without-being-overwritten">Enhancement Added: Improved Tag management, allowing Tags to be added on and deleted without being overwritten</a></h3>
+<div class="sect3">
+<h4 id="external-behavior-5"><a class="link" href="#external-behavior-5">External behavior</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: User Guide]</mark></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="editing-a-person-code-edit-code"><a class="link" href="#editing-a-person-code-edit-code">Editing a person : <code>edit</code></a></h3>
+<div class="paragraph">
+<p><code>v1.3</code> Autofill replaces all empty fields at once<br>
+<code>v1.2</code> Only Name field necessary<br></p>
+</div>
+<div class="paragraph">
+<p>Command words: <code>edit</code> <code>e</code> <code>change</code> <code>ed</code></p>
+</div>
+<div class="paragraph">
+<p>Edits an existing person in the address book.<br>
+Format: <code>edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [g/Gender] [d/DATE OF BIRTH] [t/TAG] [dt/TAG_TO_DELETE]&#8230;&#8203;</code></p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>Edits the person at the specified <code>INDEX</code>. The index refers to the index number shown in the last person listing. The index <strong>must be a positive integer</strong> 1, 2, 3, &#8230;&#8203;</p>
+</li>
+<li>
+<p>At least one of the optional fields must be provided.</p>
+</li>
+<li>
+<p>Existing values will be updated to the input values.</p>
+</li>
+<li>
+<p>When editing tags, tags will be added on to the current existing tags.</p>
+</li>
+<li>
+<p>You can remove all the person&#8217;s tags by typing dt/all.</p>
+</li>
+<li>
+<p>Autofill feature is enabled, by typing the prefix of interest and pressing enter, the details of the selected person is autofilled.</p>
+</li>
+<li>
+<p>Press multiple times to autofill multiple prefixes.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>Autofilling</strong><br>
+In the event that you wish to edit a very long field in the contact and just wish
+to correct a typo, you can enter the prefix(es) (e.g. edit 1 n/ p/) and press enter
+for LISA to fill it up for you.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>edit 1 p/91234567 e/johndoe@example.com</code><br>
+Edits the phone number and email address of the 1st person to be <code>91234567</code> and <code>johndoe@example.com</code> respectively.</p>
+</li>
+<li>
+<p><code>edit 2 n/Betsy Crower dt/all t/cute</code><br>
+Edits the name of the 2nd person to be <code>Betsy Crower</code>, clears all existing tags and adds the cute tag.</p>
+</li>
+<li>
+<p><code>edit 1 n/</code><br>
+Triggers the programme to autofill the name after the prefix is entered, becoming <code>edit 1 n/Betsy Crower</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+<div class="sect3">
+<h4 id="justification-5"><a class="link" href="#justification-5">Justification</a></h4>
+<div class="paragraph">
+<p>Tags are an important feature for LISA because of how it gives the user the freedom to connect
+attributes to certain contacts. Overwriting previously saved tags mean a lot of work and unintented
+mistake as the main use case of an edit function for tags is to add on rather than to replace.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="implementation-5"><a class="link" href="#implementation-5">Implementation</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: Developer Guide]</mark></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="improved-tag-management"><a class="link" href="#improved-tag-management">Improved Tag Management</a></h3>
+<div class="paragraph">
+<p>The original tag system management within the edit function has several difficulties
+which cause the user inconvenience and inefficiency in managing
+their tags. This is mainly due to how the editing of a tag works. When using the
+ edit function, just like how entering a new name will replace the existing name,
+ using the tag prefix to add tags to a user will end up overwriting all the existing tags
+  and replace it with the new tag(s). For example, entering the <code>edit 1 t/Awesome</code> results in the following:<br>
+Command entered:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/addtagui.jpg" alt="addtagui">
+</div>
+</div>
+<div class="paragraph">
+<p>Original result:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/addtagoverwritten.png" alt="addtagoverwritten">
+</div>
+</div>
+<div class="paragraph">
+<p>Main use case:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/addtagadded.png" alt="addtagadded">
+</div>
+</div>
+<div class="paragraph">
+<p>What would be in line with a main use case of <code>edit 1 t/trainer</code> is to add the <code>trainer</code> tag onto
+ existing tags instead. This entire process is controlled by the edit function whereby an
+ <code>editPersonDescriptor</code>, which is a class within the <code>EditCommand</code> class
+ is created using all the parsed arguments and represents all the changes
+ that are to be made. Then the <code>createEditedPerson</code> method is called to compare between
+ the <code>personToEdit</code> and the <code>editPersonDescriptor</code> and merge all the changes to create a new <code>Person</code>.</p>
+</div>
+<div class="paragraph">
+<p>Thus, the changes to enable such a feature is mainly implemented in the <code>createEditedPerson</code> method
+ the <code>Set</code> method <code>addAll()</code> is called to facilitate the merging of the tags.</p>
+</div>
+<div class="paragraph">
+<p>However, one thing to note here is that since the overwriting implementation is no longer used,
+ the only way for the tags to be deleted is gone which means we must also implement a method
+ of deleting tags. The intent to delete a tag must be clear and it is difficult to represent
+ the intention to delete using the current notation for the edit command. This is why we introduced a new
+ prefix to process detagging <code>dt/</code>. This way the user can clearly express the intent on which tags
+ are to be deleted and which are to remain, along with the ability to add on. The detagging is parsed
+ and implemented the same way as the tagging which simplifies constructing and understanding
+ the structure of tag deletion. We added a new <code>Set&lt;Tag&gt; tagsToBeDeleted</code> in the <code>editPersonDescriptor</code>
+ to signify deletion changes. Then we use the <code>removeAll</code> method from the <code>Set</code> class
+ which allows us to selectively only remove the tags in the user input.</p>
+</div>
+<div class="paragraph">
+<p>Then there comes a difficulty where an ambitious user wishes to express multiple tag managing commands
+ on one line. Regardless, this method is still very viable as the original structure supports the
+ input of multiple tags, and since the detagging mimics tagging, it is also supported.
+ However, one convenience that came with the overwriting method is the ease of deletion
+ which we would wish to allow users to perform as well. Thus, using <code>dt/all</code> will delete all existing
+ tags a contact has. The only issue with this is that a tag named <code>all</code> cannot be deleted if added.</p>
+</div>
+<div class="paragraph">
+<p>In the case of multiple tagging and detagging in one command line, we have chosen the
+ detagging to executed first because of the following reasons:</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>Users are unlikely to remove a tag that is being added in the same line. The result of this would be that the deleted
+tag is added back.</p>
+</li>
+<li>
+<p>Tags and detags are handled 1 by 1 so there is usually no conflict between tagging and detagging.</p>
+</li>
+<li>
+<p>The only sensible conflict is when the user does <code>dt/all</code> and adds tags on the same line.
+The main use case for this is to mimic the overwriting method. Thus, if adding was executed first,
+the added tags will be deleted afterwards.</p>
+</li>
+<li>
+<p>With respect to the previous reason, users are also given the freedom to type the prefix
+in any part of the command and the program will be able to execute the user&#8217;s intention.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="enhancements-implemented"><a class="link" href="#enhancements-implemented">Enhancements Implemented:</a></h3>
+<div class="paragraph">
+<p>Multiple Command Words<br>
+Prefix Autofill for Add Insurance Command<br>
+Improved Tag Management<br>
+Autofill Feature<br>
+Date Parser<br>
+Overall Architecture of Program Flow for UI<br></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="enhancements-proposed-and-has-been-implemented"><a class="link" href="#enhancements-proposed-and-has-been-implemented">Enhancements Proposed and has been implemented:</a></h3>
+<div class="paragraph">
+<p>Prefix Autofill for Add Insurance Command<br>
+Improved Tag Management<br>
+Autofill Feature<br>
+Insurance Class<br>
+Insurance Management Features<br>
+Date Parser<br>
+Overall Architecture of Program Flow for UI<br></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="enhancements-proposed-to-be-implemented-in-the-future"><a class="link" href="#enhancements-proposed-to-be-implemented-in-the-future">Enhancements Proposed to be implemented in the future:</a></h3>
+<div class="paragraph">
+<p>Command Shadowing<br></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="other-contributions"><a class="link" href="#other-contributions">Other contributions</a></h3>
+<div class="paragraph">
+<p>Helped properly implement sort contacts by name feature<br>
+Helped review fellow teammates PR and correct teammates misconceptions<br>
+Helped organise team&#8217;s repo<br>
+Responsible for glass box testing of LISA and follow-up debugging<br>
+Improved various commands of LISA<br>
+Helped out in CS2103 module forums [<a href="https://github.com/nus-cs2103-AY1718S1/forum/issues/177">Example Thread</a>]<br>
+Offered <code>DateParser</code> as a <code>Reuse-Offer</code> on module forums [<a href="https://github.com/nus-cs2103-AY1718S1/forum/issues/167">Easy Date Parser</a>]<br>
+Assisted other teams in finding bugs during acceptance testing session [<a href="https://github.com/CS2103AUG2017-F11-B1/main/issues/73">Bug Issue</a>]</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2017-11-13 12:59:07 +00:00
+</div>
+</div>
+</body>
+</html>

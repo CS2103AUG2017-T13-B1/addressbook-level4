@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 1.5.3">
+<title>Oscar Wang - Project Portfolio</title>
+<link rel="stylesheet" href="../stylesheets/gh-pages.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="../stylesheets/coderay-asciidoctor.css">
+</head>
+<body class="article">
+<div id="header">
+<h1>Oscar Wang - Project Portfolio</h1>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="lisa-levels-integrated-secretarial-agent"><a class="link" href="#lisa-levels-integrated-secretarial-agent">LISA: Levels Integrated Secretarial Agent</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>LISA: Levels Integrated Secretarial Agent is a desktop address book application designed for insurance agents to manage the complex relationship between the providers and clients.
+While the main user interactions happen across CLI, it also has a GUI built with JavaFX.
+LISA is developed by enhancing the original program "addressbook-level4" provided in class for teaching Software Engineering principles.
+The original program is written in Java, and has about 6 kLoC.</p>
+</div>
+<div class="paragraph">
+<p><strong>Code contributed</strong>: [<a href="https://github.com/CS2103AUG2017-T13-B1/main/tree/master/collated/main/OscarWang114.md">Functional code</a>] [<a href="https://github.com/CS2103AUG2017-T13-B1/main/tree/master/collated/test/OscarWang114.md">Test code</a>]</p>
+</div>
+<div class="sect2">
+<h3 id="enhancement-added-add-command-with-only-one-compulsory-field-name"><a class="link" href="#enhancement-added-add-command-with-only-one-compulsory-field-name">Enhancement Added: 'add' command with only one compulsory field: NAME</a></h3>
+<div class="sect3">
+<h4 id="external-behavior"><a class="link" href="#external-behavior">External behavior</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: User Guide]</mark></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="adding-a-person-code-add-code"><a class="link" href="#adding-a-person-code-add-code">Adding a person: <code>add</code></a></h3>
+<div class="paragraph">
+<p><code>since v1.1</code></p>
+</div>
+<div class="paragraph">
+<p>Command words: <code>add</code> <code>a</code> <code>+</code></p>
+</div>
+<div class="paragraph">
+<p>Adds a person to the address book<br></p>
+</div>
+<div class="paragraph">
+<p>Format: <code>add n/NAME [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [g/Gender] [d/DATE_OF_BIRTH] [t/TAG]&#8230;&#8203;</code></p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+A person must have a name and can have any number of tags (including 0)
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>add n/John Doe</code></p>
+</li>
+<li>
+<p><code>add n/Mary Jane p/98765432 e/maryjane@example.com a/Mary street, block 123, #01-01</code></p>
+</li>
+<li>
+<p><code>add n/Betsy Crowe t/friend e/betsycrowe@example.com a/Newgate Prison d/28 02 1996 g/FEMALE t/criminal</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+<div class="sect3">
+<h4 id="justification"><a class="link" href="#justification">Justification</a></h4>
+<div class="paragraph">
+<p>As a user, I can add contacts even if I only know his/her name.
+In reality, it is unreasonable to require users to provide complete information of a person when adding his/her as a contact.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="implementation"><a class="link" href="#implementation">Implementation</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: Developer Guide]</mark></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="making-name-the-only-compulsory-field-in-add-command"><a class="link" href="#making-name-the-only-compulsory-field-in-add-command">Making NAME the only compulsory field in Add Command</a></h3>
+<div class="paragraph">
+<p>The <code>add</code> command follows the format below:</p>
+</div>
+<div class="paragraph">
+<p><code>add n/NAME [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [d/DATE_OF_BIRTH] [g/GENDER] [t/TAG]&#8230;&#8203;</code></p>
+</div>
+<div class="paragraph">
+<p>This means when adding a new person in LISA, the user only needs to provide value for the compulsory <code>NAME</code> field. Every other field is optional.</p>
+</div>
+<div class="paragraph">
+<p>Every field in a person corresponds to one class type. Inside each class, there exists a <code>final String FIELD_VALIDATION_REGEX</code> used for validation during construction.
+For instance, the <code>PHONE</code> field has <code>Phone</code> class containing a <code>PHONE_VALIDATION_REGEX</code> which only accepts numbers that are at least three digits long:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span> PHONE_VALIDATION_REGEX = <span class="string"><span class="delimiter">&quot;</span><span class="char">\\</span><span class="content">d{3,}</span><span class="delimiter">&quot;</span></span>;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Whenever the phone tag <code>p/</code> is provided in the input, e.g. <code>add n/John Doe p/98765432</code> and <code>add n/Johnny Doe p/</code>,
+the string after <code>p/</code> is trimmed and passed into <code>isValidPhone(String test)</code> for validation when constructing the <code>Phone</code> object.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> Phone(<span class="predefined-type">String</span> phone) <span class="directive">throws</span> IllegalValueException {
+    <span class="comment">// ... constructor logic ...</span>
+    <span class="keyword">if</span> (!isValidPhone(trimmedPhone)) {
+        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalValueException(MESSAGE_PHONE_CONSTRAINTS);
+    }
+    <span class="local-variable">this</span>.value = trimmedPhone;
+}
+
+<span class="directive">public</span> <span class="directive">static</span> <span class="type">boolean</span> isValidPhone(<span class="predefined-type">String</span> test) {
+    <span class="keyword">return</span> test.matches(PHONE_VALIDATION_REGEX);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Therefore, in the first example, <code>"98765432"</code> is passed as the argument. In the second example, <code>""</code> is passed in since nothing was provided after <code>p/</code>.
+According to <code>PHONE_VALIDATION_REGEX</code>, the former passes the validation while the latter throws an <code>IllegalValueException</code>.
+Overall, this guarantees that the user input will always be validated.</p>
+</div>
+<div class="paragraph">
+<p>If the phone tag is not provided, e.g. <code>add n/John Doe e/johnd@email.com</code>, the no-argument constructor is used.
+It sets the <code>value</code> of the <code>Phone</code> object to an empty string without any validation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> Phone() {
+    <span class="local-variable">this</span>.value = <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The logic provided above can be applied to other optional fields, namely <code>[p/PHONE_NUMBER]</code>, <code>[e/EMAIL]</code>, <code>[a/ADDRESS]</code>, <code>[g/GENDER]</code> and <code>[d/DATE_OF_BIRTH]</code>.
+<code>[t/TAG]&#8230;&#8203;</code> uses a different implementation and will not be covered in this section.</p>
+</div>
+<div class="paragraph">
+<p>Due to this implementation, the field attribute of a <code>Person</code> object can never be <code>null</code>.
+If a field is not provided during input, an object with the value of an empty string will still be created and assigned to the corresponding attribute in <code>Person</code>.</p>
+</div>
+<div class="paragraph">
+<p>An alternative implementation would be "Do not create the field object at all if it is not specified in the user input".
+This approach is more flexible, but may require resolving " value equals to <code>null</code> " and <code>NullPointerException</code> when adding and editing a person.</p>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="enhancement-added-reading-and-storing-life-insurances"><a class="link" href="#enhancement-added-reading-and-storing-life-insurances">Enhancement Added: Reading and Storing Life Insurances</a></h3>
+<div class="sect3">
+<h4 id="external-behavior-2"><a class="link" href="#external-behavior-2">External behavior</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: User Guide]</mark></p>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+</div>
+<div class="sect3">
+<h4 id="justification-2"><a class="link" href="#justification-2">Justification</a></h4>
+<div class="paragraph">
+<p>This feature serves as a precursor of the implementation for the user story: As an insurance agent, I can specify the provider-client relationship among my contacts.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="implementation-2"><a class="link" href="#implementation-2">Implementation</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: Developer Guide]</mark></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="reading-and-storing-life-insurances"><a class="link" href="#reading-and-storing-life-insurances">Reading and Storing Life Insurances:</a></h3>
+<div class="paragraph">
+<p><code>since v1.3</code></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/LifeInsuranceClassDiagram.png" alt="LifeInsuranceClassDiagram" width="800">
+</div>
+</div>
+<div class="paragraph">
+<p><em>Figure 2.4.1 : Structure of the Components related to LifeInsurance</em></p>
+</div>
+<div class="paragraph">
+<p>The <code>LifeInsurance</code>,</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>represents a life insurance in LISA.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Fields inside a <code>LifeInsurance</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>UUID</code> represents a unique id of the life insurance.</p>
+</li>
+<li>
+<p><code>InsuranceName</code> represents the name of the life insurance.</p>
+</li>
+<li>
+<p><code>Roles</code> is a <code>enum</code> type that represents the three person roles in a life insurance.
+Namely owner, insured, and beneficiary.</p>
+</li>
+<li>
+<p><code>EnumMap</code> maps a person role in a life insurance to the name of the corresponding person.</p>
+</li>
+<li>
+<p><code>InsurancePerson</code> represents a person in a life insurance. There are three such fields - owner, insured, and beneficiary  in a life insurance.</p>
+</li>
+<li>
+<p><code>Premium</code> represents the premium of a life insurance.</p>
+</li>
+<li>
+<p><code>ContractFileName</code> represents the name of a digital contract file (e.g. AlexYeohTermLife.pdf, BerniceYuWholeLife.docx) of a life insurance.</p>
+</li>
+<li>
+<p><code>LocalDate</code> represents the date components of a life insurance.
+There are two such fields - signing date and expiry date in a life insurance.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code>UniqueLifeInsuranceMap</code>,</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>stores all <code>LifeInsurance</code> objects in LISA.</p>
+</li>
+<li>
+<p>maps a <code>UUID</code> key to a <code>LifeInsurance</code> value.</p>
+</li>
+<li>
+<p>exposes an unmodifiable <code>ObservableList&lt;ReadOnlyInsurance&gt;</code> that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <code>UUID</code> key inside the map has the same value with the <code>UUID</code> field inside the <code>LifeInsurance</code> it maps to.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code>List&lt;UUID&gt;</code>,</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>stores all the <code>UUID</code> objects of the life insurances a <code>Person</code> object is involved.
+A person is involved in a life insurance if he/she is an owner, insured, or beneficiary of that piece of life insurance.</p>
+</li>
+<li>
+<p>prevents storing duplicate ids, e.g., even if a person is both an owner and insured of a life insurance, <code>List&lt;UUID&gt;</code> will only store a single copy of the <code>UUID</code> of that life insurance.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code>UniqueLifeInsuranceList</code>,</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>stores all the <code>LifeInsurance</code> objects  a <code>Person</code> object is involved.
+A person is involved in a life insurance if he/she is an owner, insured, or beneficiary of that piece of life insurance.</p>
+</li>
+<li>
+<p>prevents storing duplicate life insurances, e.g., even if a person is both an owner and insured of a life insurance, <code>UniqueLifeInsuranceList</code> will only store a single copy of that life insurance.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/XmlAdaptedLifeInsuranceClassDiagram.png" alt="XmlAdaptedLifeInsuranceClassDiagram" width="800">
+</div>
+</div>
+<div class="paragraph">
+<p><em>Figure 2.4.1 : Structure of the Components related to XmlAdaptedLifeInsurance</em></p>
+</div>
+<div class="paragraph">
+<p>The <code>XmlAdaptedLifeInsurance</code></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>represents a JAXB-friendly version of the <code>LifeInsurance</code>.</p>
+</li>
+<li>
+<p>follows the format below when saved in xml format:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;id&gt;</span>ad4dc852-e6bb-44e9-800e-fa8a8964e7f1<span class="tag">&lt;/id&gt;</span>
+<span class="tag">&lt;insuranceName&gt;</span>Sample Life Insurance<span class="tag">&lt;/insuranceName&gt;</span>
+<span class="tag">&lt;owner&gt;</span>Oscar Wang<span class="tag">&lt;/owner&gt;</span>
+<span class="tag">&lt;insured&gt;</span>Oscar Wang<span class="tag">&lt;/insured&gt;</span>
+<span class="tag">&lt;beneficiary&gt;</span>John Doe<span class="tag">&lt;/beneficiary&gt;</span>
+<span class="tag">&lt;premium&gt;</span>1000.0<span class="tag">&lt;/premium&gt;</span>
+<span class="tag">&lt;contractFileName&gt;</span>SampleOscarWang.pdf<span class="tag">&lt;/contractFileName&gt;</span>
+<span class="tag">&lt;signingDate&gt;</span>01 Nov 2017<span class="tag">&lt;/signingDate&gt;</span>
+<span class="tag">&lt;expiryDate&gt;</span>01 Nov 2047<span class="tag">&lt;/expiryDate&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>Map&lt;String, XmlAdaptedLifeInsurance&gt;</code>,</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>stores all <code>XmlAdaptedLifeInsurance</code> objects.</p>
+</li>
+<li>
+<p>maps a <code>String</code> key to a <code>XmlAdaptedLifeInsurance</code> value.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <code>String</code> key inside the map has the same value with the <code>String</code> field inside the <code>XmlAdaptedLifeInsurance</code> it maps to.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>follows the format below when saved in xml format:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;lifeInsuranceMap&gt;</span>
+    <span class="tag">&lt;entry&gt;</span>
+        <span class="tag">&lt;key&gt;</span>ad4dc852-e6bb-44e9-800e-fa8a8964e7f1<span class="tag">&lt;/key&gt;</span>
+        <span class="tag">&lt;value&gt;</span>
+            <span class="comment">&lt;!-- XmlAdaptedLifeInsurance --&gt;</span>
+        <span class="tag">&lt;/value&gt;</span>
+    <span class="tag">&lt;/entry&gt;</span>
+    <span class="comment">&lt;!-- more entries --&gt;</span>
+<span class="tag">&lt;/lifeInsuranceMap&gt;</span></code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="synchronizing-life-insurances-with-persons"><a class="link" href="#synchronizing-life-insurances-with-persons">Synchronizing Life Insurances with Persons</a></h4>
+<div class="paragraph">
+<p>Inside <code>Addressbook.java</code> there are two methods in charge of keeping the life insurance master map <code>UniqueLifeInsuranceMap</code> and person master list <code>UniquePersonList</code> synchronized with each other.
+The first method, according to execution order, is <code>syncMasterLifeInsuranceMapWith(UniquePersonList persons)</code> and the
+second method is <code>syncMasterPersonListWith(UniqueLifeInsuranceMap lifeInsuranceMap)</code></p>
+</div>
+<div class="paragraph">
+<p>The first method ensures that the three <code>InsurancePerson</code> objects (owner, insured, and beneficiary) of every <code>LifeInsurance</code> in the master map links to its corresponding <code>Person</code> object if it exists in the persons list.
+In addition, it also populates the list of insurance ids <code>List&lt;UUID&gt;</code> in every <code>Person</code> object with id of the life insurance he/her is involved in.
+It is implemented in this way:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">void</span> syncMasterLifeInsuranceMapWith(UniquePersonList persons) {
+    clearAllPersonsInsuranceIds();
+    lifeInsuranceMap.forEach((id, insurance) -&gt; {
+        insurance.resetAllInsurancePersons();
+
+        <span class="predefined-type">String</span> owner = insurance.getOwnerName();
+        <span class="comment">// ... similar logic for insured and beneficiary...</span>
+        persons.forEach(person -&gt; {
+            <span class="keyword">if</span> (person.getName().toString().equals(owner)) {
+                insurance.setOwner(<span class="keyword">new</span> InsurancePerson(person));
+                person.addLifeInsuranceIds(id);
+            }
+            <span class="comment">// ... similar logic for insured and beneficiary...</span>
+        });
+    });
+    lifeInsuranceMap.syncMappedListWithInternalMap();
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The method <code>syncMappedListWithInternalMap()</code> in the last line is used to synchronize the internal list of <code>LifeInsurances</code> inside <code>UniqueLifeInsuranceMap</code>.
+This internal list is used for exposing an <code>ObservableList&lt;ReadOnlyInsurance&gt;</code> to the UI for binding.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Because <code>Person</code> objects are identified by <code>Name</code> and stored in a list,
+for every <code>LifeInsurance</code> object we have to iterate through the entire list of persons to check if the name of the <code>Person</code> object matches with the name of the three <code>InsurancePerson</code> objects.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The second method ensures that every <code>Person</code> in the master list contains the correct list of <code>LifeInsurance</code> objects corresponding to his/her list of insurance ids <code>List&lt;UUID&gt;</code>.
+It is implemented in this way:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">void</span> syncMasterPersonListWith(UniqueLifeInsuranceMap lifeInsuranceMap) <span class="directive">throws</span> InsuranceNotFoundException {
+    persons.forEach((ThrowingConsumer&lt;Person&gt;) person -&gt; {
+        <span class="predefined-type">List</span>&lt;<span class="predefined-type">UUID</span>&gt; idList = person.getLifeInsuranceIds();
+        <span class="keyword">if</span> (!idList.isEmpty()) {
+            person.clearLifeInsurances();
+            idList.forEach((ThrowingConsumer&lt;<span class="predefined-type">UUID</span>&gt;) id -&gt; {
+                LifeInsurance lf = lifeInsuranceMap.get(id);
+                person.addLifeInsurances(lf);
+            });
+        }
+    });
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Because <code>LifeInsurance</code> objects are identified by <code>UUID</code> and stored in a map,
+for every <code>Person</code> object can simply retrieve the <code>LifeInsurance</code> he/she is involved by providing the id rather than iterating through the entire map.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The two methods above are grouped into a method called <code>synWithUpdate()</code>, which is called every time when
+an operation related to <code>LifeInsurance</code> or <code>Person</code> in is executed, e.g. <code>addPerson(ReadOnlyPerson p)</code>, <code>deleteInsurance(ReadOnlyInsurance target)</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="design-considerations"><a class="link" href="#design-considerations">Design Considerations</a></h4>
+<div class="paragraph">
+<p><strong>Aspect:</strong> Data structure for storing and saving life insurances in xml format:<br>
+<strong>Alternative 1 (current choice):</strong> Use a map to store ids as keys and life insurances as values.<br>
+<strong>Pros:</strong> Provides efficient O(1) data access using the id.<br>
+<strong>Cons:</strong> Requires an internal list to provide an <code>ObservableList&lt;ReadOnlyInsurance&gt;</code> to the UI for binding.
+The internal list have to be synchronized when data in the map changes.<br>
+<strong>Alternative 2:</strong> Use a list to store all <code>LifeInsurances</code>.<br>
+<strong>Pros:</strong> Does not require internal list. Easier implementation.<br>
+<strong>Cons:</strong> Less efficient data access. Requires iterating through the entire list to search for a life insurance using id.</p>
+</div>
+<hr>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="enhancement-added-addli-command-for-adding-life-insurances"><a class="link" href="#enhancement-added-addli-command-for-adding-life-insurances">Enhancement Added: 'addli' command for adding life insurances</a></h3>
+<div class="sect3">
+<h4 id="external-behavior-3"><a class="link" href="#external-behavior-3">External behavior</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: User Guide]</mark></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="adding-a-life-insurance-code-addli-code"><a class="link" href="#adding-a-life-insurance-code-addli-code">Adding a Life Insurance: <code>addli</code></a></h3>
+<div class="paragraph">
+<p><code>since v1.5</code></p>
+</div>
+<div class="paragraph">
+<p>Command words: <code>addli</code> <code>ali</code> <code>+li</code></p>
+</div>
+<div class="paragraph">
+<p>Adds a life insurance in Lisa<br></p>
+</div>
+<div class="paragraph">
+<p>Format: <code>addli n/NAME o/OWNER i/INSURED b/BENEFICIARY pr/PREMIUM c/CONTRACT_FILE_PATH sd/SIGNING_DATE ed/EXPIRY_DATE</code></p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>Prefix filling</strong><br>
+All fields are required here as a life insurance needs to be complete before it is valid.
+However, due to the multitude of information required, you can press enter with an unfilled
+command to trigger the autofill to prompt you with the prefixes required. Also,
+pressing enter allows you to move to the next field.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>addli n/Term Life o/Alex Yeoh i/John Doe b/Mary Jane c/TermLife.pdf
+pr/600 sd/01 11 2017 ed/01 11 2037</code></p>
+</li>
+<li>
+<p><code>addli n/Whole Life o/Bernice Yu i/David Li b/Roy Balakrishnan c/WholeLife.pdf
+pr/8500 sd/01 11 2017 ed/01 11 2117</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+<div class="sect3">
+<h4 id="justification-3"><a class="link" href="#justification-3">Justification</a></h4>
+<div class="paragraph">
+<p>This feature is an implementation of the user story: As an insurance agent, I can specify the provider-client relationship among my contacts.
+It is crucial for LISA to allow insurance agents to create insurances, a provider-client relationship in the contacts.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="implementation-3"><a class="link" href="#implementation-3">Implementation</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: Developer Guide]</mark></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="add-life-insurance-command"><a class="link" href="#add-life-insurance-command">Add Life Insurance Command:</a></h3>
+<div class="paragraph">
+<p><code>since v1.4</code></p>
+</div>
+<div class="paragraph">
+<p>The following sequence diagram shows how the add life insurance operation works:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/AddLifeInsuranceCommandSequenceDiagram.png" alt="AddLifeInsuranceCommandSequenceDiagram" width="800">
+</div>
+</div>
+<div class="paragraph">
+<p>There are eight compulsory fields required for the user to input in the add life insurance command.
+They are: name, owner, insured, beneficiary, premium, signing date, expiry date, and contract file name.</p>
+</div>
+<div class="sect3">
+<h4 id="design-considerations-2"><a class="link" href="#design-considerations-2">Design Considerations</a></h4>
+<div class="paragraph">
+<p><strong>Aspect:</strong> Number of fields required from the user input:<br>
+<strong>Alternative 1 (current choice):</strong> Every field must be provided.<br>
+<strong>Pros:</strong> Ensures no field with null or empty value exists in a <code>LifeInsurance</code> object.<br>
+<strong>Cons:</strong> Not user-friendly. The user needs to fill in every field every time.
+<strong>Alternative 2:</strong> Making the name field the only compulsory field. The rest can be not provided.<br>
+<strong>Pros:</strong> More flexibility and user-friendly.<br>
+<strong>Cons:</strong> Requires good handling of null or empty values. In addition, an edit life insurance command has to be created to allow users to update the unfilled fields.</p>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="enhancement-proposed"><a class="link" href="#enhancement-proposed">Enhancement Proposed:</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>All the features listed above</p>
+</li>
+<li>
+<p>Implement date-related classes using Java 8 LocalDate</p>
+</li>
+<li>
+<p>Create a Gender class for each contact</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="other-contributions"><a class="link" href="#other-contributions">Other contributions</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Reviewed the majority of the pull requests submitted by other team members.</p>
+</li>
+<li>
+<p>Assisted several team members personally in programming, debugging, and Git-related issues.</p>
+</li>
+<li>
+<p>Reported bugs in other team&#8217;s product in acceptance testing. [<a href="https://github.com/CS2103AUG2017-F11-B3/main/issues/74">Bug 1</a>] [<a href="https://github.com/CS2103AUG2017-F11-B3/main/issues/73">Bug 2</a>]</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2017-11-13 12:59:07 +00:00
+</div>
+</div>
+</body>
+</html>

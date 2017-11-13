@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 1.5.3">
+<title>Pujitha Desiraju - Project Portfolio</title>
+<link rel="stylesheet" href="../stylesheets/gh-pages.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="../stylesheets/coderay-asciidoctor.css">
+</head>
+<body class="article">
+<div id="header">
+<h1>Pujitha Desiraju - Project Portfolio</h1>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="lisa-levels-integrated-secretarial-agent"><a class="link" href="#lisa-levels-integrated-secretarial-agent">LISA: Levels Integrated Secretarial Agent</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>LISA: Levels Integrated Secretarial Agent is a desktop address book application used for teaching Software Engineering principles. The user interacts with it using a CLI, and it has a GUI created with JavaFX. It is written in Java, and has about 6 kLoC.</p>
+</div>
+<div class="paragraph">
+<p><strong>Code contributed</strong>:
+  [<a href="https://github.com/CS2103AUG2017-T13-B1/main/pull/106/commits">Functional code</a>]
+  [<a href="https://github.com/CS2103AUG2017-T13-B1/main/pull/62/commits/f82cbafa6a8a3fb5797b7ae7ebe72b92a3644d7a">Test code</a>]</p>
+</div>
+<div class="sect2">
+<h3 id="enhancement-added-add-date-of-birth-field-to-the-add-command"><a class="link" href="#enhancement-added-add-date-of-birth-field-to-the-add-command">Enhancement Added: Add Date of Birth field to the add command</a></h3>
+<div class="sect3">
+<h4 id="external-behavior"><a class="link" href="#external-behavior">External behavior</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: User Guide]</mark></p>
+</div>
+<div class="paragraph">
+<p>Included the date of birth field within the details of the person&#8217;s record to be added
+,edited and displayed in the UI.</p>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+</div>
+<div class="sect3">
+<h4 id="justification"><a class="link" href="#justification">Justification</a></h4>
+<div class="paragraph">
+<p>The Date of Birth of a person signifies the age of the person existing in the record
+to be used by insurance class to check eligibility.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="implementation"><a class="link" href="#implementation">Implementation</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: Developer Guide]</mark></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="addition-of-date-of-birth-field"><a class="link" href="#addition-of-date-of-birth-field">Addition of Date of Birth field</a></h3>
+<div class="paragraph">
+<p>The Date of birth field includes information concerning the age of the user stored in the record.
+Its impact is noticed in the add and edit command.</p>
+</div>
+<div class="paragraph">
+<p>The <code>add</code> command has the following format:</p>
+</div>
+<div class="paragraph">
+<p><code>add n/NAME [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [g/Gender] [d/DATE_OF_BIRTH] [t/TAG]&#8230;&#8203;</code></p>
+</div>
+<div class="paragraph">
+<p>The prefix d/ as indicated in the CliSyntax.java denotes the beginning of the date of birth argument.</p>
+</div>
+<div class="paragraph">
+<p>The class DateOfBirth.java within the Model component , validates the input from the user through the following regex:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"> <span class="directive">public</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span> DOB_VALIDATION_REGEX = <span class="string"><span class="delimiter">&quot;</span><span class="char">\\</span><span class="content">d+[</span><span class="char">\\</span><span class="content">s-./,]</span><span class="char">\\</span><span class="content">p{Alnum}+[</span><span class="char">\\</span><span class="content">s-./,]</span><span class="char">\\</span><span class="content">d+.*</span><span class="delimiter">&quot;</span></span>;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With the help of the date parser(details mentioned above) , the acceptance of the date format
+is flexible and inclusive.</p>
+</div>
+<div class="paragraph">
+<p>When the d/ is encountered , the trailing argument is passed into <code>isValidDateOfBirth(String test)</code> for validation when constructing the <code>DateOfBirth</code> object.
+eg : <code>add n/John Doe p/98765432 d/27 01 1997 g/MALE</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"> <span class="comment">/**
+      * Validates given Date of Birth.
+      *
+      * @throws IllegalValueException if given date of birth string is invalid.
+      */</span>
+     <span class="directive">public</span> DateOfBirth(<span class="predefined-type">String</span> dob) <span class="directive">throws</span> IllegalValueException {
+         requireNonNull(dob);
+         <span class="keyword">if</span> (dob.isEmpty()) {
+             <span class="keyword">throw</span> <span class="keyword">new</span> EmptyFieldException(PREFIX_DOB);
+         }
+         <span class="keyword">if</span> (!isValidDateOfBirth(dob)) {
+             <span class="keyword">throw</span> <span class="keyword">new</span> IllegalValueException(MESSAGE_DOB_CONSTRAINTS);
+         }
+         <span class="local-variable">this</span>.dateOfBirth = <span class="keyword">new</span> DateParser().parse(dob);
+         <span class="local-variable">this</span>.dateSet = <span class="predefined-constant">true</span>;
+     }
+
+ <span class="comment">/**
+ * Returns true if a given string is a valid person date of birth.
+ */</span>
+ <span class="directive">public</span> <span class="directive">static</span> <span class="type">boolean</span> isValidDateOfBirth(<span class="predefined-type">String</span> test) {
+        <span class="keyword">return</span> test.matches(DOB_VALIDATION_REGEX);
+ }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Therefore, in the above example, <code>"27 01 1997"</code> is passed as the argument.</p>
+</div>
+<div class="paragraph">
+<p>Date of birth field is also an optional field , unlike the Name field. When the date of birth is not specified,
+eg :  add n/Johnny Doe  , the no-argument constructor is used.
+It sets the <code>value</code> of the <code>DateOfBirth</code> object to an empty string without any validation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> DateOfBirth() {
+        <span class="local-variable">this</span>.dateOfBirth = LocalDate.now();
+        <span class="local-variable">this</span>.dateSet = <span class="predefined-constant">false</span>;
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the above code snippet , the dataset variable denotes if the user specified the date
+of birth of the entry. This helps in assigning an empty string to an empty object.</p>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="enhancement-added-include-gender-field"><a class="link" href="#enhancement-added-include-gender-field">Enhancement Added: Include Gender field</a></h3>
+<div class="sect3">
+<h4 id="external-behavior-2"><a class="link" href="#external-behavior-2">External behavior</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: User Guide]</mark></p>
+</div>
+<div class="paragraph">
+<p>Included the Gender field within the details of the person&#8217;s record to be added
+,edited and displayed in the UI.</p>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+</div>
+<div class="sect3">
+<h4 id="justification-2"><a class="link" href="#justification-2">Justification</a></h4>
+<div class="paragraph">
+<p>The gender of a person signifies the gender of the person existing in the record.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="implementation-2"><a class="link" href="#implementation-2">Implementation</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: Developer Guide]</mark></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="addition-of-gender-field"><a class="link" href="#addition-of-gender-field">Addition of Gender field</a></h3>
+<div class="paragraph">
+<p>The Gender field includes information concerning the gender of the user stored in the record.
+Its impact is noticed in the add and edit command.</p>
+</div>
+<div class="paragraph">
+<p>The <code>add</code> command has the following format:</p>
+</div>
+<div class="paragraph">
+<p><code>add n/NAME [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [d/DATE_OF_BIRTH] [g/GENDER] [t/TAG]&#8230;&#8203;</code></p>
+</div>
+<div class="paragraph">
+<p>The prefix g/ as indicated in the CliSyntax.java denotes the beginning of the gender argument.</p>
+</div>
+<div class="paragraph">
+<p>The class Gender.java within the Model component , validates the input from the user through the following regex:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span> GENDER_VALIDATION_REGEX = <span class="string"><span class="delimiter">&quot;</span><span class="content">(?i)</span><span class="char">\\</span><span class="content">b(female|f|male|m|other|o|</span><span class="delimiter">&quot;</span></span>
+            + <span class="string"><span class="delimiter">&quot;</span><span class="content">notspecified|not_specified|not specified)</span><span class="char">\\</span><span class="content">b</span><span class="delimiter">&quot;</span></span>;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The above regex accepts the words : female, male , other , o , f or m
+, not_specified regardless of the case they are entered in.</p>
+</div>
+<div class="paragraph">
+<p>The gender field is of type ENUM and can consist of the following values:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">enum</span> GenderType {
+        NOT_SPECIFIED, MALE, FEMALE, OTHER
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When the g/ is encountered , the trailing argument is passed into <code>isValidGender(String test)</code> for validation when constructing the <code>Gender</code> object.
+eg : <code>add n/John Doe p/98765432 d/27 01 1997 g/m</code>
+Therefore, in the above example, <code>"m"</code> is passed as the argument.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"> <span class="comment">/**
+      * Validates given gender.
+      *
+      * @throws IllegalValueException if given gender string is invalid.
+      */</span>
+     <span class="directive">public</span> Gender(<span class="predefined-type">String</span> gen) <span class="directive">throws</span> IllegalValueException {
+         requireNonNull(gen);
+         <span class="keyword">if</span> (gen.isEmpty()) {
+             <span class="keyword">throw</span> <span class="keyword">new</span> EmptyFieldException(PREFIX_GENDER);
+         }
+         <span class="keyword">if</span> (!isValidGender(gen)) {
+             <span class="keyword">throw</span> <span class="keyword">new</span> IllegalValueException(MESSAGE_GENDER_CONSTRAINTS);
+         }
+         <span class="keyword">switch</span> (gen.toLowerCase()) {
+         <span class="keyword">case</span> (<span class="string"><span class="delimiter">&quot;</span><span class="content">female</span><span class="delimiter">&quot;</span></span>):
+         <span class="keyword">case</span> (<span class="string"><span class="delimiter">&quot;</span><span class="content">f</span><span class="delimiter">&quot;</span></span>):
+             <span class="local-variable">this</span>.value = GenderType.FEMALE;
+             <span class="keyword">break</span>;
+         <span class="keyword">case</span> (<span class="string"><span class="delimiter">&quot;</span><span class="content">male</span><span class="delimiter">&quot;</span></span>):
+         <span class="keyword">case</span> (<span class="string"><span class="delimiter">&quot;</span><span class="content">m</span><span class="delimiter">&quot;</span></span>):
+             <span class="local-variable">this</span>.value = GenderType.MALE;
+             <span class="keyword">break</span>;
+         <span class="keyword">case</span> (<span class="string"><span class="delimiter">&quot;</span><span class="content">other</span><span class="delimiter">&quot;</span></span>):
+         <span class="keyword">case</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">o</span><span class="delimiter">&quot;</span></span>):
+             <span class="local-variable">this</span>.value = GenderType.OTHER;
+             <span class="keyword">break</span>;
+         <span class="keyword">default</span>:
+             <span class="local-variable">this</span>.value = GenderType.NOT_SPECIFIED;
+         }
+         <span class="local-variable">this</span>.genderset = <span class="predefined-constant">true</span>;
+     }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As can be seen from the above code snippet , the given argument is converted to lower case and then given a value amongst
+the available enumerated constants : FEMALE , MALE and NOT_SPECIFIED (when no gender is specified)</p>
+</div>
+<div class="paragraph">
+<p>The <code>genderset</code> variable is specified to know if the user has entered the gender of the entry
+or not. If not , instead of displaying the default enum type :NOT_SPECIFIED , we can display
+a blank string. If specified , we can display the actual gender of the entry in a string format.</p>
+</div>
+<div class="paragraph">
+<p>Gender field is also an optional field , unlike the Name field. When the gender is not specified,
+eg :  add n/Johnny Doe  , the no-argument constructor is used.
+It sets the <code>value</code> of the <code>Gender</code> object to the following :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> Gender() {
+        <span class="local-variable">this</span>.value = GenderType.NOT_SPECIFIED;
+        <span class="local-variable">this</span>.genderset = <span class="predefined-constant">false</span>;
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As the value above specified by the user is empty , we make sure to set the genderset variable
+to False.</p>
+</div>
+<div class="paragraph">
+<p>When requested by the UI , to display , teh following code snippet is used to display either
+an empty string or the gender:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="predefined-type">String</span> toString() {
+        <span class="keyword">return</span> genderset ? value.toString() : <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>;
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="enhancements-proposed"><a class="link" href="#enhancements-proposed">Enhancements Proposed:</a></h3>
+<div class="paragraph">
+<p>Autofill Feature<br>
+Print Commmand<br>
+Insurance Management Features<br></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="other-contributions"><a class="link" href="#other-contributions">Other contributions</a></h3>
+<div class="paragraph">
+<p>Helped brainstorm ideas for the project and its enhancements</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2017-11-13 12:59:07 +00:00
+</div>
+</div>
+</body>
+</html>

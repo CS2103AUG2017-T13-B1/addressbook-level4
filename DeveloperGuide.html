@@ -5,14 +5,14 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.3">
-<title>AddressBook Level 4 - Developer Guide</title>
+<title>LISA: Levels Integrated Secretarial Agent - Developer Guide</title>
 <link rel="stylesheet" href="stylesheets/gh-pages.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="stylesheets/coderay-asciidoctor.css">
 </head>
 <body class="article">
 <div id="header">
-<h1>AddressBook Level 4 - Developer Guide</h1>
+<h1>LISA: Levels Integrated Secretarial Agent - Developer Guide</h1>
 </div>
 <div id="content">
 <div id="preamble">
@@ -44,9 +44,26 @@
 </li>
 <li><a href="#implementation">3. Implementation</a>
 <ul class="sectlevel2">
-<li><a href="#undo-redo-mechanism">3.1. Undo/Redo mechanism</a></li>
-<li><a href="#logging">3.2. Logging</a></li>
-<li><a href="#configuration">3.3. Configuration</a></li>
+<li><a href="#multiple-command-words">3.1. Multiple Command Words</a></li>
+<li><a href="#prefix-autofill">3.2. Prefix Autofill</a></li>
+<li><a href="#date-parser">3.3. Date Parser</a></li>
+<li><a href="#autofill-feature">3.4. Autofill Feature</a></li>
+<li><a href="#making-name-the-only-compulsory-field-in-add-command">3.5. Making NAME the only compulsory field in Add Command</a></li>
+<li><a href="#addition-of-date-of-birth-field">3.6. Addition of Date of Birth field</a></li>
+<li><a href="#addition-of-gender-field">3.7. Addition of Gender field</a></li>
+<li><a href="#improved-contact-arrangement-sort-function">3.8. Improved Contact Arrangement: sort function</a></li>
+<li><a href="#improved-tag-management">3.9. Improved Tag Management</a></li>
+<li><a href="#searchbox">3.10. Searchbox</a></li>
+<li><a href="#reading-and-storing-life-insurances">3.11. Reading and Storing Life Insurances:</a></li>
+<li><a href="#add-life-insurance-command">3.12. Add Life Insurance Command:</a></li>
+<li><a href="#addition-of-print-command">3.13. Addition of Print Command</a></li>
+<li><a href="#addition-of-why-command">3.14. Addition of Why Command</a></li>
+<li><a href="#save-load-contract-pdf-file">3.15. Save/Load (contract) pdf file</a></li>
+<li><a href="#switching-middle-panel-between-profile-and-insurance-page">3.16. Switching middle panel between Profile and Insurance page</a></li>
+<li><a href="#restrict-tab-key-to-switching-only-between-the-textfields">3.17. Restrict 'Tab' key to switching only between the textfields</a></li>
+<li><a href="#undo-redo-mechanism">3.18. Undo/Redo mechanism</a></li>
+<li><a href="#logging">3.19. Logging</a></li>
+<li><a href="#configuration">3.20. Configuration</a></li>
 </ul>
 </li>
 <li><a href="#documentation">4. Documentation</a>
@@ -78,7 +95,11 @@
 </ul>
 </li>
 <li><a href="#user-stories">Appendix B: User Stories</a></li>
-<li><a href="#use-cases">Appendix C: Use Cases</a></li>
+<li><a href="#use-cases">Appendix C: Use Cases</a>
+<ul class="sectlevel2">
+<li><a href="#use-case-filter-contact-with-search-box">C.1. Use case: Filter contact with search box</a></li>
+</ul>
+</li>
 <li><a href="#non-functional-requirements">Appendix D: Non Functional Requirements</a></li>
 <li><a href="#glossary">Appendix E: Glossary</a></li>
 <li><a href="#product-survey">Appendix F: Product Survey</a></li>
@@ -424,7 +445,7 @@ Note how the event is propagated through the <code>EventsCenter</code> to the <c
 <p><strong>API</strong> : <a href="https://github.com/se-edu/addressbook-level4/tree/master/src/main/java/seedu/address/ui/Ui.java"><code>Ui.java</code></a></p>
 </div>
 <div class="paragraph">
-<p>The UI consists of a <code>MainWindow</code> that is made up of parts e.g.<code>CommandBox</code>, <code>ResultDisplay</code>, <code>PersonListPanel</code>, <code>StatusBarFooter</code>, <code>BrowserPanel</code> etc. All these, including the <code>MainWindow</code>, inherit from the abstract <code>UiPart</code> class.</p>
+<p>The UI consists of a <code>MainWindow</code> that is made up of parts e.g.<code>CommandBox</code>, <code>SearchBox</code>, <code>ResultDisplay</code>, <code>PersonListPanel</code>, <code>StatusBarFooter</code>, <code>ProfilePanel</code> etc. All these, including the <code>MainWindow</code>, inherit from the abstract <code>UiPart</code> class.</p>
 </div>
 <div class="paragraph">
 <p>The <code>UI</code> component uses JavaFx UI framework. The layout of these UI parts are defined in matching <code>.fxml</code> files that are in the <code>src/main/resources/view</code> folder. For example, the layout of the <a href="https://github.com/se-edu/addressbook-level4/tree/master/src/main/java/seedu/address/ui/MainWindow.java"><code>MainWindow</code></a> is specified in <a href="https://github.com/se-edu/addressbook-level4/tree/master/src/main/resources/view/MainWindow.fxml"><code>MainWindow.fxml</code></a></p>
@@ -571,7 +592,1427 @@ Note how the event is propagated through the <code>EventsCenter</code> to the <c
 <p>This section describes some noteworthy details on how certain features are implemented.</p>
 </div>
 <div class="sect2">
-<h3 id="undo-redo-mechanism"><a class="link" href="#undo-redo-mechanism">3.1. Undo/Redo mechanism</a></h3>
+<h3 id="multiple-command-words"><a class="link" href="#multiple-command-words">3.1. Multiple Command Words</a></h3>
+<div class="paragraph">
+<p>Many commands require the user to type out the entire word which can be a hassle. We want to provide
+familiar users with shortcuts to the commands. Also, was suggested by textbook.</p>
+</div>
+<div class="paragraph">
+<p>This feature is implemented by adding a public constant <code>String[] COMMAND_WORDS</code> in every command class.
+The <code>AddressBookParser</code> will also have to change its implementation. We classified every command
+into an enumerator <code>CommandType</code> which all the command words can funnel into.</p>
+</div>
+<div class="paragraph">
+<p><code>v1.5 Implementation</code><br>
+A <code>HashMap</code> is used to contain all links from key command words to their <code>CommandType</code> enumerator.
+The <code>commandWord</code> is passed into the processing function. The function checks if the map is empty,
+in which case, it calls the map setup function, then refers to the map to get its respective
+<code>CommandType</code> and the default is <code>CommandType.NONE</code> which returns an invalid command error message.
+The map setup function converts every <code>COMMAND_WORDS</code> to a stream before mapping it with the <code>forEach</code>
+function.</p>
+</div>
+<div class="paragraph">
+<p><code>v1.2 Implementation</code><br>
+A brute force approach is applied where the <code>commandWord</code> is compared against every command&#8217;s
+<code>COMMAND_WORDS</code> using for-in-if loops. Any successful comparison is to return the respective
+<code>CommandType</code> enumerator.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="prefix-autofill"><a class="link" href="#prefix-autofill">3.2. Prefix Autofill</a></h3>
+<div class="paragraph">
+<p>When adding a new insurance, all fields are required as a contract needs to be complete before it is valid.
+However, due to the multitude of information required, users should have the convenience of
+pressing enter with an unfilled command to trigger the autofill to prompt you with the prefixes
+required and move the the caret to the next field.</p>
+</div>
+<div class="paragraph">
+<p>This enhancement follows a similar method to the autofill feature, however, since it does not
+require the pulling of data from the LISA, it is simpler.</p>
+</div>
+<div class="paragraph">
+<p>A <code>MissingPrefixException</code> is thrown from the <code>AddLifeInsuranceCommandParser</code> in the case of
+a missing prefix OR an empty field. This exception is caught by the <code>LogicManager</code> which analyses
+and fills the missing prefix.</p>
+</div>
+<div class="paragraph">
+<p><strong>How the analysis is done</strong></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>catch (MissingPrefixException mpe) {
+        // this assertion is because this exception should only
+        // be thrown by the addli command,
+        // to change if this exception is used elsewhere
+        final String inputToTest = commandText;
+        assert Arrays.stream(AddLifeInsuranceCommand.COMMAND_WORDS).anyMatch(commandWord -&gt;
+            inputToTest.contains(commandWord));
+        commandText = getCommandWithFilledPrefixes(commandText);
+        throw mpe;
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Since we are assuming that this exception is only thrown by the <code>AddLifeInsuranceCommandParser</code> ,
+we use the assert here together with a lambda function to ensure that the <code>commandText</code> starts with
+any of the valid <code>COMMAND_WORDS</code>. In the case that another new function throws the same exception,
+this assert needs to be removed and the catch should handle the exception appropriately.</p>
+</div>
+<div class="paragraph">
+<p>The <code>commandText</code> is then sent to the autofill function which gets the constant <code>Set&lt;Prefix&gt;</code> from <code>CliSyntax</code>
+called <code>PREFIXES_INSURANCE</code> and filters the list according to which is not already inside the
+<code>commandText</code>, appends the prefixes and returns the filled text.</p>
+</div>
+<div class="paragraph">
+<p>The filled text is then passed on to the <code>history</code>. <code>commandBox</code> then takes over to show the last
+command as from the <code>historySnapshot</code> and places the caret at the 1st empty field found.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="date-parser"><a class="link" href="#date-parser">3.3. Date Parser</a></h3>
+<div class="paragraph">
+<p>The date parser was created as an easy alternative to parsing user input to create a <code>LocalDate</code>
+class. A string is obtained from the user containing details of the date and is to follow a
+Day-Month-Year format, separated by any of the common dividers (i.e. <code>\\s,/-.</code>). The rearrangement
+of the 3 details is not allowed due to the multitude of confusions it may come with.</p>
+</div>
+<div class="paragraph">
+<p>Pros of using this parser:</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>Date and month can be typed as a single digit</p>
+</li>
+<li>
+<p>Month can be expressed as a number or string, in both long and 3 letter forms (e.g Oct and October)</p>
+</li>
+<li>
+<p>Case-insensitive</p>
+</li>
+<li>
+<p><code>dateString(LocalDate date)</code> gives a very nice all-friendly string for display purposes</p>
+</li>
+<li>
+<p>Year can be expressed as 4-digits or 2-digits</p>
+</li>
+<li>
+<p>2 digit years are smartly corrected to a year before the current year, a commented line shows you where to change if you wish to change the correction bracket</p>
+</li>
+<li>
+<p>Ignores extra stuff after accepting a 4-digit year</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Cons of using this parser:</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>Only accepts Day-Month-Year format</p>
+</li>
+<li>
+<p>Have to conform to using a <code>LocalDate</code> class to store your dates</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>How the string is parsed</strong></p>
+</div>
+<div class="paragraph">
+<p>Below is the main parse function of the parser</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>public LocalDate parse(String dob) throws IllegalValueException {
+     List&lt;String&gt; arguments = Arrays.asList(dob.split("[\\s-/.,]"));
+     if (arguments.size() &lt; 2) {
+         throw new IllegalValueException(MESSAGE_DATE_CONSTRAINTS);
+     }
+     String day = arguments.get(0);
+     String month = arguments.get(1);
+     String year = arguments.size() &gt; 2 ? arguments.get(2)
+            : String.valueOf(LocalDate.now().getYear());
+     return LocalDate.parse(getValidDay(day) + " " + getValidMonth(month)
+            + " " + getValidYear(year), DATE_FORMAT);
+ }</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The string is first split using the delimiters as stated above using the <code>String::split</code> function.<br>
+If the number of arguments is less than 2, there is insufficient information to
+create a date and an exception os thrown. If more than 3 arguments are input,
+only th first 3 are taken, in the Day-Month_Year format. The year is optional
+which defaults to the current year if not input. The 3 details are then each
+passed into their own correcting function in order to fit the correct format
+for the actual <code>LocalDate::parse</code> method to create a <code>LocalDate</code> object according
+to a standard format.</p>
+</div>
+<div class="paragraph">
+<p>The <code>getValidDay</code> function simply checks if the date given is less than 32 as
+it only corrects dates up to the 31st (e.g. if you tried to input 31 Feb,
+<code>LocalDate::parse</code> will be able to help you correct to 28 or 29 Feb but it throws
+an exception if you tried to input 32 or higher). This function also checks if
+the date is a single digit, in which it will then add a zero in front to fit the
+standard format.</p>
+</div>
+<div class="paragraph">
+<p>The <code>getValidMonth</code> function does the same checks as the <code>getValidDay</code> function
+(i.e. input is 12 and below and add a zero if it is a single digit). In addition,
+it checks if the month was given as a name, if so, it then searches the constant
+string arrays in the parser to check the month. It allows a case-insensitive search
+(use of <code>String::toLowerCase</code> method) and 3 letter representations of months
+(<code>MONTH_NAME_LONG</code> and <code>MONTH_NAME_SHORT</code> const string arrays).</p>
+</div>
+<div class="paragraph">
+<p>The <code>getValidYear</code> function only takes in the first 4 characters if more than 4
+are provided and can only do this since it is the last argument in the string.
+It then checks if a 2-digit year was given, if so, it auto corrects to a bracket,
+currently defined as the last century. Else 4 digit form will be taken as
+the whole year. This implementation assumes the user does not intend a 2 or 3
+digit year. Otherwise, users will have to append zeros at the start of the year
+input to indicate.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="autofill-feature"><a class="link" href="#autofill-feature">3.4. Autofill Feature</a></h3>
+<div class="paragraph">
+<p>The <code>edit</code> command now allows empty fields to be entered to trigger an autofill response.
+The autofill replaces all empty fields entered in the command box at once.
+This idea stems from the consideration of convenience in editing typos in a contact. This is especially so
+when the user wishes to update a small typo in very long field but does not wish to re-type out everything in the current field.</p>
+</div>
+<div class="paragraph">
+<p>The <code>Undo</code> command can help reverse an added contact and pressing the up button will recall the used <code>add</code> command but
+this causes more hassle than needed. Also, the up button will not be able to recall a command that was used in a previous
+session which increases the need for an autofill feature.</p>
+</div>
+<div class="paragraph">
+<p><strong>How it is triggered</strong><br>
+Below is the activity diagram on how the <code>editCommandParser</code> works while editing the <code>editPersonDescriptor</code>.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/autofillactivitydiagram.png" alt="autofillactivitydiagram">
+</div>
+</div>
+<div class="paragraph">
+<p>The part in orange is the added branch to the the flow of activities. The set of argument validation events happen within each <code>Person</code>
+attribute&#8217;s constructor. (i.e. constructors of <code>Name</code> <code>Email</code> <code>Address</code> <code>Phone</code> <code>DateOfBirth</code>)</p>
+</div>
+<div class="paragraph">
+<p>The exception thrown, <code>EmptyFieldException</code>, is a subclass of <code>ParserException</code> and helps indicate the presence of an empty field
+which is to be distinguished from an argument regex mismatch and to be thrown out to the <code>LogicManager</code> which has access to
+the contacts and is able to carry out the autofill feature. The <code>EmptyFieldException</code> is conceptually
+correct to be a subclass of <code>ParserException</code> as it is indeed a type of exception when processing invalid arguments.
+Furthermore, there is no need to declare a new type of exception thrown as it is a type of <code>ParseException</code>.</p>
+</div>
+<div class="paragraph">
+<p><strong>How the autofilling is done</strong><br>
+<code>v1.2</code><br>
+The <code>EmptyFieldException</code> contains the empty field prefix and the index of the contact in concern which allows the
+<code>LogicManager</code> to retrieve the relevant detail and replace the prefix with the filled prefix. However, this method
+restricts the feature to only fill one prefix at a time, per enter key pressed. Also, in conjunction with the feature
+as in <strong>3.2</strong>, this causes a problem as contacts with empty fields will not be able to have other specified fields filled.</p>
+</div>
+<div class="paragraph">
+<p><code>v1.3</code><br>
+The autofill function now scans and replaces every prefix that is present in the command line. Effectively
+solving the problem of inconvenience where multiple enter key presses is required to fill multiple fields and
+contacts with empty fields no longer prevent the autofilling of other empty prefixes. This also means that
+the <code>EmptyFieldException</code> is no longer unique to the empty prefix and thus, there is no need for the prefix parameter,
+which is removed from the constructor of the exception.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="making-name-the-only-compulsory-field-in-add-command"><a class="link" href="#making-name-the-only-compulsory-field-in-add-command">3.5. Making NAME the only compulsory field in Add Command</a></h3>
+<div class="paragraph">
+<p>The <code>add</code> command follows the format below:</p>
+</div>
+<div class="paragraph">
+<p><code>add n/NAME [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [d/DATE_OF_BIRTH] [g/GENDER] [t/TAG]&#8230;&#8203;</code></p>
+</div>
+<div class="paragraph">
+<p>This means when adding a new person in LISA, the user only needs to provide value for the compulsory <code>NAME</code> field. Every other field is optional.</p>
+</div>
+<div class="paragraph">
+<p>Every field in a person corresponds to one class type. Inside each class, there exists a <code>final String FIELD_VALIDATION_REGEX</code> used for validation during construction.
+For instance, the <code>PHONE</code> field has <code>Phone</code> class containing a <code>PHONE_VALIDATION_REGEX</code> which only accepts numbers that are at least three digits long:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span> PHONE_VALIDATION_REGEX = <span class="string"><span class="delimiter">&quot;</span><span class="char">\\</span><span class="content">d{3,}</span><span class="delimiter">&quot;</span></span>;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Whenever the phone tag <code>p/</code> is provided in the input, e.g. <code>add n/John Doe p/98765432</code> and <code>add n/Johnny Doe p/</code>,
+the string after <code>p/</code> is trimmed and passed into <code>isValidPhone(String test)</code> for validation when constructing the <code>Phone</code> object.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> Phone(<span class="predefined-type">String</span> phone) <span class="directive">throws</span> IllegalValueException {
+    <span class="comment">// ... constructor logic ...</span>
+    <span class="keyword">if</span> (!isValidPhone(trimmedPhone)) {
+        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalValueException(MESSAGE_PHONE_CONSTRAINTS);
+    }
+    <span class="local-variable">this</span>.value = trimmedPhone;
+}
+
+<span class="directive">public</span> <span class="directive">static</span> <span class="type">boolean</span> isValidPhone(<span class="predefined-type">String</span> test) {
+    <span class="keyword">return</span> test.matches(PHONE_VALIDATION_REGEX);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Therefore, in the first example, <code>"98765432"</code> is passed as the argument. In the second example, <code>""</code> is passed in since nothing was provided after <code>p/</code>.
+According to <code>PHONE_VALIDATION_REGEX</code>, the former passes the validation while the latter throws an <code>IllegalValueException</code>.
+Overall, this guarantees that the user input will always be validated.</p>
+</div>
+<div class="paragraph">
+<p>If the phone tag is not provided, e.g. <code>add n/John Doe e/johnd@email.com</code>, the no-argument constructor is used.
+It sets the <code>value</code> of the <code>Phone</code> object to an empty string without any validation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> Phone() {
+    <span class="local-variable">this</span>.value = <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The logic provided above can be applied to other optional fields, namely <code>[p/PHONE_NUMBER]</code>, <code>[e/EMAIL]</code>, <code>[a/ADDRESS]</code>, <code>[g/GENDER]</code> and <code>[d/DATE_OF_BIRTH]</code>.
+<code>[t/TAG]&#8230;&#8203;</code> uses a different implementation and will not be covered in this section.</p>
+</div>
+<div class="paragraph">
+<p>Due to this implementation, the field attribute of a <code>Person</code> object can never be <code>null</code>.
+If a field is not provided during input, an object with the value of an empty string will still be created and assigned to the corresponding attribute in <code>Person</code>.</p>
+</div>
+<div class="paragraph">
+<p>An alternative implementation would be "Do not create the field object at all if it is not specified in the user input".
+This approach is more flexible, but may require resolving " value equals to <code>null</code> " and <code>NullPointerException</code> when adding and editing a person.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="addition-of-date-of-birth-field"><a class="link" href="#addition-of-date-of-birth-field">3.6. Addition of Date of Birth field</a></h3>
+<div class="paragraph">
+<p>The Date of birth field includes information concerning the age of the user stored in the record.
+Its impact is noticed in the add and edit command.</p>
+</div>
+<div class="paragraph">
+<p>The <code>add</code> command has the following format:</p>
+</div>
+<div class="paragraph">
+<p><code>add n/NAME [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [g/Gender] [d/DATE_OF_BIRTH] [t/TAG]&#8230;&#8203;</code></p>
+</div>
+<div class="paragraph">
+<p>The prefix d/ as indicated in the CliSyntax.java denotes the beginning of the date of birth argument.</p>
+</div>
+<div class="paragraph">
+<p>The class DateOfBirth.java within the Model component , validates the input from the user through the following regex:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"> <span class="directive">public</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span> DOB_VALIDATION_REGEX = <span class="string"><span class="delimiter">&quot;</span><span class="char">\\</span><span class="content">d+[</span><span class="char">\\</span><span class="content">s-./,]</span><span class="char">\\</span><span class="content">p{Alnum}+[</span><span class="char">\\</span><span class="content">s-./,]</span><span class="char">\\</span><span class="content">d+.*</span><span class="delimiter">&quot;</span></span>;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>With the help of the date parser(details mentioned above) , the acceptance of the date format
+is flexible and inclusive.</p>
+</div>
+<div class="paragraph">
+<p>When the d/ is encountered , the trailing argument is passed into <code>isValidDateOfBirth(String test)</code> for validation when constructing the <code>DateOfBirth</code> object.
+eg : <code>add n/John Doe p/98765432 d/27 01 1997 g/MALE</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"> <span class="comment">/**
+      * Validates given Date of Birth.
+      *
+      * @throws IllegalValueException if given date of birth string is invalid.
+      */</span>
+     <span class="directive">public</span> DateOfBirth(<span class="predefined-type">String</span> dob) <span class="directive">throws</span> IllegalValueException {
+         requireNonNull(dob);
+         <span class="keyword">if</span> (dob.isEmpty()) {
+             <span class="keyword">throw</span> <span class="keyword">new</span> EmptyFieldException(PREFIX_DOB);
+         }
+         <span class="keyword">if</span> (!isValidDateOfBirth(dob)) {
+             <span class="keyword">throw</span> <span class="keyword">new</span> IllegalValueException(MESSAGE_DOB_CONSTRAINTS);
+         }
+         <span class="local-variable">this</span>.dateOfBirth = <span class="keyword">new</span> DateParser().parse(dob);
+         <span class="local-variable">this</span>.dateSet = <span class="predefined-constant">true</span>;
+     }
+
+ <span class="comment">/**
+ * Returns true if a given string is a valid person date of birth.
+ */</span>
+ <span class="directive">public</span> <span class="directive">static</span> <span class="type">boolean</span> isValidDateOfBirth(<span class="predefined-type">String</span> test) {
+        <span class="keyword">return</span> test.matches(DOB_VALIDATION_REGEX);
+ }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Therefore, in the above example, <code>"27 01 1997"</code> is passed as the argument.</p>
+</div>
+<div class="paragraph">
+<p>Date of birth field is also an optional field , unlike the Name field. When the date of birth is not specified,
+eg :  add n/Johnny Doe  , the no-argument constructor is used.
+It sets the <code>value</code> of the <code>DateOfBirth</code> object to an empty string without any validation.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> DateOfBirth() {
+        <span class="local-variable">this</span>.dateOfBirth = LocalDate.now();
+        <span class="local-variable">this</span>.dateSet = <span class="predefined-constant">false</span>;
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the above code snippet , the dataset variable denotes if the user specified the date
+of birth of the entry. This helps in assigning an empty string to an empty object.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="addition-of-gender-field"><a class="link" href="#addition-of-gender-field">3.7. Addition of Gender field</a></h3>
+<div class="paragraph">
+<p>The Gender field includes information concerning the gender of the user stored in the record.
+Its impact is noticed in the add and edit command.</p>
+</div>
+<div class="paragraph">
+<p>The <code>add</code> command has the following format:</p>
+</div>
+<div class="paragraph">
+<p><code>add n/NAME [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [d/DATE_OF_BIRTH] [g/GENDER] [t/TAG]&#8230;&#8203;</code></p>
+</div>
+<div class="paragraph">
+<p>The prefix g/ as indicated in the CliSyntax.java denotes the beginning of the gender argument.</p>
+</div>
+<div class="paragraph">
+<p>The class Gender.java within the Model component , validates the input from the user through the following regex:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span> GENDER_VALIDATION_REGEX = <span class="string"><span class="delimiter">&quot;</span><span class="content">(?i)</span><span class="char">\\</span><span class="content">b(female|f|male|m|other|o|</span><span class="delimiter">&quot;</span></span>
+            + <span class="string"><span class="delimiter">&quot;</span><span class="content">notspecified|not_specified|not specified)</span><span class="char">\\</span><span class="content">b</span><span class="delimiter">&quot;</span></span>;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The above regex accepts the words : female, male , other , o , f or m
+, not_specified regardless of the case they are entered in.</p>
+</div>
+<div class="paragraph">
+<p>The gender field is of type ENUM and can consist of the following values:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="type">enum</span> GenderType {
+        NOT_SPECIFIED, MALE, FEMALE, OTHER
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>When the g/ is encountered , the trailing argument is passed into <code>isValidGender(String test)</code> for validation when constructing the <code>Gender</code> object.
+eg : <code>add n/John Doe p/98765432 d/27 01 1997 g/m</code>
+Therefore, in the above example, <code>"m"</code> is passed as the argument.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"> <span class="comment">/**
+      * Validates given gender.
+      *
+      * @throws IllegalValueException if given gender string is invalid.
+      */</span>
+     <span class="directive">public</span> Gender(<span class="predefined-type">String</span> gen) <span class="directive">throws</span> IllegalValueException {
+         requireNonNull(gen);
+         <span class="keyword">if</span> (gen.isEmpty()) {
+             <span class="keyword">throw</span> <span class="keyword">new</span> EmptyFieldException(PREFIX_GENDER);
+         }
+         <span class="keyword">if</span> (!isValidGender(gen)) {
+             <span class="keyword">throw</span> <span class="keyword">new</span> IllegalValueException(MESSAGE_GENDER_CONSTRAINTS);
+         }
+         <span class="keyword">switch</span> (gen.toLowerCase()) {
+         <span class="keyword">case</span> (<span class="string"><span class="delimiter">&quot;</span><span class="content">female</span><span class="delimiter">&quot;</span></span>):
+         <span class="keyword">case</span> (<span class="string"><span class="delimiter">&quot;</span><span class="content">f</span><span class="delimiter">&quot;</span></span>):
+             <span class="local-variable">this</span>.value = GenderType.FEMALE;
+             <span class="keyword">break</span>;
+         <span class="keyword">case</span> (<span class="string"><span class="delimiter">&quot;</span><span class="content">male</span><span class="delimiter">&quot;</span></span>):
+         <span class="keyword">case</span> (<span class="string"><span class="delimiter">&quot;</span><span class="content">m</span><span class="delimiter">&quot;</span></span>):
+             <span class="local-variable">this</span>.value = GenderType.MALE;
+             <span class="keyword">break</span>;
+         <span class="keyword">case</span> (<span class="string"><span class="delimiter">&quot;</span><span class="content">other</span><span class="delimiter">&quot;</span></span>):
+         <span class="keyword">case</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">o</span><span class="delimiter">&quot;</span></span>):
+             <span class="local-variable">this</span>.value = GenderType.OTHER;
+             <span class="keyword">break</span>;
+         <span class="keyword">default</span>:
+             <span class="local-variable">this</span>.value = GenderType.NOT_SPECIFIED;
+         }
+         <span class="local-variable">this</span>.genderset = <span class="predefined-constant">true</span>;
+     }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As can be seen from the above code snippet , the given argument is converted to lower case and then given a value amongst
+the available enumerated constants : FEMALE , MALE and NOT_SPECIFIED (when no gender is specified)</p>
+</div>
+<div class="paragraph">
+<p>The <code>genderset</code> variable is specified to know if the user has entered the gender of the entry
+or not. If not , instead of displaying the default enum type :NOT_SPECIFIED , we can display
+a blank string. If specified , we can display the actual gender of the entry in a string format.</p>
+</div>
+<div class="paragraph">
+<p>Gender field is also an optional field , unlike the Name field. When the gender is not specified,
+eg :  add n/Johnny Doe  , the no-argument constructor is used.
+It sets the <code>value</code> of the <code>Gender</code> object to the following :</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> Gender() {
+        <span class="local-variable">this</span>.value = GenderType.NOT_SPECIFIED;
+        <span class="local-variable">this</span>.genderset = <span class="predefined-constant">false</span>;
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As the value above specified by the user is empty , we make sure to set the genderset variable
+to False.</p>
+</div>
+<div class="paragraph">
+<p>When requested by the UI , to display , teh following code snippet is used to display either
+an empty string or the gender:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="predefined-type">String</span> toString() {
+        <span class="keyword">return</span> genderset ? value.toString() : <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>;
+    }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="improved-contact-arrangement-sort-function"><a class="link" href="#improved-contact-arrangement-sort-function">3.8. Improved Contact Arrangement: sort function</a></h3>
+<div class="paragraph">
+<p>Originally, new contacts added into LISA will be added to the end of the list of contacts. If there were 19 contacts in
+LISA, then adding a new person named "Adam Lim" for example (add n/Adam Lim) will place him as the 20th contact in LISA.
+While a chronological order of contacts has limited benefits, especially when the user wishes to scroll through contacts
+manually or read through contacts in a printed contact list, a list of contacts sorted by alphabetical order will be much
+more useful.</p>
+</div>
+<div class="paragraph">
+<p>UniquePersonList.java</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">public</span> <span class="type">void</span> sortPersons() <span class="directive">throws</span> DuplicatePersonException {
+        ObservableList&lt;Person&gt; listToSort = FXCollections.observableArrayList(internalList);
+        listToSort.sort((ReadOnlyPerson first, ReadOnlyPerson second)-&gt; {
+            <span class="type">int</span> x = <span class="predefined-type">String</span>.CASE_INSENSITIVE_ORDER.compare(first.getName().fullName, second.getName().fullName);
+            <span class="keyword">if</span> (x == <span class="integer">0</span>) {
+                x = (first.getName().fullName).compareTo(second.getName().fullName);
+            }
+            <span class="keyword">return</span> x;
+        });
+        UniquePersonList listToReplace = <span class="keyword">new</span> UniquePersonList();
+        <span class="keyword">for</span> (ReadOnlyPerson person : listToSort) {
+            listToReplace.add(person);
+        }
+        setPersons(listToReplace);
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>sortPersons() takes in the old list of persons, sorts them alphabetically, and returns a replaced list of persons, now sorted
+in alphabetical order. This method is called in both setPerson and setPersons methods in ReadOnlyPerson, after a new person
+is added into the address book.</p>
+</div>
+<div class="paragraph">
+<p>Example, add a new person named "Kelvin Liew"</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/BeforeAddingKelvin.png" alt="BeforeAddingKelvin" width="800">
+</div>
+</div>
+<div class="paragraph">
+<p>After the new contact "Kelvin Liew" is added, he is well placed between Irfan Ibrahim and Mary Jane.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/AfterAddingKelvin.png" alt="width=" width="800"">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="improved-tag-management"><a class="link" href="#improved-tag-management">3.9. Improved Tag Management</a></h3>
+<div class="paragraph">
+<p>The original tag system management within the edit function has several difficulties
+which cause the user inconvenience and inefficiency in managing
+their tags. This is mainly due to how the editing of a tag works. When using the
+ edit function, just like how entering a new name will replace the existing name,
+ using the tag prefix to add tags to a user will end up overwriting all the existing tags
+  and replace it with the new tag(s). For example, entering the <code>edit 1 t/Awesome</code> results in the following:<br>
+Command entered:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/addtagui.jpg" alt="addtagui">
+</div>
+</div>
+<div class="paragraph">
+<p>Original result:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/addtagoverwritten.png" alt="addtagoverwritten">
+</div>
+</div>
+<div class="paragraph">
+<p>Main use case:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/addtagadded.png" alt="addtagadded">
+</div>
+</div>
+<div class="paragraph">
+<p>What would be in line with a main use case of <code>edit 1 t/trainer</code> is to add the <code>trainer</code> tag onto
+ existing tags instead. This entire process is controlled by the edit function whereby an
+ <code>editPersonDescriptor</code>, which is a class within the <code>EditCommand</code> class
+ is created using all the parsed arguments and represents all the changes
+ that are to be made. Then the <code>createEditedPerson</code> method is called to compare between
+ the <code>personToEdit</code> and the <code>editPersonDescriptor</code> and merge all the changes to create a new <code>Person</code>.</p>
+</div>
+<div class="paragraph">
+<p>Thus, the changes to enable such a feature is mainly implemented in the <code>createEditedPerson</code> method
+ the <code>Set</code> method <code>addAll()</code> is called to facilitate the merging of the tags.</p>
+</div>
+<div class="paragraph">
+<p>However, one thing to note here is that since the overwriting implementation is no longer used,
+ the only way for the tags to be deleted is gone which means we must also implement a method
+ of deleting tags. The intent to delete a tag must be clear and it is difficult to represent
+ the intention to delete using the current notation for the edit command. This is why we introduced a new
+ prefix to process detagging <code>dt/</code>. This way the user can clearly express the intent on which tags
+ are to be deleted and which are to remain, along with the ability to add on. The detagging is parsed
+ and implemented the same way as the tagging which simplifies constructing and understanding
+ the structure of tag deletion. We added a new <code>Set&lt;Tag&gt; tagsToBeDeleted</code> in the <code>editPersonDescriptor</code>
+ to signify deletion changes. Then we use the <code>removeAll</code> method from the <code>Set</code> class
+ which allows us to selectively only remove the tags in the user input.</p>
+</div>
+<div class="paragraph">
+<p>Then there comes a difficulty where an ambitious user wishes to express multiple tag managing commands
+ on one line. Regardless, this method is still very viable as the original structure supports the
+ input of multiple tags, and since the detagging mimics tagging, it is also supported.
+ However, one convenience that came with the overwriting method is the ease of deletion
+ which we would wish to allow users to perform as well. Thus, using <code>dt/all</code> will delete all existing
+ tags a contact has. The only issue with this is that a tag named <code>all</code> cannot be deleted if added.</p>
+</div>
+<div class="paragraph">
+<p>In the case of multiple tagging and detagging in one command line, we have chosen the
+ detagging to executed first because of the following reasons:</p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>Users are unlikely to remove a tag that is being added in the same line. The result of this would be that the deleted
+tag is added back.</p>
+</li>
+<li>
+<p>Tags and detags are handled 1 by 1 so there is usually no conflict between tagging and detagging.</p>
+</li>
+<li>
+<p>The only sensible conflict is when the user does <code>dt/all</code> and adds tags on the same line.
+The main use case for this is to mimic the overwriting method. Thus, if adding was executed first,
+the added tags will be deleted afterwards.</p>
+</li>
+<li>
+<p>With respect to the previous reason, users are also given the freedom to type the prefix
+in any part of the command and the program will be able to execute the user&#8217;s intention.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="searchbox"><a class="link" href="#searchbox">3.10. Searchbox</a></h3>
+<div class="paragraph">
+<p>The additional searchbox used for quick partial search/filter is a child of <code>UiParts</code> and is based on using <code>Listener</code> to detect any changes to <code>TextProperty</code>.</p>
+</div>
+<div class="paragraph">
+<p>Upon detecting changes in observables, a handler (using Lambda Expression) then passes them to <code>Logic</code> to execute the pfind command.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> SearchBox (Logic logic) {
+        <span class="local-variable">super</span>(FXML);
+
+        searchTextField.textProperty().addListener((observable, oldValue, newValue) -&gt; {
+
+            <span class="keyword">if</span> (newValue.equals(<span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>)) {
+                <span class="keyword">try</span> {
+                    CommandResult commandResult = logic.execute(<span class="string"><span class="delimiter">&quot;</span><span class="content">list</span><span class="delimiter">&quot;</span></span>);
+                    <span class="comment">// ... log ...</span>
+                    raise(<span class="keyword">new</span> NewResultAvailableEvent(commandResult.feedbackToUser, <span class="predefined-constant">false</span>));
+
+                } <span class="keyword">catch</span> (CommandException | <span class="exception">ParseException</span> e) {
+                    <span class="comment">// ...</span>
+                }
+            } <span class="keyword">else</span> {
+                <span class="keyword">try</span> {
+                    CommandResult commandResult = logic.execute(<span class="string"><span class="delimiter">&quot;</span><span class="content">pfind </span><span class="delimiter">&quot;</span></span> + newValue);
+                    <span class="comment">// ... log ....</span>
+                    raise(<span class="keyword">new</span> NewResultAvailableEvent(commandResult.feedbackToUser, <span class="predefined-constant">false</span>));
+
+                } <span class="keyword">catch</span> (CommandException | <span class="exception">ParseException</span> e) {
+                    <span class="comment">// ...</span>
+                }
+            }
+
+        });
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Seen from the script, this handle takes care of 2 cases.</p>
+</div>
+<div class="paragraph">
+<p>1) When <code>newValue</code> is empty string, it calls <code>list</code> command</p>
+</div>
+<div class="paragraph">
+<p>2) Otherwise, calls <code>pfind</code> command with the <code>newValue</code> as arguments</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Case (1) is to restore the default list of all contacts after users have used the searchbox and removed all text from field after usage
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The rest of the execution then, follows closely to the case where the command is executed through <code>CommandBox</code></p>
+</div>
+<div class="sect3">
+<h4 id="design-considerations"><a class="link" href="#design-considerations">3.10.1. Design Considerations</a></h4>
+<div class="paragraph">
+<p><strong>Aspect:</strong> Approach user should follow to input the command<br>
+<strong>Alternative 1 (current choice):</strong> Track every single changes in <code>SearchBox</code> textField.<br>
+<strong>Pros:</strong> Intuitive, need no additional step as the person card below changes real-time.<br>
+<strong>Cons:</strong> Many handler calls, duplicate execution when retyping same characters<br>
+<strong>Alternative 2:</strong> Confirmation with <code>Enter</code> key or similar feedback.<br>
+<strong>Pros:</strong> Less calls and hence more effective logging.<br>
+<strong>Cons:</strong> May not be intuitive pressing <code>Enter</code> with partially filled input.</p>
+</div>
+<hr>
+<div class="paragraph">
+<p><strong>Aspect:</strong> Execution of <code>pfind</code><br>
+<strong>Alternative 1 (current choice):</strong> Through <code>Logic</code><br>
+<strong>Pros:</strong> Reusing code. Binding it to <code>Logic</code> will automatically update any related possible changes occuring in <code>Logic Component</code>. Also easier to perform tests.<br>
+<strong>Cons:</strong> More detoured execution, going through checking of command type and parser.<br>
+<strong>Alternative 2:</strong> Directly create <code>PartialCommand</code> object with trimmed list of arguments.<br>
+<strong>Pros:</strong> Lowers coupling and dependencies, less irrelevant logs. <br>
+<strong>Cons:</strong> Lower accountability and assumes no future changes to <code>Command</code> signature<br></p>
+</div>
+<hr>
+<div class="paragraph">
+<p><strong>Aspect:</strong> Position and choice of FXML container <br>
+<strong>Alternative 1 (current choice):</strong> Follows <code>CommandBox</code> styleClass` which is in turn contained by <code>VBox</code> together with and directly above <code>PersonListCard</code>.<br>
+<strong>Pros:</strong> Similar aesthetic look to <code>CommandBox</code> to promote intuition to type in command, but within immediate proximity of person cards to suggest some sort of filtering.<br>
+<strong>Cons:</strong> Looks somewhat awkward if the person list is scrolled down (slight disjoint in seperation line and card)<br>
+<strong>Alternative 2:</strong> Popup textField ui upon hover<br>
+<strong>Pros:</strong> Can save space in case this software is run on very low resolution. Also prevent confusion of which textField to type in command.<br>
+<strong>Cons:</strong> More keyboard-based user may not notice the feature and/or movement in cursor may close the popup unintentionally.<br></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="reading-and-storing-life-insurances"><a class="link" href="#reading-and-storing-life-insurances">3.11. Reading and Storing Life Insurances:</a></h3>
+<div class="paragraph">
+<p><code>since v1.3</code></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/LifeInsuranceClassDiagram.png" alt="LifeInsuranceClassDiagram" width="800">
+</div>
+</div>
+<div class="paragraph">
+<p><em>Figure 2.4.1 : Structure of the Components related to LifeInsurance</em></p>
+</div>
+<div class="paragraph">
+<p>The <code>LifeInsurance</code>,</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>represents a life insurance in LISA.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Fields inside a <code>LifeInsurance</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>UUID</code> represents a unique id of the life insurance.</p>
+</li>
+<li>
+<p><code>InsuranceName</code> represents the name of the life insurance.</p>
+</li>
+<li>
+<p><code>Roles</code> is a <code>enum</code> type that represents the three person roles in a life insurance.
+Namely owner, insured, and beneficiary.</p>
+</li>
+<li>
+<p><code>EnumMap</code> maps a person role in a life insurance to the name of the corresponding person.</p>
+</li>
+<li>
+<p><code>InsurancePerson</code> represents a person in a life insurance. There are three such fields - owner, insured, and beneficiary  in a life insurance.</p>
+</li>
+<li>
+<p><code>Premium</code> represents the premium of a life insurance.</p>
+</li>
+<li>
+<p><code>ContractFileName</code> represents the name of a digital contract file (e.g. AlexYeohTermLife.pdf, BerniceYuWholeLife.docx) of a life insurance.</p>
+</li>
+<li>
+<p><code>LocalDate</code> represents the date components of a life insurance.
+There are two such fields - signing date and expiry date in a life insurance.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code>UniqueLifeInsuranceMap</code>,</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>stores all <code>LifeInsurance</code> objects in LISA.</p>
+</li>
+<li>
+<p>maps a <code>UUID</code> key to a <code>LifeInsurance</code> value.</p>
+</li>
+<li>
+<p>exposes an unmodifiable <code>ObservableList&lt;ReadOnlyInsurance&gt;</code> that can be 'observed' e.g. the UI can be bound to this list so that the UI automatically updates when the data in the list change.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <code>UUID</code> key inside the map has the same value with the <code>UUID</code> field inside the <code>LifeInsurance</code> it maps to.
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code>List&lt;UUID&gt;</code>,</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>stores all the <code>UUID</code> objects of the life insurances a <code>Person</code> object is involved.
+A person is involved in a life insurance if he/she is an owner, insured, or beneficiary of that piece of life insurance.</p>
+</li>
+<li>
+<p>prevents storing duplicate ids, e.g., even if a person is both an owner and insured of a life insurance, <code>List&lt;UUID&gt;</code> will only store a single copy of the <code>UUID</code> of that life insurance.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <code>UniqueLifeInsuranceList</code>,</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>stores all the <code>LifeInsurance</code> objects  a <code>Person</code> object is involved.
+A person is involved in a life insurance if he/she is an owner, insured, or beneficiary of that piece of life insurance.</p>
+</li>
+<li>
+<p>prevents storing duplicate life insurances, e.g., even if a person is both an owner and insured of a life insurance, <code>UniqueLifeInsuranceList</code> will only store a single copy of that life insurance.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/XmlAdaptedLifeInsuranceClassDiagram.png" alt="XmlAdaptedLifeInsuranceClassDiagram" width="800">
+</div>
+</div>
+<div class="paragraph">
+<p><em>Figure 2.4.1 : Structure of the Components related to XmlAdaptedLifeInsurance</em></p>
+</div>
+<div class="paragraph">
+<p>The <code>XmlAdaptedLifeInsurance</code></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>represents a JAXB-friendly version of the <code>LifeInsurance</code>.</p>
+</li>
+<li>
+<p>follows the format below when saved in xml format:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;id&gt;</span>ad4dc852-e6bb-44e9-800e-fa8a8964e7f1<span class="tag">&lt;/id&gt;</span>
+<span class="tag">&lt;insuranceName&gt;</span>Sample Life Insurance<span class="tag">&lt;/insuranceName&gt;</span>
+<span class="tag">&lt;owner&gt;</span>Oscar Wang<span class="tag">&lt;/owner&gt;</span>
+<span class="tag">&lt;insured&gt;</span>Oscar Wang<span class="tag">&lt;/insured&gt;</span>
+<span class="tag">&lt;beneficiary&gt;</span>John Doe<span class="tag">&lt;/beneficiary&gt;</span>
+<span class="tag">&lt;premium&gt;</span>1000.0<span class="tag">&lt;/premium&gt;</span>
+<span class="tag">&lt;contractFileName&gt;</span>SampleOscarWang.pdf<span class="tag">&lt;/contractFileName&gt;</span>
+<span class="tag">&lt;signingDate&gt;</span>01 Nov 2017<span class="tag">&lt;/signingDate&gt;</span>
+<span class="tag">&lt;expiryDate&gt;</span>01 Nov 2047<span class="tag">&lt;/expiryDate&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>Map&lt;String, XmlAdaptedLifeInsurance&gt;</code>,</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>stores all <code>XmlAdaptedLifeInsurance</code> objects.</p>
+</li>
+<li>
+<p>maps a <code>String</code> key to a <code>XmlAdaptedLifeInsurance</code> value.</p>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The <code>String</code> key inside the map has the same value with the <code>String</code> field inside the <code>XmlAdaptedLifeInsurance</code> it maps to.
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>follows the format below when saved in xml format:</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;lifeInsuranceMap&gt;</span>
+    <span class="tag">&lt;entry&gt;</span>
+        <span class="tag">&lt;key&gt;</span>ad4dc852-e6bb-44e9-800e-fa8a8964e7f1<span class="tag">&lt;/key&gt;</span>
+        <span class="tag">&lt;value&gt;</span>
+            <span class="comment">&lt;!-- XmlAdaptedLifeInsurance --&gt;</span>
+        <span class="tag">&lt;/value&gt;</span>
+    <span class="tag">&lt;/entry&gt;</span>
+    <span class="comment">&lt;!-- more entries --&gt;</span>
+<span class="tag">&lt;/lifeInsuranceMap&gt;</span></code></pre>
+</div>
+</div>
+<div class="sect3">
+<h4 id="synchronizing-life-insurances-with-persons"><a class="link" href="#synchronizing-life-insurances-with-persons">3.11.1. Synchronizing Life Insurances with Persons</a></h4>
+<div class="paragraph">
+<p>Inside <code>Addressbook.java</code> there are two methods in charge of keeping the life insurance master map <code>UniqueLifeInsuranceMap</code> and person master list <code>UniquePersonList</code> synchronized with each other.
+The first method, according to execution order, is <code>syncMasterLifeInsuranceMapWith(UniquePersonList persons)</code> and the
+second method is <code>syncMasterPersonListWith(UniqueLifeInsuranceMap lifeInsuranceMap)</code></p>
+</div>
+<div class="paragraph">
+<p>The first method ensures that the three <code>InsurancePerson</code> objects (owner, insured, and beneficiary) of every <code>LifeInsurance</code> in the master map links to its corresponding <code>Person</code> object if it exists in the persons list.
+In addition, it also populates the list of insurance ids <code>List&lt;UUID&gt;</code> in every <code>Person</code> object with id of the life insurance he/her is involved in.
+It is implemented in this way:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">void</span> syncMasterLifeInsuranceMapWith(UniquePersonList persons) {
+    clearAllPersonsInsuranceIds();
+    lifeInsuranceMap.forEach((id, insurance) -&gt; {
+        insurance.resetAllInsurancePersons();
+
+        <span class="predefined-type">String</span> owner = insurance.getOwnerName();
+        <span class="comment">// ... similar logic for insured and beneficiary...</span>
+        persons.forEach(person -&gt; {
+            <span class="keyword">if</span> (person.getName().toString().equals(owner)) {
+                insurance.setOwner(<span class="keyword">new</span> InsurancePerson(person));
+                person.addLifeInsuranceIds(id);
+            }
+            <span class="comment">// ... similar logic for insured and beneficiary...</span>
+        });
+    });
+    lifeInsuranceMap.syncMappedListWithInternalMap();
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The method <code>syncMappedListWithInternalMap()</code> in the last line is used to synchronize the internal list of <code>LifeInsurances</code> inside <code>UniqueLifeInsuranceMap</code>.
+This internal list is used for exposing an <code>ObservableList&lt;ReadOnlyInsurance&gt;</code> to the UI for binding.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Because <code>Person</code> objects are identified by <code>Name</code> and stored in a list,
+for every <code>LifeInsurance</code> object we have to iterate through the entire list of persons to check if the name of the <code>Person</code> object matches with the name of the three <code>InsurancePerson</code> objects.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The second method ensures that every <code>Person</code> in the master list contains the correct list of <code>LifeInsurance</code> objects corresponding to his/her list of insurance ids <code>List&lt;UUID&gt;</code>.
+It is implemented in this way:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">void</span> syncMasterPersonListWith(UniqueLifeInsuranceMap lifeInsuranceMap) <span class="directive">throws</span> InsuranceNotFoundException {
+    persons.forEach((ThrowingConsumer&lt;Person&gt;) person -&gt; {
+        <span class="predefined-type">List</span>&lt;<span class="predefined-type">UUID</span>&gt; idList = person.getLifeInsuranceIds();
+        <span class="keyword">if</span> (!idList.isEmpty()) {
+            person.clearLifeInsurances();
+            idList.forEach((ThrowingConsumer&lt;<span class="predefined-type">UUID</span>&gt;) id -&gt; {
+                LifeInsurance lf = lifeInsuranceMap.get(id);
+                person.addLifeInsurances(lf);
+            });
+        }
+    });
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Because <code>LifeInsurance</code> objects are identified by <code>UUID</code> and stored in a map,
+for every <code>Person</code> object can simply retrieve the <code>LifeInsurance</code> he/she is involved by providing the id rather than iterating through the entire map.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The two methods above are grouped into a method called <code>synWithUpdate()</code>, which is called every time when
+an operation related to <code>LifeInsurance</code> or <code>Person</code> in is executed, e.g. <code>addPerson(ReadOnlyPerson p)</code>, <code>deleteInsurance(ReadOnlyInsurance target)</code>.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="design-considerations-2"><a class="link" href="#design-considerations-2">3.11.2. Design Considerations</a></h4>
+<div class="paragraph">
+<p><strong>Aspect:</strong> Data structure for storing and saving life insurances in xml format:<br>
+<strong>Alternative 1 (current choice):</strong> Use a map to store ids as keys and life insurances as values.<br>
+<strong>Pros:</strong> Provides efficient O(1) data access using the id.<br>
+<strong>Cons:</strong> Requires an internal list to provide an <code>ObservableList&lt;ReadOnlyInsurance&gt;</code> to the UI for binding.
+The internal list have to be synchronized when data in the map changes.<br>
+<strong>Alternative 2:</strong> Use a list to store all <code>LifeInsurances</code>.<br>
+<strong>Pros:</strong> Does not require internal list. Easier implementation.<br>
+<strong>Cons:</strong> Less efficient data access. Requires iterating through the entire list to search for a life insurance using id.</p>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="add-life-insurance-command"><a class="link" href="#add-life-insurance-command">3.12. Add Life Insurance Command:</a></h3>
+<div class="paragraph">
+<p><code>since v1.4</code></p>
+</div>
+<div class="paragraph">
+<p>The following sequence diagram shows how the add life insurance operation works:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/AddLifeInsuranceCommandSequenceDiagram.png" alt="AddLifeInsuranceCommandSequenceDiagram" width="800">
+</div>
+</div>
+<div class="paragraph">
+<p>There are eight compulsory fields required for the user to input in the add life insurance command.
+They are: name, owner, insured, beneficiary, premium, signing date, expiry date, and contract file name.</p>
+</div>
+<div class="sect3">
+<h4 id="design-considerations-3"><a class="link" href="#design-considerations-3">3.12.1. Design Considerations</a></h4>
+<div class="paragraph">
+<p><strong>Aspect:</strong> Number of fields required from the user input:<br>
+<strong>Alternative 1 (current choice):</strong> Every field must be provided.<br>
+<strong>Pros:</strong> Ensures no field with null or empty value exists in a <code>LifeInsurance</code> object.<br>
+<strong>Cons:</strong> Not user-friendly. The user needs to fill in every field every time.
+<strong>Alternative 2:</strong> Making the name field the only compulsory field. The rest can be not provided.<br>
+<strong>Pros:</strong> More flexibility and user-friendly.<br>
+<strong>Cons:</strong> Requires good handling of null or empty values. In addition, an edit life insurance command has to be created to allow users to update the unfilled fields.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="addition-of-print-command"><a class="link" href="#addition-of-print-command">3.13. Addition of Print Command</a></h3>
+<div class="paragraph">
+<p>The print command enables the user to save his/her addressbook in the form of a printable .txt file</p>
+</div>
+<div class="paragraph">
+<p>The print command has the following format:
+print [FILENAME]</p>
+</div>
+<div class="paragraph">
+<p>There is no need to specify the .txt extension as the program does this automatically.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">        <span class="comment">//First line in the .txt file is the time and date printed, so that the user will know the recency</span>
+        <span class="comment">//of the printed address book</span>
+        lines.add(<span class="string"><span class="delimiter">&quot;</span><span class="content">LISA was last updated on: </span><span class="delimiter">&quot;</span></span> + timeStamp + <span class="string"><span class="delimiter">&quot;</span><span class="char">\n</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>);
+        <span class="comment">//Next, feedback the total number of contacts at said time and date</span>
+        lines.add(<span class="string"><span class="delimiter">&quot;</span><span class="content">There are </span><span class="delimiter">&quot;</span></span> + lastShownList.size() + <span class="string"><span class="delimiter">&quot;</span><span class="content"> contacts in LISA</span><span class="char">\n</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>);
+
+        <span class="type">int</span> personIndex = <span class="integer">1</span>;
+
+        <span class="comment">//iterating through each person in LISA</span>
+        <span class="keyword">for</span> (ReadOnlyPerson person: lastShownList) {
+            <span class="predefined-type">String</span> entry = personIndex + <span class="string"><span class="delimiter">&quot;</span><span class="content">. </span><span class="delimiter">&quot;</span></span> + person.getAsParagraph();
+            lines.add(entry);
+            lines.add(<span class="string"><span class="delimiter">&quot;</span><span class="char">\n</span><span class="delimiter">&quot;</span></span> + person.getName().fullName
+                    + <span class="string"><span class="delimiter">&quot;</span><span class="content"> is a personnel involved in the following insurance policies:</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>);
+
+            UniqueLifeInsuranceList insurances = person.getLifeInsurances();
+            <span class="type">int</span> insuranceIndex = <span class="integer">1</span>;
+
+            <span class="comment">//within each person, iterate through all the insurance policies associated</span>
+            <span class="comment">//with this person</span>
+            <span class="keyword">for</span> (ReadOnlyInsurance insurance: insurances) {
+                <span class="predefined-type">String</span> insuranceHeader = <span class="string"><span class="delimiter">&quot;</span><span class="content">Insurance Policy </span><span class="delimiter">&quot;</span></span> + insuranceIndex
+                        + <span class="string"><span class="delimiter">&quot;</span><span class="content">: </span><span class="delimiter">&quot;</span></span> + insurance.getInsuranceName() + <span class="string"><span class="delimiter">&quot;</span><span class="content"> ======</span><span class="delimiter">&quot;</span></span>;
+                lines.add(insuranceHeader);
+                <span class="predefined-type">String</span> owner = insurance.getOwner().getName();
+                <span class="predefined-type">String</span> insured = insurance.getInsured().getName();
+                <span class="predefined-type">String</span> beneficiary = insurance.getBeneficiary().getName();
+                <span class="predefined-type">String</span> premium = insurance.getPremium().toString();
+                <span class="predefined-type">String</span> signingDate = insurance.getSigningDateString();
+                <span class="predefined-type">String</span> expiryDate = insurance.getExpiryDateString();
+                lines.add(<span class="string"><span class="delimiter">&quot;</span><span class="content">Owner: </span><span class="delimiter">&quot;</span></span> + owner + <span class="string"><span class="delimiter">&quot;</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>
+                        + <span class="string"><span class="delimiter">&quot;</span><span class="content">Insured: </span><span class="delimiter">&quot;</span></span> + insured + <span class="string"><span class="delimiter">&quot;</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>
+                        + <span class="string"><span class="delimiter">&quot;</span><span class="content">Beneficiary: </span><span class="delimiter">&quot;</span></span> + beneficiary + <span class="string"><span class="delimiter">&quot;</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>
+                        + <span class="string"><span class="delimiter">&quot;</span><span class="content">Premium: </span><span class="delimiter">&quot;</span></span> + premium + <span class="string"><span class="delimiter">&quot;</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>
+                        + <span class="string"><span class="delimiter">&quot;</span><span class="content">Signing Date: </span><span class="delimiter">&quot;</span></span> + signingDate + <span class="string"><span class="delimiter">&quot;</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>
+                        + <span class="string"><span class="delimiter">&quot;</span><span class="content">Expiry Date: </span><span class="delimiter">&quot;</span></span> + expiryDate
+                );
+
+                <span class="comment">//insuranceEnd is just a printed line &quot;=====&quot; which ties with the length</span>
+                <span class="comment">//of insuranceHeader to make the txt file more organised.</span>
+                <span class="predefined-type">String</span> insuranceEnd = <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>;
+                <span class="type">int</span> headerLength = insuranceHeader.length();
+                <span class="keyword">for</span> (<span class="type">int</span> i = <span class="integer">1</span>; i &lt;= headerLength; i++) {
+                    insuranceEnd = insuranceEnd + <span class="string"><span class="delimiter">&quot;</span><span class="content">=</span><span class="delimiter">&quot;</span></span>;
+                }
+                lines.add(insuranceEnd);
+
+                lines.add(<span class="string"><span class="delimiter">&quot;</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>);
+                insuranceIndex++;
+            }
+            lines.add(<span class="string"><span class="delimiter">&quot;</span><span class="content">--------End of </span><span class="delimiter">&quot;</span></span> + person.getName().fullName + <span class="string"><span class="delimiter">&quot;</span><span class="content">'s profile</span><span class="delimiter">&quot;</span></span>);
+            lines.add(<span class="string"><span class="delimiter">&quot;</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>);
+            personIndex++;
+        }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Firstly, the time and date the address book is printed will be written down.
+After this, the total number of people in LISA at this time will also be written.
+Print Command iterates through each contact in the addressbook and prints out his/her basic details first.
+For each person, print command then iterates through ALL insurance policies he is involved in (whether as an
+owner/beneficiary/insured) and prints out the policy details.</p>
+</div>
+<div class="paragraph">
+<p>The Print Command requires two things: (1) That a filepath be specified, and (2) that the filepath does not contain illegal
+file path characters, which includes the following: /:*?"&lt;&gt;|</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">public</span> <span class="directive">static</span> <span class="predefined-type">String</span> parseFilePath(<span class="predefined-type">String</span> args) <span class="directive">throws</span> IllegalValueException, InvalidPathException {
+        <span class="directive">final</span> <span class="predefined-type">Matcher</span> matcher = PRINT_ARGS_FORMAT.matcher(args.trim());
+        <span class="keyword">if</span> (!matcher.matches()) {
+            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalValueException(MESSAGE_INVALID_COMMAND_FORMAT);
+        }
+        <span class="directive">final</span> <span class="predefined-type">Matcher</span> matcherFilePath = PRINT_ARGS_ILLEGAL.matcher(args.trim());
+        <span class="keyword">if</span> (!matcherFilePath.matches()) {
+            <span class="keyword">throw</span> <span class="keyword">new</span> InvalidPathException(args, MESSAGE_INVALID_FILEPATH);
+        }
+        <span class="keyword">return</span> matcher.group(<span class="string"><span class="delimiter">&quot;</span><span class="content">filename</span><span class="delimiter">&quot;</span></span>);
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the first requirement is violated, an IllegalValueException will be thrown.</p>
+</div>
+<div class="paragraph">
+<p>For the second requirement a regex has been set to detect the above mentioned illegal characters</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">Pattern</span> PRINT_ARGS_ILLEGAL =
+            <span class="predefined-type">Pattern</span>.compile(<span class="string"><span class="delimiter">&quot;</span><span class="content">(?&lt;filename&gt;[^</span><span class="char">\\</span><span class="char">\\</span><span class="content">/:*?</span><span class="char">\&quot;</span><span class="content">&lt;&gt;|]+)</span><span class="delimiter">&quot;</span></span>); <span class="comment">//Filepath cannot include illegal characters</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the specified file path contains illegal characters such that the second requirement is violated, then an
+InvalidPathException will be thrown.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="addition-of-why-command"><a class="link" href="#addition-of-why-command">3.14. Addition of Why Command</a></h3>
+<div class="paragraph">
+<p>The Why Command throws the user with random information about the indexed person upon
+asking "why".</p>
+</div>
+<div class="paragraph">
+<p>A fun, interesting easter egg feature for the user to play with in LISA.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">public</span> <span class="predefined-type">String</span> getReason() {
+            Address address = <span class="local-variable">this</span>.getAddress();
+            <span class="predefined-type">Name</span> name = <span class="local-variable">this</span>.getName();
+            Email email = <span class="local-variable">this</span>.getEmail();
+            DateOfBirth dob = <span class="local-variable">this</span>.getDateOfBirth();
+            <span class="predefined-type">Random</span> randomGenerator = <span class="keyword">new</span> <span class="predefined-type">Random</span>();
+            <span class="type">int</span> randomInt = randomGenerator.nextInt(<span class="integer">6</span>);
+            <span class="keyword">if</span> (randomInt == <span class="integer">0</span>) {
+                <span class="keyword">if</span> (address.toString() == <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>) {
+                    <span class="local-variable">this</span>.reason = <span class="predefined-type">String</span>.format(SHOWING_WHY_MESSAGE_NO_ADDRESS, name);
+                } <span class="keyword">else</span> {
+                    <span class="local-variable">this</span>.reason = <span class="predefined-type">String</span>.format(SHOWING_WHY_MESSAGE, name, address);
+                }
+            } <span class="keyword">else</span> <span class="keyword">if</span> (randomInt == <span class="integer">1</span>) {
+                <span class="keyword">if</span> (dob.toString() == <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>) {
+                    <span class="local-variable">this</span>.reason = <span class="predefined-type">String</span>.format(SHOWING_WHY_MESSAGE_NO_DOB, name);
+                } <span class="keyword">else</span> {
+                    <span class="local-variable">this</span>.reason = <span class="predefined-type">String</span>.format(SHOWING_WHY_MESSAGE_2, name, dob);
+                }
+            } <span class="keyword">else</span> <span class="keyword">if</span> (randomInt == <span class="integer">2</span>) {
+                <span class="keyword">if</span> (email.value == <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>) {
+                    <span class="local-variable">this</span>.reason = <span class="predefined-type">String</span>.format(SHOWING_WHY_MESSAGE_NO_EMAIL, name);
+                } <span class="keyword">else</span> {
+                    <span class="local-variable">this</span>.reason = <span class="predefined-type">String</span>.format(SHOWING_WHY_MESSAGE_3, name, email);
+                }
+            } <span class="keyword">else</span> <span class="keyword">if</span> (randomInt == <span class="integer">3</span>) {
+                <span class="local-variable">this</span>.reason = <span class="predefined-type">String</span>.format(SHOWING_WHY_MESSAGE_4, name);
+            } <span class="keyword">else</span> <span class="keyword">if</span> (randomInt == <span class="integer">4</span>) {
+                <span class="local-variable">this</span>.reason = <span class="predefined-type">String</span>.format(SHOWING_WHY_MESSAGE_5, name);
+            } <span class="keyword">else</span> <span class="keyword">if</span> (randomInt == <span class="integer">5</span>) {
+                <span class="local-variable">this</span>.reason = <span class="predefined-type">String</span>.format(SHOWING_WHY_MESSAGE_6, name);
+            }
+            <span class="keyword">return</span> reason;
+        }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Why command takes in the index of a person, for e.g. why 1. The command parser then parses the index
+(in a similar way to edit) and runs through a random "reason" generator in getReason() in Person.java.
+For if 1, 2 or 3 is generated by randomGenerator.nextInt(5),  then the persons address, dob or email will
+be returned respectively, for example, "Because John Doe lives in Clementi Ave 2". For 4, 5 and 6, other interesting
+messages will be printed, such as "Because John Doe appreciates you".</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="save-load-contract-pdf-file"><a class="link" href="#save-load-contract-pdf-file">3.15. Save/Load (contract) pdf file</a></h3>
+<div class="paragraph">
+<p>Allows for pdf file of the contract to be added to the project, and accessed by clicking on the link on insurance profile page.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/contractPdf.png" alt="contractPdf" width="380">
+</div>
+</div>
+<div class="paragraph">
+<p>If file is not detected in the project folder (data folder), filechooser will popup to allow user to add the pdf file into the project. Regardless of the name of the file chosen, it will automatically be renamed to the name specified in the insurance profile.</p>
+</div>
+<div class="paragraph">
+<p>In the case that the file exist in the project folder, the entry for contract file will be highlighted upon hover and will open the file upon clicking.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">  <span class="directive">private</span> <span class="type">void</span> initializeContractFile(ReadOnlyInsurance insurance) {
+         insuranceFile =  <span class="keyword">new</span> <span class="predefined-type">File</span>(PDFFOLDERPATH + insurance.getContractPath());
+         <span class="keyword">if</span> (isFileExists(insuranceFile)) {
+             activateLinkToInsuranceFile();
+         } <span class="keyword">else</span> {
+             contractName.getStyleClass().clear();
+             contractName.getStyleClass().add(<span class="string"><span class="delimiter">&quot;</span><span class="content">missing-file</span><span class="delimiter">&quot;</span></span>);
+             contractName.setOnMouseClicked(<span class="keyword">new</span> <span class="predefined-type">EventHandler</span>&lt;<span class="predefined-type">MouseEvent</span>&gt;() {
+                 <span class="annotation">@Override</span>
+                 <span class="directive">public</span> <span class="type">void</span> handle(<span class="predefined-type">MouseEvent</span> event) {
+                     FileChooser.ExtensionFilter extFilter =
+                             <span class="keyword">new</span> FileChooser.ExtensionFilter(<span class="string"><span class="delimiter">&quot;</span><span class="content">PDF files (*.pdf)</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">*.pdf</span><span class="delimiter">&quot;</span></span>);
+                     FileChooser chooser = <span class="keyword">new</span> FileChooser();
+                     chooser.getExtensionFilters().add(extFilter);
+                     <span class="predefined-type">File</span> openedFile = chooser.showOpenDialog(<span class="predefined-constant">null</span>);
+                     activateLinkToInsuranceFile();
+
+                     <span class="keyword">if</span> (isFileExists(openedFile)) {
+                         <span class="keyword">try</span> {
+                             Files.copy(openedFile.toPath(), insuranceFile.toPath());
+                         } <span class="keyword">catch</span> (<span class="exception">IOException</span> ex) {
+                             logger.info(<span class="string"><span class="delimiter">&quot;</span><span class="content">Unable to open at path: </span><span class="delimiter">&quot;</span></span> + openedFile.getAbsolutePath());
+                         }
+                     }
+                 }
+             });
+
+         }
+     }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As seen, the <code>File insuranceFile</code> attempts to find the file in the folder containing all save files.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span> PDFFOLDERPATH = <span class="string"><span class="delimiter">&quot;</span><span class="content">data/</span><span class="delimiter">&quot;</span></span>;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Upon successful retrieval of the file, or adding of the file if it does not exist, the method <code>activateLinkToInsuranceFile()</code> is then called to add a mouse click handler onto the contract entry to open up the file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">private</span> <span class="type">void</span> activateLinkToInsuranceFile() {
+         contractName.getStyleClass().clear();
+         contractName.getStyleClass().add(<span class="string"><span class="delimiter">&quot;</span><span class="content">valid-file</span><span class="delimiter">&quot;</span></span>);
+         contractName.setOnMouseClicked(event -&gt; {
+             <span class="keyword">try</span> {
+                 Desktop.getDesktop().open(insuranceFile);
+             } <span class="keyword">catch</span> (<span class="exception">IOException</span> ee) {
+                 logger.info(<span class="string"><span class="delimiter">&quot;</span><span class="content">File do not exist: </span><span class="delimiter">&quot;</span></span> + PDFFOLDERPATH + insurance.getContractPath());
+             }
+         });
+     }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="switching-middle-panel-between-profile-and-insurance-page"><a class="link" href="#switching-middle-panel-between-profile-and-insurance-page">3.16. Switching middle panel between Profile and Insurance page</a></h3>
+<div class="paragraph">
+<p>Implemented by raising events when one of the following events is detected</p>
+</div>
+<div class="paragraph">
+<p>1) <code>Person</code> card selected from left panel : <code>PersonPanelSelectionChangedEvent</code></p>
+</div>
+<div class="paragraph">
+<p>2) <code>Insurance</code> card selected from right panel : <code>InsurancePanelSelectionChangedEvent</code></p>
+</div>
+<div class="paragraph">
+<p>3) <code>Person</code> name selected from <code>InsuranceProfilePanel</code> when bound to middle panel : <code>PersonNameClickedEvent</code></p>
+</div>
+<div class="paragraph">
+<p>4) <code>Insurance</code> selected from <code>ProfilePanel</code> when bound to middle panel : <code>InsuranceClickedEvent</code></p>
+</div>
+<div class="paragraph">
+<p>Each of these events call their own respective event handler and raise <code>SwitchToProfilePanelRequestEvent</code> or <code>SwitchToInsurancePanelRequestEvent</code> as required.
+These 2 events are picked up by <code>MainWindow</code> which switch the middle panel placeholder binding to respective node.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"> <span class="annotation">@Subscribe</span>
+    <span class="directive">private</span> <span class="type">void</span> handleSwitchToProfilePanelRequestEvent(SwitchToProfilePanelRequestEvent event) {
+        logger.info(LogsCenter.getEventHandlingLogMessage(event));
+
+        middlePanelPlaceholder.getChildren().clear();
+        middlePanelPlaceholder.getChildren().add(profilePanel.getRoot());
+    }
+
+    <span class="annotation">@Subscribe</span>
+    <span class="directive">private</span> <span class="type">void</span> handleSwitchToInsurancePanelRequestEvent(SwitchToInsurancePanelRequestEvent event) {
+        logger.info(LogsCenter.getEventHandlingLogMessage(event));
+
+        middlePanelPlaceholder.getChildren().clear();
+        middlePanelPlaceholder.getChildren().add(insuranceProfilePanel.getRoot());
+    }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="restrict-tab-key-to-switching-only-between-the-textfields"><a class="link" href="#restrict-tab-key-to-switching-only-between-the-textfields">3.17. Restrict 'Tab' key to switching only between the textfields</a></h3>
+<div class="paragraph">
+<p>This feature is implemented in <code>MainWindow</code> in order to circumvent direct coupling between <code>CommandBox</code> and <code>SearchBox</code> class. In order to locate the nodes for this two textfields, <code>lookup</code> function from <code>Scene</code> is utilized.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">public</span> <span class="type">void</span> setTransversableTextFields() {
+        commandTextField = (<span class="predefined-type">TextField</span>) primaryStage.getScene().lookup(COMMANDBOX_TEXTFIELD_ID);
+        searchTextField = (<span class="predefined-type">TextField</span>) primaryStage.getScene().lookup(SEARCHBOX_TEXTFIELD_ID);
+    }</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The function above must be called after the <code>show()</code> function
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The two static arguments are their respective <code>fx:id</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"> <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span> COMMANDBOX_TEXTFIELD_ID = <span class="string"><span class="delimiter">&quot;</span><span class="content">#commandTextField</span><span class="delimiter">&quot;</span></span>;
+     <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span> SEARCHBOX_TEXTFIELD_ID = <span class="string"><span class="delimiter">&quot;</span><span class="content">#searchTextField</span><span class="delimiter">&quot;</span></span>;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Handle for <code>KeyEvent</code> is then written in such the way that Tab will be handled by MainWindow and not its children. After setting up the nodes, all is left is to call <code>requestFocus()</code> accordingly.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"> getRoot().addEventFilter(<span class="predefined-type">KeyEvent</span>.KEY_PRESSED, event -&gt; {
+            <span class="keyword">if</span> (event.getCode().equals(KeyCode.TAB)) {
+                <span class="keyword">if</span> (commandTextField.isFocused()) {
+                    searchTextField.requestFocus();
+                }
+                <span class="keyword">else</span> {
+                    commandTextField.requestFocus();
+                }
+                event.consume();
+            }
+            <span class="keyword">if</span> (event.getTarget() <span class="keyword">instanceof</span> TextInputControl &amp;&amp; keyCombination.match(event)) {
+                menuItem.getOnAction().handle(<span class="keyword">new</span> <span class="predefined-type">ActionEvent</span>());
+                event.consume();
+            }
+        });
+    }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="undo-redo-mechanism"><a class="link" href="#undo-redo-mechanism">3.18. Undo/Redo mechanism</a></h3>
 <div class="paragraph">
 <p>The undo/redo mechanism is facilitated by an <code>UndoRedoStack</code>, which resides inside <code>LogicManager</code>. It supports undoing and redoing of commands that modifies the state of the address book (e.g. <code>add</code>, <code>edit</code>). Such commands will inherit from <code>UndoableCommand</code>.</p>
 </div>
@@ -723,7 +2164,7 @@ If the <code>redoStack</code> is empty, then there are no other commands left to
 </div>
 </div>
 <div class="sect3">
-<h4 id="design-considerations"><a class="link" href="#design-considerations">3.1.1. Design Considerations</a></h4>
+<h4 id="design-considerations-4"><a class="link" href="#design-considerations-4">3.18.1. Design Considerations</a></h4>
 <div class="paragraph">
 <p><strong>Aspect:</strong> Implementation of <code>UndoableCommand</code><br>
 <strong>Alternative 1 (current choice):</strong> Add a new abstract method <code>executeUndoableCommand()</code><br>
@@ -765,9 +2206,63 @@ If the <code>redoStack</code> is empty, then there are no other commands left to
 <strong>Cons:</strong> Requires dealing with commands that have already been undone: We must remember to skip these commands. Violates Single Responsibility Principle and Separation of Concerns as <code>HistoryManager</code> now needs to do two different things.<br></p>
 </div>
 </div>
+<div class="sect3">
+<h4 id="enhancement-undone-redone-command-as-feedback-in-addition-to-success-message"><a class="link" href="#enhancement-undone-redone-command-as-feedback-in-addition-to-success-message">3.18.2. Enhancement: Undone/Redone Command as feedback in addition to Success Message</a></h4>
+<div class="paragraph">
+<p><code>v1.5 Implementation</code>
+Each undoable command class (AddCommand, DeleteCommand, ClearCommand, EditCommand) will have and overriden ToString()
+function that allows the relevant details of the executed command to be printed out.</p>
+</div>
+<div class="paragraph">
+<p>Below is an example of the overriden ToString() function in the context of AddCommand.java</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="comment">/**
+     * Returns the Command String of that added this person into the addressbook
+     */</span>
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="predefined-type">String</span> toString() {
+        <span class="directive">final</span> <span class="predefined-type">StringBuilder</span> builder = <span class="keyword">new</span> <span class="predefined-type">StringBuilder</span>();
+        builder.append(toAdd.getName())
+                .append(<span class="string"><span class="delimiter">&quot;</span><span class="content"> Phone: </span><span class="delimiter">&quot;</span></span>)
+                .append(toAdd.getPhone())
+                .append(<span class="string"><span class="delimiter">&quot;</span><span class="content">Email: </span><span class="delimiter">&quot;</span></span>)
+                .append(toAdd.getEmail())
+                .append(<span class="string"><span class="delimiter">&quot;</span><span class="content">Address: </span><span class="delimiter">&quot;</span></span>)
+                .append(toAdd.getAddress())
+                .append(<span class="string"><span class="delimiter">&quot;</span><span class="content">DateOfBirth: </span><span class="delimiter">&quot;</span></span>)
+                .append(toAdd.getDateOfBirth())
+                .append(<span class="string"><span class="delimiter">&quot;</span><span class="content">Gender: </span><span class="delimiter">&quot;</span></span>)
+                .append(toAdd.getGender())
+                .append(<span class="string"><span class="delimiter">&quot;</span><span class="content"> Tags: </span><span class="delimiter">&quot;</span></span>);
+        toAdd.getTags().forEach(builder::append);
+        <span class="predefined-type">String</span> person = builder.toString();
+        <span class="keyword">return</span> COMMAND_WORD + <span class="string"><span class="delimiter">&quot;</span><span class="content"> </span><span class="delimiter">&quot;</span></span> + person;
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Before executing an Undo Command and transferring the undoable command from the undoStack to the redoStack, a peek is taken
+into the undoStack to obtain the undoable command to be undone. The command string that of this command to be undone can
+then be obtained from the overriden ToString() function of this undoable command.</p>
+</div>
+<div class="paragraph">
+<p>After obtaining the command string, the popping of the undoable command from the undoStack to the redoStack will proceed.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">        <span class="predefined-type">String</span> commandString = undoRedoStack.peekUndo().toString();
+        <span class="predefined-type">String</span> feedbackToUser = parseUndoCommand(commandString);
+        undoRedoStack.popUndo().undo();
+
+        <span class="keyword">return</span> <span class="keyword">new</span> CommandResult(feedbackToUser);</code></pre>
+</div>
+</div>
+</div>
 </div>
 <div class="sect2">
-<h3 id="logging"><a class="link" href="#logging">3.2. Logging</a></h3>
+<h3 id="logging"><a class="link" href="#logging">3.19. Logging</a></h3>
 <div class="paragraph">
 <p>We are using <code>java.util.logging</code> package for logging. The <code>LogsCenter</code> class is used to manage the logging levels and logging destinations.</p>
 </div>
@@ -805,7 +2300,7 @@ If the <code>redoStack</code> is empty, then there are no other commands left to
 </div>
 </div>
 <div class="sect2">
-<h3 id="configuration"><a class="link" href="#configuration">3.3. Configuration</a></h3>
+<h3 id="configuration"><a class="link" href="#configuration">3.20. Configuration</a></h3>
 <div class="paragraph">
 <p>Certain properties of the application can be controlled (e.g App name, logging level) through the configuration file (default: <code>config.json</code>).</p>
 </div>
@@ -1715,7 +3210,19 @@ for <code>RemarkCommandParser</code>.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>* * *</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">user</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">add a new person</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Include gender as a field in record entry</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>* * *</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">user</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Include date of birth as a field in record entry</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>* * *</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">user</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">add a new person by providing only his/her name</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
@@ -1734,12 +3241,18 @@ for <code>RemarkCommandParser</code>.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>* * *</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">careless user</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">undo/redo previous command</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">to easily correct the mistake I made</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>* * *</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">user</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">add/delete tags without overwriting/rewriting the entire tag list</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>* * *</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">user</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">add/delete tags without overriting/rewriting the entire tag list</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">be able to edit a small typo in the contact without re-typing the entire contact detail</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
@@ -1816,21 +3329,27 @@ for <code>RemarkCommandParser</code>.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>*</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">efficiency user</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">load multiple addressbooks</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">have different book for different purpose</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>*</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">experienced user</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">write multiple command in a single line</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">shorten typing time</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>*</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">lazy user</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">create an email by clicking on email address on person card</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">send email on the fly</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>*</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">prudent user</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">confirm what command I am undo-ing or redo-ing when I excecute the undo/redo command</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">do not make unintentional changes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>*</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">efficient user</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">have my contact list sorted in alphabetical order</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">have a well ordered list of contacts in LISA or in the printed address book.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>*</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">user</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">have interesting Easter Egg features</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">have some fun with the application</p></td>
 </tr>
 </tbody>
 </table>
@@ -1894,8 +3413,63 @@ for <code>RemarkCommandParser</code>.</p>
 </li>
 </ul>
 </div>
+<div class="sect2">
+<h3 id="use-case-filter-contact-with-search-box"><a class="link" href="#use-case-filter-contact-with-search-box">C.1. Use case: Filter contact with search box</a></h3>
+<div class="paragraph">
+<p><strong>MSS</strong></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>User types the desired contact partially into the search box</p>
+</li>
+<li>
+<p>AddressBooks shows specific contacts that matched the partial search</p>
+<div class="paragraph">
+<p>Use case ends.</p>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><strong>Extensions</strong></p>
+</div>
+<div class="ulist none">
+<ul class="none">
+<li>
+<p>1a. User input too few partial keywords</p>
+<div class="ulist none">
+<ul class="none">
+<li>
+<p>1a1. AddressBook shows filtered list with too many contacts</p>
+</li>
+<li>
+<p>1a2. User extends the keyword to narrow down the search further</p>
+<div class="paragraph">
+<p>Use case resumes at step 2.</p>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>1b. No match for given keywords</p>
+<div class="ulist none">
+<ul class="none">
+<li>
+<p>1b1. AddressBook shows empty contact panel</p>
+<div class="paragraph">
+<p>Use case ends.</p>
+</div>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
 <div class="paragraph">
 <p>{More to be added}</p>
+</div>
 </div>
 </div>
 </div>
@@ -1997,7 +3571,7 @@ for <code>RemarkCommandParser</code>.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-10-13 07:34:13 +00:00
+Last updated 2017-11-13 12:59:07 +00:00
 </div>
 </div>
 </body>

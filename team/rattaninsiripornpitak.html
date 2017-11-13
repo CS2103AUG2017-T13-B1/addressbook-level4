@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 1.5.3">
+<title>Rattanin Siripornpitak - Project Portfolio</title>
+<link rel="stylesheet" href="../stylesheets/gh-pages.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="../stylesheets/coderay-asciidoctor.css">
+</head>
+<body class="article">
+<div id="header">
+<h1>Rattanin Siripornpitak - Project Portfolio</h1>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="lisa-levels-integrated-secretarial-agent"><a class="link" href="#lisa-levels-integrated-secretarial-agent">LISA: Levels Integrated Secretarial Agent</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>LISA: Levels Integrated Secretarial Agent is a desktop address book application used for teaching Software Engineering principles. The user interacts with it using a CLI, and it has a GUI created with JavaFX. It is written in Java, and has about 6 kLoC.</p>
+</div>
+<div class="paragraph">
+<p><strong>Code contributed</strong>: [<a href="https://github.com/CS2103AUG2017-T13-B1/main/tree/master/collated/main/RSJunior37.md">Functional code</a>] [<a href="https://github.com/CS2103AUG2017-T13-B1/main/tree/master/collated/test/RSJunior37.md">Test code</a>] {give links to collated code files}</p>
+</div>
+<div class="sect2">
+<h3 id="enhancement-added-searchbox-with-partialsearch-command"><a class="link" href="#enhancement-added-searchbox-with-partialsearch-command">Enhancement Added: Searchbox with partialsearch command</a></h3>
+<div class="sect3">
+<h4 id="external-behavior"><a class="link" href="#external-behavior">External behavior</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: User Guide]</mark></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="locating-persons-by-the-first-few-alphabets-of-the-name-code-pfind-code"><a class="link" href="#locating-persons-by-the-first-few-alphabets-of-the-name-code-pfind-code">Locating persons by the first few alphabets of the name: <code>pfind</code></a></h3>
+<div class="paragraph">
+<p><code>since v1.1</code></p>
+</div>
+<div class="paragraph">
+<p>Command words: <code>pfind</code> <code>pf</code> <code>plook</code> <code>plookup</code></p>
+</div>
+<div class="paragraph">
+<p>Finds persons whose names begins with the given keywords.<br>
+Format: <code>pfind PARTIALNAME [MORE_PARTIALNAMES]</code></p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>The search is case insensitive. e.g <code>ha</code> will match <code>Hans</code></p>
+</li>
+<li>
+<p>Searches anywhere within the name. eg <code>ar</code> will match <code>Jaryl</code></p>
+</li>
+<li>
+<p>Both partial or full name will be matched. e.g. A or Alice will both return <code>Alice</code></p>
+</li>
+<li>
+<p>Persons matching at least one keyword will be returned (i.e. <code>OR</code> search). e.g. <code>Ha B</code> will return <code>Hans Gruber</code>, <code>Bo Yang</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>pfind li</code><br>
+Returns any name containing li anywhere within the name, eg: <code>Alice Syn</code>, <code>Charlotte Oliveiro</code>, <code>David Li</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Alternatively, this command can perform by directly inputting <code>PARTIALNAME</code> into the search box right above the contact panel.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/searchBox.png" alt="searchBox" width="380">
+</div>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+<div class="sect3">
+<h4 id="justification"><a class="link" href="#justification">Justification</a></h4>
+<div class="paragraph">
+<p>Quick, intuitive and user-friendly filtering mechanism</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="implementation"><a class="link" href="#implementation">Implementation</a></h4>
+<div class="paragraph">
+<p>Follows the implementation of <code>find</code> <code>command</code> with modification made to predicate class</p>
+</div>
+<div class="paragraph">
+<p>Usage extends to searchbox which is implemented as follows:</p>
+</div>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: Developer Guide]</mark></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="searchbox"><a class="link" href="#searchbox">Searchbox</a></h3>
+<div class="paragraph">
+<p>The additional searchbox used for quick partial search/filter is a child of <code>UiParts</code> and is based on using <code>Listener</code> to detect any changes to <code>TextProperty</code>.</p>
+</div>
+<div class="paragraph">
+<p>Upon detecting changes in observables, a handler (using Lambda Expression) then passes them to <code>Logic</code> to execute the pfind command.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> SearchBox (Logic logic) {
+        <span class="local-variable">super</span>(FXML);
+
+        searchTextField.textProperty().addListener((observable, oldValue, newValue) -&gt; {
+
+            <span class="keyword">if</span> (newValue.equals(<span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>)) {
+                <span class="keyword">try</span> {
+                    CommandResult commandResult = logic.execute(<span class="string"><span class="delimiter">&quot;</span><span class="content">list</span><span class="delimiter">&quot;</span></span>);
+                    <span class="comment">// ... log ...</span>
+                    raise(<span class="keyword">new</span> NewResultAvailableEvent(commandResult.feedbackToUser, <span class="predefined-constant">false</span>));
+
+                } <span class="keyword">catch</span> (CommandException | <span class="exception">ParseException</span> e) {
+                    <span class="comment">// ...</span>
+                }
+            } <span class="keyword">else</span> {
+                <span class="keyword">try</span> {
+                    CommandResult commandResult = logic.execute(<span class="string"><span class="delimiter">&quot;</span><span class="content">pfind </span><span class="delimiter">&quot;</span></span> + newValue);
+                    <span class="comment">// ... log ....</span>
+                    raise(<span class="keyword">new</span> NewResultAvailableEvent(commandResult.feedbackToUser, <span class="predefined-constant">false</span>));
+
+                } <span class="keyword">catch</span> (CommandException | <span class="exception">ParseException</span> e) {
+                    <span class="comment">// ...</span>
+                }
+            }
+
+        });
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Seen from the script, this handle takes care of 2 cases.</p>
+</div>
+<div class="paragraph">
+<p>1) When <code>newValue</code> is empty string, it calls <code>list</code> command</p>
+</div>
+<div class="paragraph">
+<p>2) Otherwise, calls <code>pfind</code> command with the <code>newValue</code> as arguments</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Case (1) is to restore the default list of all contacts after users have used the searchbox and removed all text from field after usage
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The rest of the execution then, follows closely to the case where the command is executed through <code>CommandBox</code></p>
+</div>
+<div class="sect3">
+<h4 id="design-considerations"><a class="link" href="#design-considerations">Design Considerations</a></h4>
+<div class="paragraph">
+<p><strong>Aspect:</strong> Approach user should follow to input the command<br>
+<strong>Alternative 1 (current choice):</strong> Track every single changes in <code>SearchBox</code> textField.<br>
+<strong>Pros:</strong> Intuitive, need no additional step as the person card below changes real-time.<br>
+<strong>Cons:</strong> Many handler calls, duplicate execution when retyping same characters<br>
+<strong>Alternative 2:</strong> Confirmation with <code>Enter</code> key or similar feedback.<br>
+<strong>Pros:</strong> Less calls and hence more effective logging.<br>
+<strong>Cons:</strong> May not be intuitive pressing <code>Enter</code> with partially filled input.</p>
+</div>
+<hr>
+<div class="paragraph">
+<p><strong>Aspect:</strong> Execution of <code>pfind</code><br>
+<strong>Alternative 1 (current choice):</strong> Through <code>Logic</code><br>
+<strong>Pros:</strong> Reusing code. Binding it to <code>Logic</code> will automatically update any related possible changes occuring in <code>Logic Component</code>. Also easier to perform tests.<br>
+<strong>Cons:</strong> More detoured execution, going through checking of command type and parser.<br>
+<strong>Alternative 2:</strong> Directly create <code>PartialCommand</code> object with trimmed list of arguments.<br>
+<strong>Pros:</strong> Lowers coupling and dependencies, less irrelevant logs. <br>
+<strong>Cons:</strong> Lower accountability and assumes no future changes to <code>Command</code> signature<br></p>
+</div>
+<hr>
+<div class="paragraph">
+<p><strong>Aspect:</strong> Position and choice of FXML container <br>
+<strong>Alternative 1 (current choice):</strong> Follows <code>CommandBox</code> styleClass` which is in turn contained by <code>VBox</code> together with and directly above <code>PersonListCard</code>.<br>
+<strong>Pros:</strong> Similar aesthetic look to <code>CommandBox</code> to promote intuition to type in command, but within immediate proximity of person cards to suggest some sort of filtering.<br>
+<strong>Cons:</strong> Looks somewhat awkward if the person list is scrolled down (slight disjoint in seperation line and card)<br>
+<strong>Alternative 2:</strong> Popup textField ui upon hover<br>
+<strong>Pros:</strong> Can save space in case this software is run on very low resolution. Also prevent confusion of which textField to type in command.<br>
+<strong>Cons:</strong> More keyboard-based user may not notice the feature and/or movement in cursor may close the popup unintentionally.<br></p>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="enhancement-added-save-load-contract-pdf-file"><a class="link" href="#enhancement-added-save-load-contract-pdf-file">Enhancement Added: Save &amp; Load contract pdf file</a></h3>
+<div class="sect3">
+<h4 id="external-behavior-2"><a class="link" href="#external-behavior-2">External behavior</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: User Guide]</mark></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="add-view-contract-pdf-file"><a class="link" href="#add-view-contract-pdf-file">Add/View contract pdf file</a></h3>
+<div class="paragraph">
+<p><code>since v1.4</code></p>
+</div>
+<div class="paragraph">
+<p>The pdf file for contract can now be added by clicking on file name beside "Contract Path:"  which will bring up the file directory. Afterwards, clicking on the same entry will directly open the file for viewing</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/contractPdf.png" alt="contractPdf" width="380">
+</div>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+<div class="sect3">
+<h4 id="justification-2"><a class="link" href="#justification-2">Justification</a></h4>
+<div class="paragraph">
+<p>Accessing of external files via LISA allows it to act as self-sufficient software for its purpose. This also aids user with managing their files storage directory.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="implementation-2"><a class="link" href="#implementation-2">Implementation</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: Developer Guide]</mark></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="save-load-contract-pdf-file"><a class="link" href="#save-load-contract-pdf-file">Save/Load (contract) pdf file</a></h3>
+<div class="paragraph">
+<p>Allows for pdf file of the contract to be added to the project, and accessed by clicking on the link on insurance profile page.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/contractPdf.png" alt="contractPdf" width="380">
+</div>
+</div>
+<div class="paragraph">
+<p>If file is not detected in the project folder (data folder), filechooser will popup to allow user to add the pdf file into the project. Regardless of the name of the file chosen, it will automatically be renamed to the name specified in the insurance profile.</p>
+</div>
+<div class="paragraph">
+<p>In the case that the file exist in the project folder, the entry for contract file will be highlighted upon hover and will open the file upon clicking.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">  <span class="directive">private</span> <span class="type">void</span> initializeContractFile(ReadOnlyInsurance insurance) {
+         insuranceFile =  <span class="keyword">new</span> <span class="predefined-type">File</span>(PDFFOLDERPATH + insurance.getContractPath());
+         <span class="keyword">if</span> (isFileExists(insuranceFile)) {
+             activateLinkToInsuranceFile();
+         } <span class="keyword">else</span> {
+             contractName.getStyleClass().clear();
+             contractName.getStyleClass().add(<span class="string"><span class="delimiter">&quot;</span><span class="content">missing-file</span><span class="delimiter">&quot;</span></span>);
+             contractName.setOnMouseClicked(<span class="keyword">new</span> <span class="predefined-type">EventHandler</span>&lt;<span class="predefined-type">MouseEvent</span>&gt;() {
+                 <span class="annotation">@Override</span>
+                 <span class="directive">public</span> <span class="type">void</span> handle(<span class="predefined-type">MouseEvent</span> event) {
+                     FileChooser.ExtensionFilter extFilter =
+                             <span class="keyword">new</span> FileChooser.ExtensionFilter(<span class="string"><span class="delimiter">&quot;</span><span class="content">PDF files (*.pdf)</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">*.pdf</span><span class="delimiter">&quot;</span></span>);
+                     FileChooser chooser = <span class="keyword">new</span> FileChooser();
+                     chooser.getExtensionFilters().add(extFilter);
+                     <span class="predefined-type">File</span> openedFile = chooser.showOpenDialog(<span class="predefined-constant">null</span>);
+                     activateLinkToInsuranceFile();
+
+                     <span class="keyword">if</span> (isFileExists(openedFile)) {
+                         <span class="keyword">try</span> {
+                             Files.copy(openedFile.toPath(), insuranceFile.toPath());
+                         } <span class="keyword">catch</span> (<span class="exception">IOException</span> ex) {
+                             logger.info(<span class="string"><span class="delimiter">&quot;</span><span class="content">Unable to open at path: </span><span class="delimiter">&quot;</span></span> + openedFile.getAbsolutePath());
+                         }
+                     }
+                 }
+             });
+
+         }
+     }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>As seen, the <code>File insuranceFile</code> attempts to find the file in the folder containing all save files.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="Java"><span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span> PDFFOLDERPATH = <span class="string"><span class="delimiter">&quot;</span><span class="content">data/</span><span class="delimiter">&quot;</span></span>;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Upon successful retrieval of the file, or adding of the file if it does not exist, the method <code>activateLinkToInsuranceFile()</code> is then called to add a mouse click handler onto the contract entry to open up the file.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">private</span> <span class="type">void</span> activateLinkToInsuranceFile() {
+         contractName.getStyleClass().clear();
+         contractName.getStyleClass().add(<span class="string"><span class="delimiter">&quot;</span><span class="content">valid-file</span><span class="delimiter">&quot;</span></span>);
+         contractName.setOnMouseClicked(event -&gt; {
+             <span class="keyword">try</span> {
+                 Desktop.getDesktop().open(insuranceFile);
+             } <span class="keyword">catch</span> (<span class="exception">IOException</span> ee) {
+                 logger.info(<span class="string"><span class="delimiter">&quot;</span><span class="content">File do not exist: </span><span class="delimiter">&quot;</span></span> + PDFFOLDERPATH + insurance.getContractPath());
+             }
+         });
+     }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="enhancement-added-switching-middle-panel-between-insurance-and-profile"><a class="link" href="#enhancement-added-switching-middle-panel-between-insurance-and-profile">Enhancement Added: Switching middle panel between Insurance and Profile</a></h3>
+<div class="sect3">
+<h4 id="external-behavior-3"><a class="link" href="#external-behavior-3">External behavior</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: User Guide]</mark></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="tracing-a-person-from-insurance-profile"><a class="link" href="#tracing-a-person-from-insurance-profile">Tracing a person from insurance profile</a></h3>
+<div class="paragraph">
+<p><code>since v1.3</code></p>
+</div>
+<div class="paragraph">
+<p>Directly switching to a person profile page by clicking on their name on insurance profile</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/profileJump.png" alt="profileJump" width="380">
+</div>
+</div>
+<div class="paragraph">
+<p>Person name will be highlighted upon hover to indicate it is a link</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="finding-insurance-from-insurance-panel-list-on-the-right"><a class="link" href="#finding-insurance-from-insurance-panel-list-on-the-right">Finding insurance from insurance panel list on the right</a></h3>
+<div class="paragraph">
+<p><code>since v1.4</code></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/insurancePanel.png" alt="insurancePanel" width="380">
+</div>
+</div>
+<div class="paragraph">
+<p>Specific insurance contract can be displayed directly by selecting them on this panel</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="tracing-all-insurance-files-the-current-person-selected-is-involved-in"><a class="link" href="#tracing-all-insurance-files-the-current-person-selected-is-involved-in">Tracing all insurance files the current person selected is involved in</a></h3>
+<div class="paragraph">
+<p><code>since v1.4</code></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/linkToInsurance.png" alt="linkToInsurance" width="380">
+</div>
+</div>
+<div class="paragraph">
+<p>List of all related insurance contracts are now displayed on person profile page. These entries can be clicked on which will switch up the selected insurance page</p>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<div class="paragraph">
+<p>Note : <code>InsuranceListPanel</code> is written by OscarWang114. This is later embedded into standalone right panel on <code>MainWindow</code> by me.</p>
+</div>
+<hr>
+<div class="sect3">
+<h4 id="justification-3"><a class="link" href="#justification-3">Justification</a></h4>
+<div class="paragraph">
+<p>Easy tracking all related persons to insurance contracts and vice versa will improve navigability of LISA</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="implementation-3"><a class="link" href="#implementation-3">Implementation</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: Developer Guide]</mark></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="switching-middle-panel-between-profile-and-insurance-page"><a class="link" href="#switching-middle-panel-between-profile-and-insurance-page">Switching middle panel between Profile and Insurance page</a></h3>
+<div class="paragraph">
+<p>Implemented by raising events when one of the following events is detected</p>
+</div>
+<div class="paragraph">
+<p>1) <code>Person</code> card selected from left panel : <code>PersonPanelSelectionChangedEvent</code></p>
+</div>
+<div class="paragraph">
+<p>2) <code>Insurance</code> card selected from right panel : <code>InsurancePanelSelectionChangedEvent</code></p>
+</div>
+<div class="paragraph">
+<p>3) <code>Person</code> name selected from <code>InsuranceProfilePanel</code> when bound to middle panel : <code>PersonNameClickedEvent</code></p>
+</div>
+<div class="paragraph">
+<p>4) <code>Insurance</code> selected from <code>ProfilePanel</code> when bound to middle panel : <code>InsuranceClickedEvent</code></p>
+</div>
+<div class="paragraph">
+<p>Each of these events call their own respective event handler and raise <code>SwitchToProfilePanelRequestEvent</code> or <code>SwitchToInsurancePanelRequestEvent</code> as required.
+These 2 events are picked up by <code>MainWindow</code> which switch the middle panel placeholder binding to respective node.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"> <span class="annotation">@Subscribe</span>
+    <span class="directive">private</span> <span class="type">void</span> handleSwitchToProfilePanelRequestEvent(SwitchToProfilePanelRequestEvent event) {
+        logger.info(LogsCenter.getEventHandlingLogMessage(event));
+
+        middlePanelPlaceholder.getChildren().clear();
+        middlePanelPlaceholder.getChildren().add(profilePanel.getRoot());
+    }
+
+    <span class="annotation">@Subscribe</span>
+    <span class="directive">private</span> <span class="type">void</span> handleSwitchToInsurancePanelRequestEvent(SwitchToInsurancePanelRequestEvent event) {
+        logger.info(LogsCenter.getEventHandlingLogMessage(event));
+
+        middlePanelPlaceholder.getChildren().clear();
+        middlePanelPlaceholder.getChildren().add(insuranceProfilePanel.getRoot());
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="enhancement-added-restricting-tab-only-to-textfields"><a class="link" href="#enhancement-added-restricting-tab-only-to-textfields">Enhancement Added: Restricting 'Tab' only to Textfields</a></h3>
+<div class="sect3">
+<h4 id="external-behavior-4"><a class="link" href="#external-behavior-4">External behavior</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: User Guide]</mark></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="tab-key-will-only-switch-between-commandbox-and-searchbox"><a class="link" href="#tab-key-will-only-switch-between-commandbox-and-searchbox">Tab key will only switch between CommandBox and SearchBox</a></h3>
+<div class="paragraph">
+<p><code>since v1.5</code></p>
+</div>
+<div class="paragraph">
+<p>To facilitate the usage of LISA via keyboard only, tabs nagivation is restricted only to the two textfields for easy input.</p>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+<div class="sect3">
+<h4 id="justification-4"><a class="link" href="#justification-4">Justification</a></h4>
+<div class="paragraph">
+<p>As mentioned above, to lower dependence on mouse</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="implementation-4"><a class="link" href="#implementation-4">Implementation</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: Developer Guide]</mark></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="restrict-tab-key-to-switching-only-between-the-textfields"><a class="link" href="#restrict-tab-key-to-switching-only-between-the-textfields">Restrict 'Tab' key to switching only between the textfields</a></h3>
+<div class="paragraph">
+<p>This feature is implemented in <code>MainWindow</code> in order to circumvent direct coupling between <code>CommandBox</code> and <code>SearchBox</code> class. In order to locate the nodes for this two textfields, <code>lookup</code> function from <code>Scene</code> is utilized.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">public</span> <span class="type">void</span> setTransversableTextFields() {
+        commandTextField = (<span class="predefined-type">TextField</span>) primaryStage.getScene().lookup(COMMANDBOX_TEXTFIELD_ID);
+        searchTextField = (<span class="predefined-type">TextField</span>) primaryStage.getScene().lookup(SEARCHBOX_TEXTFIELD_ID);
+    }</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The function above must be called after the <code>show()</code> function
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The two static arguments are their respective <code>fx:id</code></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"> <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span> COMMANDBOX_TEXTFIELD_ID = <span class="string"><span class="delimiter">&quot;</span><span class="content">#commandTextField</span><span class="delimiter">&quot;</span></span>;
+     <span class="directive">private</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span> SEARCHBOX_TEXTFIELD_ID = <span class="string"><span class="delimiter">&quot;</span><span class="content">#searchTextField</span><span class="delimiter">&quot;</span></span>;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Handle for <code>KeyEvent</code> is then written in such the way that Tab will be handled by MainWindow and not its children. After setting up the nodes, all is left is to call <code>requestFocus()</code> accordingly.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"> getRoot().addEventFilter(<span class="predefined-type">KeyEvent</span>.KEY_PRESSED, event -&gt; {
+            <span class="keyword">if</span> (event.getCode().equals(KeyCode.TAB)) {
+                <span class="keyword">if</span> (commandTextField.isFocused()) {
+                    searchTextField.requestFocus();
+                }
+                <span class="keyword">else</span> {
+                    commandTextField.requestFocus();
+                }
+                event.consume();
+            }
+            <span class="keyword">if</span> (event.getTarget() <span class="keyword">instanceof</span> TextInputControl &amp;&amp; keyCombination.match(event)) {
+                menuItem.getOnAction().handle(<span class="keyword">new</span> <span class="predefined-type">ActionEvent</span>());
+                event.consume();
+            }
+        });
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="enhancement-proposed"><a class="link" href="#enhancement-proposed">Enhancement Proposed:</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Features listed above (excluding restricted Tab)</p>
+</li>
+<li>
+<p>Appointment management &amp; notifications</p>
+</li>
+<li>
+<p>Allow adding of photo onto profile page</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="other-contributions"><a class="link" href="#other-contributions">Other contributions</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Handles and assists in implementations related to Ui (excluding css)</p>
+</li>
+<li>
+<p>Housekeeping of (Class, Test, etc.) names which required refactoring</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2017-11-13 12:59:07 +00:00
+</div>
+</div>
+</body>
+</html>

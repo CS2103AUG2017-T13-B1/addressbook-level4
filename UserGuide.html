@@ -5,14 +5,14 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.3">
-<title>AddressBook Level 4 - User Guide</title>
+<title>LISA: Levels Integrated Secretarial Agent - User Guide</title>
 <link rel="stylesheet" href="stylesheets/gh-pages.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="stylesheets/coderay-asciidoctor.css">
 </head>
 <body class="article">
 <div id="header">
-<h1>AddressBook Level 4 - User Guide</h1>
+<h1>LISA: Levels Integrated Secretarial Agent - User Guide</h1>
 </div>
 <div id="content">
 <div id="preamble">
@@ -32,14 +32,23 @@
 <li><a href="#listing-all-persons-code-list-code">2.3. Listing all persons : <code>list</code></a></li>
 <li><a href="#editing-a-person-code-edit-code">2.4. Editing a person : <code>edit</code></a></li>
 <li><a href="#locating-persons-by-name-code-find-code">2.5. Locating persons by name: <code>find</code></a></li>
-<li><a href="#deleting-a-person-code-delete-code">2.6. Deleting a person : <code>delete</code></a></li>
-<li><a href="#selecting-a-person-code-select-code">2.7. Selecting a person : <code>select</code></a></li>
-<li><a href="#listing-entered-commands-code-history-code">2.8. Listing entered commands : <code>history</code></a></li>
-<li><a href="#undoing-previous-command-code-undo-code">2.9. Undoing previous command : <code>undo</code></a></li>
-<li><a href="#redoing-the-previously-undone-command-code-redo-code">2.10. Redoing the previously undone command : <code>redo</code></a></li>
-<li><a href="#clearing-all-entries-code-clear-code">2.11. Clearing all entries : <code>clear</code></a></li>
-<li><a href="#exiting-the-program-code-exit-code">2.12. Exiting the program : <code>exit</code></a></li>
-<li><a href="#saving-the-data">2.13. Saving the data</a></li>
+<li><a href="#locating-persons-by-the-first-few-alphabets-of-the-name-code-pfind-code">2.6. Locating persons by the first few alphabets of the name: <code>pfind</code></a></li>
+<li><a href="#deleting-a-person-code-delete-code">2.7. Deleting a person : <code>delete</code></a></li>
+<li><a href="#selecting-a-person-code-select-code">2.8. Selecting a person : <code>select</code></a></li>
+<li><a href="#adding-a-life-insurance-code-addli-code">2.9. Adding a Life Insurance: <code>addli</code></a></li>
+<li><a href="#listing-entered-commands-code-history-code">2.10. Listing entered commands : <code>history</code></a></li>
+<li><a href="#undoing-previous-command-code-undo-code">2.11. Undoing previous command : <code>undo</code></a></li>
+<li><a href="#redoing-the-previously-undone-command-code-redo-code">2.12. Redoing the previously undone command : <code>redo</code></a></li>
+<li><a href="#clearing-all-entries-code-clear-code">2.13. Clearing all entries : <code>clear</code></a></li>
+<li><a href="#tracing-a-person-from-insurance-profile">2.14. Tracing a person from insurance profile</a></li>
+<li><a href="#finding-insurance-from-insurance-panel-list-on-the-right">2.15. Finding insurance from insurance panel list on the right</a></li>
+<li><a href="#tracing-all-insurance-files-the-current-person-selected-is-involved-in">2.16. Tracing all insurance files the current person selected is involved in</a></li>
+<li><a href="#add-view-contract-pdf-file">2.17. Add/View contract pdf file</a></li>
+<li><a href="#tab-key-will-only-switch-between-commandbox-and-searchbox">2.18. Tab key will only switch between CommandBox and SearchBox</a></li>
+<li><a href="#printing-the-address-book-code-print-code">2.19. Printing the Address book : <code>print</code></a></li>
+<li><a href="#easter-egg-code-why-code">2.20. Easter egg : <code>why</code></a></li>
+<li><a href="#exiting-the-program-code-exit-code">2.21. Exiting the program : <code>exit</code></a></li>
+<li><a href="#saving-the-data">2.22. Saving the data</a></li>
 </ul>
 </li>
 <li><a href="#faq">3. FAQ</a></li>
@@ -69,7 +78,7 @@ This app will not work with earlier versions of Java 8.
 </div>
 </li>
 <li>
-<p>Download the latest <code>addressbook.jar</code> <a href="https://github.com/se-edu/addressbook-level4/releases">here</a>.</p>
+<p>Download the latest <code>LISA.jar</code> <a href="https://github.com/se-edu/addressbook-level4/releases">here</a>.</p>
 </li>
 <li>
 <p>Copy the file to the folder you want to use as the home folder for your Address Book.</p>
@@ -134,6 +143,11 @@ e.g. typing <strong><code>help</code></strong> and pressing <kbd>Enter</kbd> wil
 <li>
 <p>Parameters can be in any order e.g. if the command specifies <code>n/NAME p/PHONE_NUMBER</code>, <code>p/PHONE_NUMBER n/NAME</code> is also acceptable.</p>
 </li>
+<li>
+<p>Dates require a DAY-MONTH-YEAR format, where day and month can be single or double digit, month can also be
+the name in 3-letter form or the long name, and year can be 2 or 4-digit, where the 2-digit form is
+corrected to the last century</p>
+</li>
 </ul>
 </div>
 </div>
@@ -141,14 +155,22 @@ e.g. typing <strong><code>help</code></strong> and pressing <kbd>Enter</kbd> wil
 <div class="sect2">
 <h3 id="viewing-help-code-help-code"><a class="link" href="#viewing-help-code-help-code">2.1. Viewing help : <code>help</code></a></h3>
 <div class="paragraph">
-<p>Format: <code>help</code></p>
+<p>Command words: <code>help</code> <code>h</code> <code>hlp</code> <code>f1</code> <code>commands</code> <code>command</code> <code>sos</code></p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="adding-a-person-code-add-code"><a class="link" href="#adding-a-person-code-add-code">2.2. Adding a person: <code>add</code></a></h3>
 <div class="paragraph">
-<p>Adds a person to the address book<br>
-Format: <code>add n/NAME [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]&#8230;&#8203;</code></p>
+<p><code>since v1.1</code></p>
+</div>
+<div class="paragraph">
+<p>Command words: <code>add</code> <code>a</code> <code>+</code></p>
+</div>
+<div class="paragraph">
+<p>Adds a person to the address book<br></p>
+</div>
+<div class="paragraph">
+<p>Format: <code>add n/NAME [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [g/Gender] [d/DATE_OF_BIRTH] [t/TAG]&#8230;&#8203;</code></p>
 </div>
 <div class="admonitionblock tip">
 <table>
@@ -174,13 +196,16 @@ A person must have a name and can have any number of tags (including 0)
 <p><code>add n/Mary Jane p/98765432 e/maryjane@example.com a/Mary street, block 123, #01-01</code></p>
 </li>
 <li>
-<p><code>add n/Betsy Crowe t/friend e/betsycrowe@example.com a/Newgate Prison t/criminal</code></p>
+<p><code>add n/Betsy Crowe t/friend e/betsycrowe@example.com a/Newgate Prison d/28 02 1996 g/FEMALE t/criminal</code></p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect2">
 <h3 id="listing-all-persons-code-list-code"><a class="link" href="#listing-all-persons-code-list-code">2.3. Listing all persons : <code>list</code></a></h3>
+<div class="paragraph">
+<p>Command words: <code>list</code></p>
+</div>
 <div class="paragraph">
 <p>Shows a list of all persons in the address book.<br>
 Format: <code>list</code></p>
@@ -189,8 +214,15 @@ Format: <code>list</code></p>
 <div class="sect2">
 <h3 id="editing-a-person-code-edit-code"><a class="link" href="#editing-a-person-code-edit-code">2.4. Editing a person : <code>edit</code></a></h3>
 <div class="paragraph">
+<p><code>v1.3</code> Autofill replaces all empty fields at once<br>
+<code>v1.2</code> Only Name field necessary<br></p>
+</div>
+<div class="paragraph">
+<p>Command words: <code>edit</code> <code>e</code> <code>change</code> <code>ed</code></p>
+</div>
+<div class="paragraph">
 <p>Edits an existing person in the address book.<br>
-Format: <code>edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG] [dt/TAG_TO_DELETE]&#8230;&#8203;</code></p>
+Format: <code>edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [g/Gender] [d/DATE OF BIRTH] [t/TAG] [dt/TAG_TO_DELETE]&#8230;&#8203;</code></p>
 </div>
 <div class="sidebarblock">
 <div class="content">
@@ -209,11 +241,34 @@ Format: <code>edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG] [dt/TA
 <p>When editing tags, tags will be added on to the current existing tags.</p>
 </li>
 <li>
-<p>You can remove all the person&#8217;s tags by typing dt/all</p>
+<p>You can remove all the person&#8217;s tags by typing dt/all.</p>
+</li>
+<li>
+<p>Autofill feature is enabled, by typing the prefix of interest and pressing enter, the details of the selected person is autofilled.</p>
+</li>
+<li>
+<p>Press multiple times to autofill multiple prefixes.</p>
 </li>
 </ul>
 </div>
 </div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>Autofilling</strong><br>
+In the event that you wish to edit a very long field in the contact and just wish
+to correct a typo, you can enter the prefix(es) (e.g. edit 1 n/ p/) and press enter
+for LISA to fill it up for you.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>Examples:</p>
@@ -225,14 +280,21 @@ Format: <code>edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG] [dt/TA
 Edits the phone number and email address of the 1st person to be <code>91234567</code> and <code>johndoe@example.com</code> respectively.</p>
 </li>
 <li>
-<p><code>edit 2 n/Betsy Crower t/</code><br>
-Edits the name of the 2nd person to be <code>Betsy Crower</code> and clears all existing tags.</p>
+<p><code>edit 2 n/Betsy Crower dt/all t/cute</code><br>
+Edits the name of the 2nd person to be <code>Betsy Crower</code>, clears all existing tags and adds the cute tag.</p>
+</li>
+<li>
+<p><code>edit 1 n/</code><br>
+Triggers the programme to autofill the name after the prefix is entered, becoming <code>edit 1 n/Betsy Crower</code></p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect2">
 <h3 id="locating-persons-by-name-code-find-code"><a class="link" href="#locating-persons-by-name-code-find-code">2.5. Locating persons by name: <code>find</code></a></h3>
+<div class="paragraph">
+<p>Command words: <code>find</code> <code>f</code> <code>look</code> <code>lookup</code></p>
+</div>
 <div class="paragraph">
 <p>Finds persons whose names contain any of the given keywords.<br>
 Format: <code>find KEYWORD [MORE_KEYWORDS]</code></p>
@@ -277,17 +339,79 @@ Returns any person having names <code>Betsy</code>, <code>Tim</code>, or <code>J
 </div>
 </div>
 <div class="sect2">
-<h3 id="deleting-a-person-code-delete-code"><a class="link" href="#deleting-a-person-code-delete-code">2.6. Deleting a person : <code>delete</code></a></h3>
+<h3 id="locating-persons-by-the-first-few-alphabets-of-the-name-code-pfind-code"><a class="link" href="#locating-persons-by-the-first-few-alphabets-of-the-name-code-pfind-code">2.6. Locating persons by the first few alphabets of the name: <code>pfind</code></a></h3>
 <div class="paragraph">
-<p>Deletes the specified person from the address book.<br>
-Format: <code>delete INDEX</code></p>
+<p><code>since v1.1</code></p>
+</div>
+<div class="paragraph">
+<p>Command words: <code>pfind</code> <code>pf</code> <code>plook</code> <code>plookup</code></p>
+</div>
+<div class="paragraph">
+<p>Finds persons whose names begins with the given keywords.<br>
+Format: <code>pfind PARTIALNAME [MORE_PARTIALNAMES]</code></p>
 </div>
 <div class="sidebarblock">
 <div class="content">
 <div class="ulist">
 <ul>
 <li>
-<p>Deletes the person at the specified <code>INDEX</code>.</p>
+<p>The search is case insensitive. e.g <code>ha</code> will match <code>Hans</code></p>
+</li>
+<li>
+<p>Searches anywhere within the name. eg <code>ar</code> will match <code>Jaryl</code></p>
+</li>
+<li>
+<p>Both partial or full name will be matched. e.g. A or Alice will both return <code>Alice</code></p>
+</li>
+<li>
+<p>Persons matching at least one keyword will be returned (i.e. <code>OR</code> search). e.g. <code>Ha B</code> will return <code>Hans Gruber</code>, <code>Bo Yang</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>pfind li</code><br>
+Returns any name containing li anywhere within the name, eg: <code>Alice Syn</code>, <code>Charlotte Oliveiro</code>, <code>David Li</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Alternatively, this command can perform by directly inputting <code>PARTIALNAME</code> into the search box right above the contact panel.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/searchBox.png" alt="searchBox" width="380">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="deleting-a-person-code-delete-code"><a class="link" href="#deleting-a-person-code-delete-code">2.7. Deleting a person : <code>delete</code></a></h3>
+<div class="paragraph">
+<p>Command words: <code>delete</code> <code>del</code> <code>d</code> <code>-</code></p>
+</div>
+<div class="paragraph">
+<p>Deletes the specified person/insurance from the address book.<br>
+Format: <code>delete INDEX [PANEL_CHOICE]</code></p>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>Deletes the person/insurance at the specified <code>INDEX</code>.</p>
+</li>
+<li>
+<p>Panel choice can be indicated by adding an additional argument <code>[left|l|person|p]</code> for the
+person panel or <code>[right|r|insurance|i]</code> for the insurance panel.</p>
+</li>
+<li>
+<p>Panel choice is the person panel by default.</p>
 </li>
 <li>
 <p>The index refers to the index number shown in the most recent listing.</p>
@@ -310,31 +434,41 @@ Format: <code>delete INDEX</code></p>
 Deletes the 2nd person in the address book.</p>
 </li>
 <li>
-<p><code>find Betsy</code><br>
-<code>delete 1</code><br>
-Deletes the 1st person in the results of the <code>find</code> command.</p>
+<p><code>delete 1 r</code><br>
+Deletes the 1st insurance in the insurance panel.</p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="selecting-a-person-code-select-code"><a class="link" href="#selecting-a-person-code-select-code">2.7. Selecting a person : <code>select</code></a></h3>
+<h3 id="selecting-a-person-code-select-code"><a class="link" href="#selecting-a-person-code-select-code">2.8. Selecting a person : <code>select</code></a></h3>
 <div class="paragraph">
-<p>Selects the person identified by the index number used in the last person listing.<br>
-Format: <code>select INDEX</code></p>
+<p>Command words: <code>select</code> <code>s</code> <code>choose</code> <code>sel</code></p>
+</div>
+<div class="paragraph">
+<p>Selects the person/insurance identified by the index number used in the last listing.<br>
+Format: <code>select INDEX [PANEL_CHOICE]</code></p>
 </div>
 <div class="sidebarblock">
 <div class="content">
 <div class="ulist">
 <ul>
 <li>
-<p>Selects the person and loads the Google search page the person at the specified <code>INDEX</code>.</p>
+<p>Selects the person and loads the personal profile of the person or selects the insurance
+and loads the insurance profile of the insurance at the specified <code>INDEX</code></p>
+</li>
+<li>
+<p>Panel choice can be indicated by adding an additional argument <code>[left|l|person|p]</code> for the
+person panel or <code>[right|r|insurance|i]</code> for the insurance panel.</p>
+</li>
+<li>
+<p>Panel choice is the person panel by default.</p>
 </li>
 <li>
 <p>The index refers to the index number shown in the most recent listing.</p>
 </li>
 <li>
-<p>The index <strong>must be a positive integer</strong> <code>1, 2, 3, &#8230;&#8203;</code></p>
+<p>The index <strong>must be a positive integer</strong> <code>1, 2, 3, &#8230;&#8203;</code> and <strong>index must be within the respective list.</strong></p>
 </li>
 </ul>
 </div>
@@ -351,15 +485,65 @@ Format: <code>select INDEX</code></p>
 Selects the 2nd person in the address book.</p>
 </li>
 <li>
-<p><code>find Betsy</code><br>
-<code>select 1</code><br>
-Selects the 1st person in the results of the <code>find</code> command.</p>
+<p><code>select 1 r</code><br>
+Selects the 1st insurance in the insurance panel.</p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect2">
-<h3 id="listing-entered-commands-code-history-code"><a class="link" href="#listing-entered-commands-code-history-code">2.8. Listing entered commands : <code>history</code></a></h3>
+<h3 id="adding-a-life-insurance-code-addli-code"><a class="link" href="#adding-a-life-insurance-code-addli-code">2.9. Adding a Life Insurance: <code>addli</code></a></h3>
+<div class="paragraph">
+<p><code>since v1.5</code></p>
+</div>
+<div class="paragraph">
+<p>Command words: <code>addli</code> <code>ali</code> <code>+li</code></p>
+</div>
+<div class="paragraph">
+<p>Adds a life insurance in Lisa<br></p>
+</div>
+<div class="paragraph">
+<p>Format: <code>addli n/NAME o/OWNER i/INSURED b/BENEFICIARY pr/PREMIUM c/CONTRACT_FILE_PATH sd/SIGNING_DATE ed/EXPIRY_DATE</code></p>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>Prefix filling</strong><br>
+All fields are required here as a life insurance needs to be complete before it is valid.
+However, due to the multitude of information required, you can press enter with an unfilled
+command to trigger the autofill to prompt you with the prefixes required. Also,
+pressing enter allows you to move to the next field.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>addli n/Term Life o/Alex Yeoh i/John Doe b/Mary Jane c/TermLife.pdf
+pr/600 sd/01 11 2017 ed/01 11 2037</code></p>
+</li>
+<li>
+<p><code>addli n/Whole Life o/Bernice Yu i/David Li b/Roy Balakrishnan c/WholeLife.pdf
+pr/8500 sd/01 11 2017 ed/01 11 2117</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="listing-entered-commands-code-history-code"><a class="link" href="#listing-entered-commands-code-history-code">2.10. Listing entered commands : <code>history</code></a></h3>
+<div class="paragraph">
+<p>Command words: <code>history</code> <code>last</code> <code>h</code> <code>hist</code></p>
+</div>
 <div class="paragraph">
 <p>Lists all the commands that you have entered in reverse chronological order.<br>
 Format: <code>history</code></p>
@@ -380,7 +564,10 @@ Format: <code>history</code></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="undoing-previous-command-code-undo-code"><a class="link" href="#undoing-previous-command-code-undo-code">2.9. Undoing previous command : <code>undo</code></a></h3>
+<h3 id="undoing-previous-command-code-undo-code"><a class="link" href="#undoing-previous-command-code-undo-code">2.11. Undoing previous command : <code>undo</code></a></h3>
+<div class="paragraph">
+<p>Command words: <code>undo</code> <code>u</code> <code>revert</code></p>
+</div>
 <div class="paragraph">
 <p>Restores the address book to the state before the previous <em>undoable</em> command was executed.<br>
 Format: <code>undo</code></p>
@@ -425,7 +612,10 @@ The <code>undo</code> command fails as there are no undoable commands executed p
 </div>
 </div>
 <div class="sect2">
-<h3 id="redoing-the-previously-undone-command-code-redo-code"><a class="link" href="#redoing-the-previously-undone-command-code-redo-code">2.10. Redoing the previously undone command : <code>redo</code></a></h3>
+<h3 id="redoing-the-previously-undone-command-code-redo-code"><a class="link" href="#redoing-the-previously-undone-command-code-redo-code">2.12. Redoing the previously undone command : <code>redo</code></a></h3>
+<div class="paragraph">
+<p>Command words: <code>redo</code> <code>r</code></p>
+</div>
 <div class="paragraph">
 <p>Reverses the most recent <code>undo</code> command.<br>
 Format: <code>redo</code></p>
@@ -457,21 +647,182 @@ The <code>redo</code> command fails as there are no <code>undo</code> commands e
 </div>
 </div>
 <div class="sect2">
-<h3 id="clearing-all-entries-code-clear-code"><a class="link" href="#clearing-all-entries-code-clear-code">2.11. Clearing all entries : <code>clear</code></a></h3>
+<h3 id="clearing-all-entries-code-clear-code"><a class="link" href="#clearing-all-entries-code-clear-code">2.13. Clearing all entries : <code>clear</code></a></h3>
+<div class="paragraph">
+<p>Command words: <code>clear</code> <code>clr</code> <code>c</code> <code>cl</code></p>
+</div>
 <div class="paragraph">
 <p>Clears all entries from the address book.<br>
 Format: <code>clear</code></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="exiting-the-program-code-exit-code"><a class="link" href="#exiting-the-program-code-exit-code">2.12. Exiting the program : <code>exit</code></a></h3>
+<h3 id="tracing-a-person-from-insurance-profile"><a class="link" href="#tracing-a-person-from-insurance-profile">2.14. Tracing a person from insurance profile</a></h3>
 <div class="paragraph">
-<p>Exits the program.<br>
-Format: <code>exit</code></p>
+<p><code>since v1.3</code></p>
+</div>
+<div class="paragraph">
+<p>Directly switching to a person profile page by clicking on their name on insurance profile</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/profileJump.png" alt="profileJump" width="380">
+</div>
+</div>
+<div class="paragraph">
+<p>Person name will be highlighted upon hover to indicate it is a link</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="saving-the-data"><a class="link" href="#saving-the-data">2.13. Saving the data</a></h3>
+<h3 id="finding-insurance-from-insurance-panel-list-on-the-right"><a class="link" href="#finding-insurance-from-insurance-panel-list-on-the-right">2.15. Finding insurance from insurance panel list on the right</a></h3>
+<div class="paragraph">
+<p><code>since v1.4</code></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/insurancePanel.png" alt="insurancePanel" width="380">
+</div>
+</div>
+<div class="paragraph">
+<p>Specific insurance contract can be displayed directly by selecting them on this panel</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="tracing-all-insurance-files-the-current-person-selected-is-involved-in"><a class="link" href="#tracing-all-insurance-files-the-current-person-selected-is-involved-in">2.16. Tracing all insurance files the current person selected is involved in</a></h3>
+<div class="paragraph">
+<p><code>since v1.4</code></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/linkToInsurance.png" alt="linkToInsurance" width="380">
+</div>
+</div>
+<div class="paragraph">
+<p>List of all related insurance contracts are now displayed on person profile page. These entries can be clicked on which will switch up the selected insurance page</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="add-view-contract-pdf-file"><a class="link" href="#add-view-contract-pdf-file">2.17. Add/View contract pdf file</a></h3>
+<div class="paragraph">
+<p><code>since v1.4</code></p>
+</div>
+<div class="paragraph">
+<p>The pdf file for contract can now be added by clicking on file name beside "Contract Path:"  which will bring up the file directory. Afterwards, clicking on the same entry will directly open the file for viewing</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/contractPdf.png" alt="contractPdf" width="380">
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="tab-key-will-only-switch-between-commandbox-and-searchbox"><a class="link" href="#tab-key-will-only-switch-between-commandbox-and-searchbox">2.18. Tab key will only switch between CommandBox and SearchBox</a></h3>
+<div class="paragraph">
+<p><code>since v1.5</code></p>
+</div>
+<div class="paragraph">
+<p>To facilitate the usage of LISA via keyboard only, tabs nagivation is restricted only to the two textfields for easy input.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="printing-the-address-book-code-print-code"><a class="link" href="#printing-the-address-book-code-print-code">2.19. Printing the Address book : <code>print</code></a></h3>
+<div class="paragraph">
+<p><code>since v1.4</code></p>
+</div>
+<div class="paragraph">
+<p>Command words: <code>print</code></p>
+</div>
+<div class="paragraph">
+<p>Saves the entire address book into a printable .txt file.<br>
+Format: <code>print FILENAME</code></p>
+</div>
+<div class="paragraph">
+<p>After executing the command, the user can find the saved file as FILENAME.txt in the same directory where the project/.jar
+file is saved.</p>
+</div>
+<div class="paragraph">
+<p>For example: the user intends to print the address book as FILEPATH.txt</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/PrintCommandSuccess.png" alt="PrintCommandSuccess" width="800">
+</div>
+</div>
+<div class="paragraph">
+<p>Now, he can find his FILEPATH.txt file along side the .jar file directory.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/TextFilePath.png" alt="TextFilePath" width="600">
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Note: The file name cannot contain illegal file path characters, which includes the following: /:*?"&lt;&gt;|</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The result of the created .txt file is illustrated in the figure below</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/PrintedTxtFile.png" alt="PrintedTxtFile" width="800">
+</div>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>print FILENAME</code><br>
+Prints the entire addressbook by listing all the contacts, and the associated insurance policies with each contact.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="easter-egg-code-why-code"><a class="link" href="#easter-egg-code-why-code">2.20. Easter egg : <code>why</code></a></h3>
+<div class="paragraph">
+<p><code>since v1.2</code></p>
+</div>
+<div class="paragraph">
+<p>Command words: <code>why</code></p>
+</div>
+<div class="paragraph">
+<p>Prints out a line telling the user "why" for a particular person
+Format: <code>why INDEX</code></p>
+</div>
+<div class="paragraph">
+<p>After executing, the user will be presented with a feedback which looks something like this:
+"Because John Doe lives in 123 Clementi Ave 2"</p>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>list</code><br>
+<code>why 1</code><br>
+Returns "Because Kelvin Liew appreciates you"</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="exiting-the-program-code-exit-code"><a class="link" href="#exiting-the-program-code-exit-code">2.21. Exiting the program : <code>exit</code></a></h3>
+<div class="paragraph">
+<p>Command words: <code>exit</code> <code>quit</code> <code>esc</code> <code>off</code> <code>x</code></p>
+</div>
+<div class="paragraph">
+<p>Exits the program.<br></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="saving-the-data"><a class="link" href="#saving-the-data">2.22. Saving the data</a></h3>
 <div class="paragraph">
 <p>Address book data are saved in the hard disk automatically after any command that changes the data.<br>
 There is no need to save manually.</p>
@@ -494,8 +845,8 @@ There is no need to save manually.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Add</strong> <code>add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]&#8230;&#8203;</code><br>
-e.g. <code>add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague</code></p>
+<p><strong>Add</strong> <code>add n/NAME [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [g/Gender] [d/DATE_OF_BIRTH] [t/TAG]&#8230;&#8203;</code><br>
+e.g. <code>add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 g/MALE t/friend t/colleague</code></p>
 </li>
 <li>
 <p><strong>Clear</strong> : <code>clear</code></p>
@@ -505,12 +856,16 @@ e.g. <code>add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1
 e.g. <code>delete 3</code></p>
 </li>
 <li>
-<p><strong>Edit</strong> : <code>edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [t/TAG]&#8230;&#8203;</code><br>
+<p><strong>Edit</strong> : <code>edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [g/Gender][d/DATE OF BIRTH] [t/TAG]&#8230;&#8203;</code><br>
 e.g. <code>edit 2 n/James Lee e/jameslee@example.com</code></p>
 </li>
 <li>
 <p><strong>Find</strong> : <code>find KEYWORD [MORE_KEYWORDS]</code><br>
 e.g. <code>find James Jake</code></p>
+</li>
+<li>
+<p><strong>Partial Find</strong> : <code>pfind PARTIALNAME [MORE_PARTIALNAMES]</code><br>
+e.g. <code>pfind Ja arl Al</code></p>
 </li>
 <li>
 <p><strong>List</strong> : <code>list</code></p>
@@ -531,6 +886,12 @@ e.g.<code>select 2</code></p>
 <li>
 <p><strong>Redo</strong> : <code>redo</code></p>
 </li>
+<li>
+<p><strong>Print</strong> : <code>print</code></p>
+</li>
+<li>
+<p><strong>Why</strong> : <code>why</code></p>
+</li>
 </ul>
 </div>
 </div>
@@ -538,7 +899,7 @@ e.g.<code>select 2</code></p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-10-13 07:34:13 +00:00
+Last updated 2017-11-13 12:59:07 +00:00
 </div>
 </div>
 </body>

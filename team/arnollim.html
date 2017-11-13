@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 1.5.3">
+<title>Arnol Lim - Project Portfolio</title>
+<link rel="stylesheet" href="../stylesheets/gh-pages.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="../stylesheets/coderay-asciidoctor.css">
+</head>
+<body class="article">
+<div id="header">
+<h1>Arnol Lim - Project Portfolio</h1>
+</div>
+<div id="content">
+<div class="sect1">
+<h2 id="lisa-levels-integrated-secretarial-agent"><a class="link" href="#lisa-levels-integrated-secretarial-agent">LISA: Levels Integrated Secretarial Agent</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>LISA: Levels Integrated Secretarial Agent is a desktop address book application used for teaching Software Engineering principles. The user interacts with it using a CLI, and it has a GUI created with JavaFX. It is written in Java, and has about 6 kLoC.</p>
+</div>
+<div class="paragraph">
+<p><strong>Code contributed</strong>: [<a href="https://github.com/CS2103AUG2017-T13-B1/main/blob/master/collated/main/arnollim.md">Functional code</a>] [<a href="https://github.com/CS2103AUG2017-T13-B1/main/blob/master/collated/test/arnollim.md">Test code</a>]</p>
+</div>
+<div class="sect2">
+<h3 id="enhancement-added-improved-undo-redo-commands-such-that-the-redone-undone-command-is-returned-as-feedback-in-addition-to-undo-redo-success"><a class="link" href="#enhancement-added-improved-undo-redo-commands-such-that-the-redone-undone-command-is-returned-as-feedback-in-addition-to-undo-redo-success">Enhancement Added: Improved Undo/Redo commands such that the Redone/Undone command is returned as feedback, in addition to "Undo/Redo Success!"</a></h3>
+<div class="sect3">
+<h4 id="external-behavior"><a class="link" href="#external-behavior">External behavior</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: User Guide]</mark></p>
+</div>
+<div class="paragraph">
+<p>The Undo/Redo commands will return a "Undo/Redo Success!" feedback to the user upon successful
+redo/undo. Now, the undone/redone command will also be returned as a feedback in addition to
+the success message.</p>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+</div>
+<div class="sect3">
+<h4 id="justification"><a class="link" href="#justification">Justification</a></h4>
+<div class="paragraph">
+<p>To enhance the user&#8217;s sense of control over LISA, the Undo/Redo commands will also
+return the undone/redone message to the user as a feedback so that the user knows for sure what
+command is being undone/redone. This will be especially useful if he undoes or redoes the
+command accidentally, or after returning to LISA after a break. This is to prevent unintentional changes
+to LISA, which may be accidental.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="implementation"><a class="link" href="#implementation">Implementation</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: Developer Guide]</mark>
+==== Enhancement: Undone/Redone Command as feedback in addition to Success Message
+<code>v1.5 Implementation</code>
+Each undoable command class (AddCommand, DeleteCommand, ClearCommand, EditCommand) will have and overriden ToString()
+function that allows the relevant details of the executed command to be printed out.</p>
+</div>
+<div class="paragraph">
+<p>Below is an example of the overriden ToString() function in the context of AddCommand.java</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="comment">/**
+     * Returns the Command String of that added this person into the addressbook
+     */</span>
+    <span class="annotation">@Override</span>
+    <span class="directive">public</span> <span class="predefined-type">String</span> toString() {
+        <span class="directive">final</span> <span class="predefined-type">StringBuilder</span> builder = <span class="keyword">new</span> <span class="predefined-type">StringBuilder</span>();
+        builder.append(toAdd.getName())
+                .append(<span class="string"><span class="delimiter">&quot;</span><span class="content"> Phone: </span><span class="delimiter">&quot;</span></span>)
+                .append(toAdd.getPhone())
+                .append(<span class="string"><span class="delimiter">&quot;</span><span class="content">Email: </span><span class="delimiter">&quot;</span></span>)
+                .append(toAdd.getEmail())
+                .append(<span class="string"><span class="delimiter">&quot;</span><span class="content">Address: </span><span class="delimiter">&quot;</span></span>)
+                .append(toAdd.getAddress())
+                .append(<span class="string"><span class="delimiter">&quot;</span><span class="content">DateOfBirth: </span><span class="delimiter">&quot;</span></span>)
+                .append(toAdd.getDateOfBirth())
+                .append(<span class="string"><span class="delimiter">&quot;</span><span class="content">Gender: </span><span class="delimiter">&quot;</span></span>)
+                .append(toAdd.getGender())
+                .append(<span class="string"><span class="delimiter">&quot;</span><span class="content"> Tags: </span><span class="delimiter">&quot;</span></span>);
+        toAdd.getTags().forEach(builder::append);
+        <span class="predefined-type">String</span> person = builder.toString();
+        <span class="keyword">return</span> COMMAND_WORD + <span class="string"><span class="delimiter">&quot;</span><span class="content"> </span><span class="delimiter">&quot;</span></span> + person;
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Before executing an Undo Command and transferring the undoable command from the undoStack to the redoStack, a peek is taken
+into the undoStack to obtain the undoable command to be undone. The command string that of this command to be undone can
+then be obtained from the overriden ToString() function of this undoable command.</p>
+</div>
+<div class="paragraph">
+<p>After obtaining the command string, the popping of the undoable command from the undoStack to the redoStack will proceed.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">        <span class="predefined-type">String</span> commandString = undoRedoStack.peekUndo().toString();
+        <span class="predefined-type">String</span> feedbackToUser = parseUndoCommand(commandString);
+        undoRedoStack.popUndo().undo();
+
+        <span class="keyword">return</span> <span class="keyword">new</span> CommandResult(feedbackToUser);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="enhancement-added-print-command-function"><a class="link" href="#enhancement-added-print-command-function">Enhancement Added: Print Command function</a></h3>
+<div class="sect3">
+<h4 id="external-behavior-2"><a class="link" href="#external-behavior-2">External behavior</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: User Guide]</mark>
+The print command enables the user to save his/her addressbook into a printable .txt file</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="printing-the-address-book-code-print-code"><a class="link" href="#printing-the-address-book-code-print-code">Printing the Address book : <code>print</code></a></h3>
+<div class="paragraph">
+<p><code>since v1.4</code></p>
+</div>
+<div class="paragraph">
+<p>Command words: <code>print</code></p>
+</div>
+<div class="paragraph">
+<p>Saves the entire address book into a printable .txt file.<br>
+Format: <code>print FILENAME</code></p>
+</div>
+<div class="paragraph">
+<p>After executing the command, the user can find the saved file as FILENAME.txt in the same directory where the project/.jar
+file is saved.</p>
+</div>
+<div class="paragraph">
+<p>For example: the user intends to print the address book as FILEPATH.txt</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/PrintCommandSuccess.png" alt="PrintCommandSuccess" width="800">
+</div>
+</div>
+<div class="paragraph">
+<p>Now, he can find his FILEPATH.txt file along side the .jar file directory.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/TextFilePath.png" alt="TextFilePath" width="600">
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Note: The file name cannot contain illegal file path characters, which includes the following: /:*?"&lt;&gt;|</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The result of the created .txt file is illustrated in the figure below</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/PrintedTxtFile.png" alt="PrintedTxtFile" width="800">
+</div>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>print FILENAME</code><br>
+Prints the entire addressbook by listing all the contacts, and the associated insurance policies with each contact.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+<div class="sect3">
+<h4 id="justification-2"><a class="link" href="#justification-2">Justification</a></h4>
+<div class="paragraph">
+<p>The user may need to export the entire address book in LISA in some sort of text document for
+printing or for reference. Print function allows the user to have a hardcopy or softcopy contact list document
+for convenient reference whenever he/she is off the application.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="implementation-2"><a class="link" href="#implementation-2">Implementation</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: Developer Guide]</mark></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="addition-of-print-command"><a class="link" href="#addition-of-print-command">Addition of Print Command</a></h3>
+<div class="paragraph">
+<p>The print command enables the user to save his/her addressbook in the form of a printable .txt file</p>
+</div>
+<div class="paragraph">
+<p>The print command has the following format:
+print [FILENAME]</p>
+</div>
+<div class="paragraph">
+<p>There is no need to specify the .txt extension as the program does this automatically.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">        <span class="comment">//First line in the .txt file is the time and date printed, so that the user will know the recency</span>
+        <span class="comment">//of the printed address book</span>
+        lines.add(<span class="string"><span class="delimiter">&quot;</span><span class="content">LISA was last updated on: </span><span class="delimiter">&quot;</span></span> + timeStamp + <span class="string"><span class="delimiter">&quot;</span><span class="char">\n</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>);
+        <span class="comment">//Next, feedback the total number of contacts at said time and date</span>
+        lines.add(<span class="string"><span class="delimiter">&quot;</span><span class="content">There are </span><span class="delimiter">&quot;</span></span> + lastShownList.size() + <span class="string"><span class="delimiter">&quot;</span><span class="content"> contacts in LISA</span><span class="char">\n</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>);
+
+        <span class="type">int</span> personIndex = <span class="integer">1</span>;
+
+        <span class="comment">//iterating through each person in LISA</span>
+        <span class="keyword">for</span> (ReadOnlyPerson person: lastShownList) {
+            <span class="predefined-type">String</span> entry = personIndex + <span class="string"><span class="delimiter">&quot;</span><span class="content">. </span><span class="delimiter">&quot;</span></span> + person.getAsParagraph();
+            lines.add(entry);
+            lines.add(<span class="string"><span class="delimiter">&quot;</span><span class="char">\n</span><span class="delimiter">&quot;</span></span> + person.getName().fullName
+                    + <span class="string"><span class="delimiter">&quot;</span><span class="content"> is a personnel involved in the following insurance policies:</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>);
+
+            UniqueLifeInsuranceList insurances = person.getLifeInsurances();
+            <span class="type">int</span> insuranceIndex = <span class="integer">1</span>;
+
+            <span class="comment">//within each person, iterate through all the insurance policies associated</span>
+            <span class="comment">//with this person</span>
+            <span class="keyword">for</span> (ReadOnlyInsurance insurance: insurances) {
+                <span class="predefined-type">String</span> insuranceHeader = <span class="string"><span class="delimiter">&quot;</span><span class="content">Insurance Policy </span><span class="delimiter">&quot;</span></span> + insuranceIndex
+                        + <span class="string"><span class="delimiter">&quot;</span><span class="content">: </span><span class="delimiter">&quot;</span></span> + insurance.getInsuranceName() + <span class="string"><span class="delimiter">&quot;</span><span class="content"> ======</span><span class="delimiter">&quot;</span></span>;
+                lines.add(insuranceHeader);
+                <span class="predefined-type">String</span> owner = insurance.getOwner().getName();
+                <span class="predefined-type">String</span> insured = insurance.getInsured().getName();
+                <span class="predefined-type">String</span> beneficiary = insurance.getBeneficiary().getName();
+                <span class="predefined-type">String</span> premium = insurance.getPremium().toString();
+                <span class="predefined-type">String</span> signingDate = insurance.getSigningDateString();
+                <span class="predefined-type">String</span> expiryDate = insurance.getExpiryDateString();
+                lines.add(<span class="string"><span class="delimiter">&quot;</span><span class="content">Owner: </span><span class="delimiter">&quot;</span></span> + owner + <span class="string"><span class="delimiter">&quot;</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>
+                        + <span class="string"><span class="delimiter">&quot;</span><span class="content">Insured: </span><span class="delimiter">&quot;</span></span> + insured + <span class="string"><span class="delimiter">&quot;</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>
+                        + <span class="string"><span class="delimiter">&quot;</span><span class="content">Beneficiary: </span><span class="delimiter">&quot;</span></span> + beneficiary + <span class="string"><span class="delimiter">&quot;</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>
+                        + <span class="string"><span class="delimiter">&quot;</span><span class="content">Premium: </span><span class="delimiter">&quot;</span></span> + premium + <span class="string"><span class="delimiter">&quot;</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>
+                        + <span class="string"><span class="delimiter">&quot;</span><span class="content">Signing Date: </span><span class="delimiter">&quot;</span></span> + signingDate + <span class="string"><span class="delimiter">&quot;</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>
+                        + <span class="string"><span class="delimiter">&quot;</span><span class="content">Expiry Date: </span><span class="delimiter">&quot;</span></span> + expiryDate
+                );
+
+                <span class="comment">//insuranceEnd is just a printed line &quot;=====&quot; which ties with the length</span>
+                <span class="comment">//of insuranceHeader to make the txt file more organised.</span>
+                <span class="predefined-type">String</span> insuranceEnd = <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>;
+                <span class="type">int</span> headerLength = insuranceHeader.length();
+                <span class="keyword">for</span> (<span class="type">int</span> i = <span class="integer">1</span>; i &lt;= headerLength; i++) {
+                    insuranceEnd = insuranceEnd + <span class="string"><span class="delimiter">&quot;</span><span class="content">=</span><span class="delimiter">&quot;</span></span>;
+                }
+                lines.add(insuranceEnd);
+
+                lines.add(<span class="string"><span class="delimiter">&quot;</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>);
+                insuranceIndex++;
+            }
+            lines.add(<span class="string"><span class="delimiter">&quot;</span><span class="content">--------End of </span><span class="delimiter">&quot;</span></span> + person.getName().fullName + <span class="string"><span class="delimiter">&quot;</span><span class="content">'s profile</span><span class="delimiter">&quot;</span></span>);
+            lines.add(<span class="string"><span class="delimiter">&quot;</span><span class="char">\n</span><span class="delimiter">&quot;</span></span>);
+            personIndex++;
+        }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Firstly, the time and date the address book is printed will be written down.
+After this, the total number of people in LISA at this time will also be written.
+Print Command iterates through each contact in the addressbook and prints out his/her basic details first.
+For each person, print command then iterates through ALL insurance policies he is involved in (whether as an
+owner/beneficiary/insured) and prints out the policy details.</p>
+</div>
+<div class="paragraph">
+<p>The Print Command requires two things: (1) That a filepath be specified, and (2) that the filepath does not contain illegal
+file path characters, which includes the following: /:*?"&lt;&gt;|</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">public</span> <span class="directive">static</span> <span class="predefined-type">String</span> parseFilePath(<span class="predefined-type">String</span> args) <span class="directive">throws</span> IllegalValueException, InvalidPathException {
+        <span class="directive">final</span> <span class="predefined-type">Matcher</span> matcher = PRINT_ARGS_FORMAT.matcher(args.trim());
+        <span class="keyword">if</span> (!matcher.matches()) {
+            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalValueException(MESSAGE_INVALID_COMMAND_FORMAT);
+        }
+        <span class="directive">final</span> <span class="predefined-type">Matcher</span> matcherFilePath = PRINT_ARGS_ILLEGAL.matcher(args.trim());
+        <span class="keyword">if</span> (!matcherFilePath.matches()) {
+            <span class="keyword">throw</span> <span class="keyword">new</span> InvalidPathException(args, MESSAGE_INVALID_FILEPATH);
+        }
+        <span class="keyword">return</span> matcher.group(<span class="string"><span class="delimiter">&quot;</span><span class="content">filename</span><span class="delimiter">&quot;</span></span>);
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the first requirement is violated, an IllegalValueException will be thrown.</p>
+</div>
+<div class="paragraph">
+<p>For the second requirement a regex has been set to detect the above mentioned illegal characters</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">Pattern</span> PRINT_ARGS_ILLEGAL =
+            <span class="predefined-type">Pattern</span>.compile(<span class="string"><span class="delimiter">&quot;</span><span class="content">(?&lt;filename&gt;[^</span><span class="char">\\</span><span class="char">\\</span><span class="content">/:*?</span><span class="char">\&quot;</span><span class="content">&lt;&gt;|]+)</span><span class="delimiter">&quot;</span></span>); <span class="comment">//Filepath cannot include illegal characters</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If the specified file path contains illegal characters such that the second requirement is violated, then an
+InvalidPathException will be thrown.</p>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="enhancement-added-sort-function-with-help-from-juxarius"><a class="link" href="#enhancement-added-sort-function-with-help-from-juxarius">Enhancement Added: 'sort function' (with help from @Juxarius)</a></h3>
+<div class="sect3">
+<h4 id="external-behavior-3"><a class="link" href="#external-behavior-3">External behavior</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: User Guide]</mark>
+The contact list in LISA is arranged in alphabetical order. Newly added people are also well placed in alphabetical
+order in LISA</p>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+</div>
+<div class="sect3">
+<h4 id="justification-3"><a class="link" href="#justification-3">Justification</a></h4>
+<div class="paragraph">
+<p>Previously, LISA will arrange the contacts in order of date added. This is not functionally
+helpful. Instead, the contacts are now sorted in alphabetical order, the most common form of
+sorting.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="implementation-3"><a class="link" href="#implementation-3">Implementation</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: Developer Guide]</mark>
+Implemented into LISA with help from Jaryl Tan (@Juxarius).
+=== Improved Contact Arrangement: sort function
+Originally, new contacts added into LISA will be added to the end of the list of contacts. If there were 19 contacts in
+LISA, then adding a new person named "Adam Lim" for example (add n/Adam Lim) will place him as the 20th contact in LISA.
+While a chronological order of contacts has limited benefits, especially when the user wishes to scroll through contacts
+manually or read through contacts in a printed contact list, a list of contacts sorted by alphabetical order will be much
+more useful.</p>
+</div>
+<div class="paragraph">
+<p>UniquePersonList.java</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">public</span> <span class="type">void</span> sortPersons() <span class="directive">throws</span> DuplicatePersonException {
+        ObservableList&lt;Person&gt; listToSort = FXCollections.observableArrayList(internalList);
+        listToSort.sort((ReadOnlyPerson first, ReadOnlyPerson second)-&gt; {
+            <span class="type">int</span> x = <span class="predefined-type">String</span>.CASE_INSENSITIVE_ORDER.compare(first.getName().fullName, second.getName().fullName);
+            <span class="keyword">if</span> (x == <span class="integer">0</span>) {
+                x = (first.getName().fullName).compareTo(second.getName().fullName);
+            }
+            <span class="keyword">return</span> x;
+        });
+        UniquePersonList listToReplace = <span class="keyword">new</span> UniquePersonList();
+        <span class="keyword">for</span> (ReadOnlyPerson person : listToSort) {
+            listToReplace.add(person);
+        }
+        setPersons(listToReplace);
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>sortPersons() takes in the old list of persons, sorts them alphabetically, and returns a replaced list of persons, now sorted
+in alphabetical order. This method is called in both setPerson and setPersons methods in ReadOnlyPerson, after a new person
+is added into the address book.</p>
+</div>
+<div class="paragraph">
+<p>Example, add a new person named "Kelvin Liew"</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/BeforeAddingKelvin.png" alt="BeforeAddingKelvin" width="800">
+</div>
+</div>
+<div class="paragraph">
+<p>After the new contact "Kelvin Liew" is added, he is well placed between Irfan Ibrahim and Mary Jane.</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="../images/AfterAddingKelvin.png" alt="width=" width="800"">
+</div>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+</div>
+</div>
+<div class="sect2">
+<h3 id="enhancement-added-why-command-easter-egg"><a class="link" href="#enhancement-added-why-command-easter-egg">Enhancement Added: Why Command easter egg</a></h3>
+<div class="sect3">
+<h4 id="external-behavior-4"><a class="link" href="#external-behavior-4">External behavior</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: User Guide]</mark></p>
+</div>
+<div class="paragraph">
+<p>The Why Command throws the user with random information about the indexed person upon
+asking "why".</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="easter-egg-code-why-code"><a class="link" href="#easter-egg-code-why-code">Easter egg : <code>why</code></a></h3>
+<div class="paragraph">
+<p><code>since v1.2</code></p>
+</div>
+<div class="paragraph">
+<p>Command words: <code>why</code></p>
+</div>
+<div class="paragraph">
+<p>Prints out a line telling the user "why" for a particular person
+Format: <code>why INDEX</code></p>
+</div>
+<div class="paragraph">
+<p>After executing, the user will be presented with a feedback which looks something like this:
+"Because John Doe lives in 123 Clementi Ave 2"</p>
+</div>
+<div class="paragraph">
+<p>Examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>list</code><br>
+<code>why 1</code><br>
+Returns "Because Kelvin Liew appreciates you"</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+<div class="sect3">
+<h4 id="justification-4"><a class="link" href="#justification-4">Justification</a></h4>
+<div class="paragraph">
+<p>A fun, interesting easter egg feature for the user to play with in LISA.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="implementation-4"><a class="link" href="#implementation-4">Implementation</a></h4>
+<hr>
+<div class="paragraph">
+<p><mark>Start of Extract [from: Developer Guide]</mark></p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="addition-of-why-command"><a class="link" href="#addition-of-why-command">Addition of Why Command</a></h3>
+<div class="paragraph">
+<p>The Why Command throws the user with random information about the indexed person upon
+asking "why".</p>
+</div>
+<div class="paragraph">
+<p>A fun, interesting easter egg feature for the user to play with in LISA.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">    <span class="directive">public</span> <span class="predefined-type">String</span> getReason() {
+            Address address = <span class="local-variable">this</span>.getAddress();
+            <span class="predefined-type">Name</span> name = <span class="local-variable">this</span>.getName();
+            Email email = <span class="local-variable">this</span>.getEmail();
+            DateOfBirth dob = <span class="local-variable">this</span>.getDateOfBirth();
+            <span class="predefined-type">Random</span> randomGenerator = <span class="keyword">new</span> <span class="predefined-type">Random</span>();
+            <span class="type">int</span> randomInt = randomGenerator.nextInt(<span class="integer">6</span>);
+            <span class="keyword">if</span> (randomInt == <span class="integer">0</span>) {
+                <span class="keyword">if</span> (address.toString() == <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>) {
+                    <span class="local-variable">this</span>.reason = <span class="predefined-type">String</span>.format(SHOWING_WHY_MESSAGE_NO_ADDRESS, name);
+                } <span class="keyword">else</span> {
+                    <span class="local-variable">this</span>.reason = <span class="predefined-type">String</span>.format(SHOWING_WHY_MESSAGE, name, address);
+                }
+            } <span class="keyword">else</span> <span class="keyword">if</span> (randomInt == <span class="integer">1</span>) {
+                <span class="keyword">if</span> (dob.toString() == <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>) {
+                    <span class="local-variable">this</span>.reason = <span class="predefined-type">String</span>.format(SHOWING_WHY_MESSAGE_NO_DOB, name);
+                } <span class="keyword">else</span> {
+                    <span class="local-variable">this</span>.reason = <span class="predefined-type">String</span>.format(SHOWING_WHY_MESSAGE_2, name, dob);
+                }
+            } <span class="keyword">else</span> <span class="keyword">if</span> (randomInt == <span class="integer">2</span>) {
+                <span class="keyword">if</span> (email.value == <span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span>) {
+                    <span class="local-variable">this</span>.reason = <span class="predefined-type">String</span>.format(SHOWING_WHY_MESSAGE_NO_EMAIL, name);
+                } <span class="keyword">else</span> {
+                    <span class="local-variable">this</span>.reason = <span class="predefined-type">String</span>.format(SHOWING_WHY_MESSAGE_3, name, email);
+                }
+            } <span class="keyword">else</span> <span class="keyword">if</span> (randomInt == <span class="integer">3</span>) {
+                <span class="local-variable">this</span>.reason = <span class="predefined-type">String</span>.format(SHOWING_WHY_MESSAGE_4, name);
+            } <span class="keyword">else</span> <span class="keyword">if</span> (randomInt == <span class="integer">4</span>) {
+                <span class="local-variable">this</span>.reason = <span class="predefined-type">String</span>.format(SHOWING_WHY_MESSAGE_5, name);
+            } <span class="keyword">else</span> <span class="keyword">if</span> (randomInt == <span class="integer">5</span>) {
+                <span class="local-variable">this</span>.reason = <span class="predefined-type">String</span>.format(SHOWING_WHY_MESSAGE_6, name);
+            }
+            <span class="keyword">return</span> reason;
+        }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Why command takes in the index of a person, for e.g. why 1. The command parser then parses the index
+(in a similar way to edit) and runs through a random "reason" generator in getReason() in Person.java.
+For if 1, 2 or 3 is generated by randomGenerator.nextInt(5),  then the persons address, dob or email will
+be returned respectively, for example, "Because John Doe lives in Clementi Ave 2". For 4, 5 and 6, other interesting
+messages will be printed, such as "Because John Doe appreciates you".</p>
+</div>
+<div class="paragraph">
+<p><mark>End of Extract</mark></p>
+</div>
+<hr>
+</div>
+<div class="sect2">
+<h3 id="enhancement-proposed"><a class="link" href="#enhancement-proposed">Enhancement Proposed:</a></h3>
+<div class="paragraph">
+<p>A log in/log out page for enhanced security
+Email function to automatically load .txt or .xml file into Outlook or other Desktop email applications
+Ability to change ui theme on command: <code>change</code> function</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="other-contributions"><a class="link" href="#other-contributions">Other contributions</a></h3>
+<div class="paragraph">
+<p>All the features listed above
+Performed Acceptance Testing on other group&#8217;s applications and highlighted bugs
+<a href="https://github.com/CS2103AUG2017-T12-B1/main/issues/73">#73</a>,
+<a href="https://github.com/CS2103AUG2017-T12-B1/main/issues/64">#64</a>
+Helped review team member&#8217;s PRs
+Improved certain commands in LISA</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="additional-information"><a class="link" href="#additional-information">Additional Information</a></h3>
+<div class="paragraph">
+<p>Initially switched to addressbook-level2 without the group; was unable to cope with the depth of addressbook-level4.
+However, switched back to addressbook-level4 after gaining confidence during phase B.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2017-11-13 12:59:07 +00:00
+</div>
+</div>
+</body>
+</html>
